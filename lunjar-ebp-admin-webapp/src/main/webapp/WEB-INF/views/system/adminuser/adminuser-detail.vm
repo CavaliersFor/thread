@@ -1,0 +1,53 @@
+
+<style>
+	.formBox td span {margin-left: 0px;}
+</style>
+<div class="formBox">		
+	 <div>
+		<div class="fl">
+            <span class="fl">用户：$!{user.userName}</span>		
+			<a class="fl btnLink mt5 ml20" href="e$!{user.id}.htm?back=d$!{user.id}" >修改</a>    			
+		</div>
+        <div class="fr">
+			<a href="listb.htm">&lt;&lt;  返回列表</a>
+		</div>
+	</div>	
+    <div class="content2">		
+        <table class="c6">			
+			<tr>
+        		<th>用户姓名：</th>
+    			<td>$!{user.userName}</td>        
+        		<th>状态：</th>
+    			<td>#getDictionaryName("adminUserStatus" $!{user.status})</td>
+        	</tr>
+			<tr>        	  	
+        		<th>登录账号：</th>
+    			<td>$!{user.account}</td>
+				<th>电子邮箱：</th>
+    			<td>$!{user.email}</td>
+        	</tr>
+			<tr>
+        		<th>固定电话：</th>
+    			<td>$!{user.phone}</td>        	
+        		<th>移动电话：</th>
+    			<td>$!{user.mobile}</td>
+        	</tr>
+			<tr>
+        		<th>最后登录时间：</th>
+    			<td>$!date.format("yyyy-MM-dd HH:mm",$!{user.lastLoginTime})</td>        	
+        		<th>登录次数：</th>
+    			<td>$!{user.loginCount}</td>
+        	</tr>
+			<tr>
+        		<th>创建时间：</th>
+    			<td>$!date.format("yyyy-MM-dd HH:mm",$!{user.gmtCreate})</td>        	
+        		<th>修改时间：</th>
+    			<td>$!date.format("yyyy-MM-dd HH:mm",$!{user.gmtModify})</td>
+        	</tr>			
+			<tr>
+        		<th>备注：</th>
+    			<td colspan="3">$!{user.remark}</td>
+        	</tr>
+		</table>
+	</div>	
+</div>

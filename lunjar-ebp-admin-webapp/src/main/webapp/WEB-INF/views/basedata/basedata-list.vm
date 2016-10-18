@@ -1,0 +1,59 @@
+#loadWebResources(["extJs","form"]) 
+<script>var _componentUrl="#getComponentUrl()";</script>
+#set($screen_jsArray=["basedata/basedata"]) 
+##加载js 文件
+##<div class="r_title">基础数据管理  > 其他基础数据管理</div>
+##<link rel="stylesheet" type="text/css" href="#getWebresourcesUrl()/styles/height100.css" />
+<style>
+.left{width:300px;}
+.boxy-content{height:250px;}
+.boxy-bbar{text-align:center;}
+</style>
+<div class="bodyBox">    
+    <div id="tree" class="left"></div>
+    <div class="middle"></div>
+    <div class="right">
+        <!--<form method="get" id="formSearch">
+            <table class="search">
+                <tr>
+                    <th>代码：</th>
+                    <td>
+                        <input name="dictValue" type="text" class="w70" />
+                    </td>
+                    <th>文本：</th>
+                    <td>
+                        <input name="dictText" type="text" class="w70" />
+                    </td>
+                    <th>状态：</th>
+                    <td>
+						#formSelect({"name":"status","dictGroup":"dataDictStatus","selectedValue":$!query.status},"class='w80'")
+                    </td>
+                    <td >
+                        <input type="submit" id="btn_search" value="搜索" class="btn" />
+                        <input type="button" id="btn_reset" value="清空" class="btn"/>
+						&nbsp;|&nbsp;<input type="button" id="btn_add" value="添加新项" class="btn" />
+                    </td>
+                </tr>
+            </table>
+		</form>-->
+        <table class="list">
+			<thead >            
+                <tr>
+                    <th width="30">序号</th>
+                    <th width="80">代码</th>
+                    <th >文本</th>
+                    <th  width="60">状态</th>
+					<th  width="50">排序</th>
+                    <th  width="120">添加时间</th>
+                    <th  width="120">更新时间</th>
+                    <th width="90">操作</th>
+                </tr>
+			</thead>
+            <tbody >
+				<td colspan="8" >
+                    <div class="msg-info m10" >请先选择基础数据类别</div>
+                </td>
+            </tbody>
+        </table>
+    </div>
+</div>

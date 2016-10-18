@@ -1,0 +1,161 @@
+
+#set($screen_jsArray=["basedata/param-list"])
+#set($backUrl=$request.getParameter("back"))
+
+#if(!$backUrl)
+	#set($backUrl="listb")
+#end
+#if("$backUrl"=="listb")
+	#set($backLinkText="返回列表")
+#else
+	#set($backLinkText="返回接口信息")
+#end
+<script>_backUrl='$backUrl';</script>
+<div class="formBox">
+	
+  <input name="id" id="apiId" type="hidden" value="$!api.id"/>
+		<h3>
+		<i></i>
+        <div class="fl">    		
+            <span>接口信息</span>
+		</div>
+        <div class="fr">
+			<a href="${backUrl}.htm">&lt;&lt;  $backLinkText</a>
+		</div>
+		</h3>
+	
+   
+        <div style="height:250px;">
+			
+				<div class="left" style="float:left;width:650px;margin:10px;">
+					<table class="c2"> 
+						<tr>
+							<th>名称: </th>
+							<td>	    
+								$!api.apiName
+							</td>
+						</tr> 
+						<tr>
+							<th>类型: </th>
+							<td>
+								
+								#if($!api.apiType==1)保全#elseif($!api.apiType==2)门户#elseif($!api.apiType==3)数据增值
+								#elseif($!api.apiType==4)短信#elseif($!api.apiType==5)邮件#elseif($!api.apiType==6)其他#end
+							</td>
+						</tr>
+						<tr>
+							<th>地址: </th>
+							<td>
+								
+								$!api.apiUrl
+							</td>
+						</tr>
+						
+						<tr>
+							<th>请求字符编码:</th>
+							<td>
+								
+								#if($!api.apiReqEncoding==1)application/x-www-form-urlencoded#elseif($!api.apiType==2)multipart/form-data)#end	
+							</td>
+						</tr>
+						<tr>
+							<th>返回主体:</th>
+							<td>
+								<div>
+									$!api.apiRespContent
+								</div>
+								
+							</td>
+						</tr>
+					</table>		  
+				</div>
+				<div style="float:left;width:650px;margin:10px;">
+					<table class="c2">
+						<tr>
+							<th>接口描述:</th>
+							<td >
+								
+								$!api.apiDesc
+							</td>
+						</tr>
+						<tr>
+							<th>接口请求方式:</th>
+							<td>
+								#if($!api.apiWay==1)POST#elseif($!api.apiWay==2)GET#end									
+							</td>
+						</tr>
+						<tr >
+							<th>是否付费:</th>
+							<td>
+								#if($!api.isPay==1)收费#elseif($!api.isPay==2)免费#end										
+							</td>
+						</tr>
+						<tr >
+							<th>返回主体说明:</th>
+							<td>
+								<div>
+									$!api.apiRespDesc
+								</div>						
+							</td>
+						</tr>
+					</table>
+				</div>
+				
+		</div>
+		
+	<h3>
+		
+        <div class="fl">    		
+            <span>接口参数</span>
+		</div>
+        
+		</h3>
+		<div id="list" class="listBox">
+		<table>
+				<tr>
+					<th>参数名称</th>
+					<th>类型</th>
+					<th>是否必填</th>
+					<th>默认值</th>
+					<th>描述</th>
+				</tr>
+		
+                <tr>
+					 #foreach($o in $data)
+                     #if( $!o.apiId==$!api.apiId) 
+                     <td >
+                        $!o.paramName
+                    </td>                   
+                    <td >
+                   	 	#if($!o.paramType==1)字符#elseif($!o.paramType==2)对象#end
+                    </td>   
+					<td>
+						#if($!o.isNull==1)必填#elseif($!o.isNull==2)不必#end
+					</td>
+                    <td >
+						$!o.paramDefalut
+					</td>
+					<td >
+						$!o.paramDescription
+					</td>
+					
+				</tr>
+					
+					 #end
+					  #end
+					
+				
+               
+        
+            
+        
+		</table>
+		  
+		</div>
+	
+        
+       
+			
+		
+    
+</div>

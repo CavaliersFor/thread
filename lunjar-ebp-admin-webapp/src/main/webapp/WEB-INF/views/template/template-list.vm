@@ -1,0 +1,173 @@
+#loadWebResources(["list","form","extJs","datePicker"]) 
+#set($screen_jsArray=["template/template"])
+#set($thisActionUrl="list")
+<div class="searchBox">
+    <form method="post" id="form_search" action="$thisActionUrl">
+          <table>
+              <tr>
+				<th>
+					<select name="searchType">
+						<option value="1" #if($!{searchType} eq "1")selected#end>接入者</option>
+						<option value="2" #if($!{searchType} eq "2")selected#end>产品</option>
+						<option value="3" #if($!{searchType} eq "3")selected#end>保全点</option>
+					</select>
+				</th>
+				<td>
+					<input type="text" name="searchText" value="$!{searchText}" />
+				</td>
+				<!--<th>接入者/产品名称：</th>
+				<td><input placeholder="接入者/产品" name="searchName" type="text" value="$!query.itemId"  class="inp-w160"/></td>-->
+				<th>状态：</th>
+                <td>
+					<select name="status">
+						<option value="" selected>全部</option>
+						<option value="1" #if($!{query.status} eq "1") selected #end>启用</option>
+						<option value="0" #if($!{query.status} eq "0") selected #end>测试中</option>
+					</select>
+				</td>    
+				<th></th>
+                <td><input type="submit" id="btn_search" value="搜索" class="btn" />&nbsp;|&nbsp;<input type="button" id="btn_add" value="上传模版" class="btn addTemplate" onclick="editWin();" /></td>			
+             </tr>
+        </table>
+    </form>
+</div>
+<div id="list" class="listBox mt10">
+    <table>
+        <tr>          
+            <th width="5%">序号</th>
+			<th width="12%">接入者</th> 
+			<th width="12%">产品</th>   
+            <th width="12%">保全点</th>
+			<th width="12%">步骤</th>
+			<th width="12%">版本号</th>
+			<th width="10%">状态</th>
+			<th width="10%">启用时间</th>
+			<th width="25%">操作</th>
+        </tr>
+        #set($data=$page.data)
+        #if($data.size()>0)
+            #foreach($o in $data)
+                #set($no = ($velocityCount + ($!page.pageNo - 1) * $!page.pageSize))
+                <tr #if($math.mod($velocityCount,2)==0)  class="bg" #end>
+                    <td >
+                        <label for="chk_$o.id">&nbsp;$no</label>
+                    </td>          
+					<td>$!partnerMap.get(${o.partnerId})</td> 
+					<td>$!productMap.get(${o.productId})</td>
+					<td>$!itemMap.get(${o.itemId})</td>
+					<td>#if($!{o.flowId})$!flowMap.get(${o.flowId})#else——#end</td>
+					<td>V$!{o.version}.0</td>
+					<td>#if($!{o.gmtStart})启用#else测试中#end</td>
+					<td>#if($!{o.gmtStart})$!date.format("yyyy-MM-dd HH:mm:ss",$!{o.gmtStart})#else——#end</td>
+					<td>
+					<span class="data">
+						 <input type="hidden"  value="${o.version}" name="version"  />
+						 <input type="hidden"  value="$!{o.itemId}" name="itemId"  />
+						 <input type="hidden"  value="${o.flowId}" name="flowId"  />
+						 <input type="hidden"  value="$!{o.productId}" name="productId"  />
+						 <input type="hidden"  value="$!{o.partnerId}" name="partnerId"  />
+						 <input type="hidden"  value="$!{o.status}" name="status"  />
+                     </span>
+					 #if(!$!{o.gmtStart})
+					 <a onclick="editWin2($o.id)" href="javascript:void(0);" class="view">启用</a>
+					 <a onclick="deleteTemplate($o.id)" href="javascript:void(0);" class="view">删除</a>
+					 #end
+                    </td>
+                </tr>
+            #end
+        #else
+            <tr>
+                <td colspan="10">非常抱歉，没有符合条件的数据！</td>
+            </tr>
+        #end 
+    </table>        
+</div>
+#if($data.size()>0)
+	#pageTabFoot({"queryFormId":"form_search","page":$page,"submitUrl":"${thisActionUrl}#list","canSetPagesize":true}) 
+#end
+<!--模版启用时间设置弹出框-->
+<div id="editForm2" style="display:none;">
+	<form class="winFormBox2">
+		<table>
+			<tr>
+				<th>启用时间：</th>
+    			<td>
+					<input id="input_template_id" name="id" type="hidden" value="" />
+					<input placeholder="" style="cursor:pointer" id="input_gmt_start" name="gmtStart" type="text" value=""  readOnly="true" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="inp-w160"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+<!--上传模版弹出框-->
+#loadImageUploadorWebResources()
+<style>
+.boxy-wrapper .boxy-bbar{text-align:center;}
+</style>
+<div id="editForm" style="display:none;height:240px;">
+	<form class="winFormBox">
+		<table>
+			<tr>
+				<th style="width:90px;">行业领域：</th>
+    			<td>
+					#formSelect({"id":"selectParent","name":"productTypeParent","dictGroup":"productType","data":$pubDataDictTool.getDictGroupByParentValue('productType','productType')},"class='w200'")
+				</td>
+			</tr>
+			<tr>
+    			<th>产品：</th>
+    			<td>
+					<select id="sel_product" name="productId" class='w200'>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>保全点：</th>
+    			<td>
+					<select id="sel_item" name="itemId" class='w200'>
+					</select>
+					<span class="red" id="_dlc"></span>
+				</td>
+			</tr>
+			<tr id="tr_flow">
+				<th>步骤：</th>
+    			<td>
+					<select id="sel_flow" name="flowId" class='w200'>
+					</select>
+				</td>
+			</tr>
+			<tr>
+        		<th>版本号：</th>
+    			<td><input id="version" name="version" type="text" disabled="true" value="" />
+				</td>  
+			</tr>
+			<tr>
+        		<th>路径：</th>
+    			<td>
+					<input id="file_path" name="path" type="text" readOnly="true" class='w200'/>
+					<div id="swfu-placeholder2"><!–swfupload文件选择按钮占位符，执行下面的js后，这里将被替换成swfupload上传按钮–></div>
+					<!--<input id="fileUpload" name="fileUpload" type="file" />-->
+				</td>  
+			</tr>
+		</table>
+	</form>
+</div>
+<script>
+	var swfuOption = {//swfupload选项
+    upload_url : "#getCurrentSystemUrl('uploadfile')", //接收上传的服务端url
+    flash_url : "#getComponentUrl()/swfupload/swfupload.swf",//swfupload压缩包解压后swfupload.swf的url
+    button_placeholder_id : "swfu-placeholder2",//上传按钮占位符的id
+    file_size_limit : "20480",//用户可以选择的文件大小，有效的单位有B、KB、MB、GB，若无单位默认为KB
+    button_width: "200", //按钮宽度
+    button_height: "20", //按钮高度
+    button_text: "<a>点我上传模版</a>",//按钮文字
+	//button_image_url:"#getComponentUrl()/swfupload/btn_upload.gif",
+	upload_success_handler:function(file,server_data,receivedResponse){
+		if(receivedResponse&&server_data!=null&&server_data!=''){
+			$("#file_path").val(server_data);
+		}else{
+			Core.PopUtil.error('<b style="color:#ff6600;">上传</b>失败！',false);
+		}
+	}
+}
+var swfu = new SWFUpload(swfuOption);//初始化并将swfupload按钮替换swfupload占位符
+</script>

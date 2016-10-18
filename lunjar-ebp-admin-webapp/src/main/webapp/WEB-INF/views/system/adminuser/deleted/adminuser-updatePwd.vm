@@ -1,0 +1,40 @@
+##该页面已废弃
+#loadWebResources(["form"]) 
+#if("$!flag"=="sucess")
+$!msg
+#else
+<div class="formBox">
+	<form method="post" id="form">
+        <div class="content">
+            <tr>
+                <th class="w200">&nbsp;&nbsp;&nbsp;&nbsp;原密码:</th>
+                <td>
+                    <input name="pwd" size="30"  class="required {rangelength:[6,20]}" type="password" value=""/>
+					<span class="red">*</span>
+				</td>
+            </tr>
+            </br>
+            <tr>
+                <th class="w200">&nbsp;&nbsp;&nbsp;&nbsp;新密码:</th>
+                <td>
+                    <input name="newPwd" size="30" id="newPwd" class="required {rangelength:[6,20]}" type="password" value=""/>
+					<span class="red">*</span>
+				</td>
+            </tr>
+            </br>
+            <tr>
+                <th class="w200">确认密码:</th>
+                <td>
+                    <input name="confimPwd" size="30"  class="required {rangelength:[6,20]}" type="password" value="" equalTo="#newPwd"/>
+					<span class="red">*</span>
+				</td>
+            </tr>
+        </div>
+        <div class="form-but">
+            <button type="submit" class="button-s4">提交</button>
+        </div>
+    </form>    
+	
+</div>	
+$!msg
+#end

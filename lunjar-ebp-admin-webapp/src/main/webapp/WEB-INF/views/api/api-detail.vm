@@ -1,0 +1,107 @@
+#loadWebResources(["list","datePicker"]) 
+#set($screen_jsArray=["basedata/param-list"])
+<div class="formBox">
+    <h3>
+        <div class="fl">    		
+            <span>接口管理</span>
+		</div>
+        <div class="fr">
+			<a href="$listb">&lt;&lt;  返回列表</a>
+		</div>
+	</h3>
+	<input name="id" id="apiId" type="hidden" value="$!api.id"/>
+	<div class="divtitle">
+		接口基本信息
+		<a href="">修改</a>
+	</div>
+	<table class="c2"> 
+		<tr>
+			<th width="13%">接口名称</th>
+			<td width="38%">
+				${api.apiName}
+			</td>
+			<th width="13%">接口类型</th>
+			<td>
+				
+			</td>
+		</tr>
+		<tr>
+			<th>接口地址</th>
+			<td>
+				$!{api.apiUrl}"								
+			</td>
+			<th>请求方式</th>
+			<td>
+													
+			</td>
+		</tr>
+		<tr>	
+			<th>请求格式</th>
+			<td>
+				
+			</td>
+			<th>是否付费</th>
+			<td>
+															
+			</td>
+		</tr>
+		<tr>	
+			<th>返回主体</th>
+			<td>
+															
+			</td>
+			<th>返回主体说明</th>
+			<td>
+										
+			</td>
+		</tr>
+		<tr>
+			<th>接口描述</th>
+			<td>
+				
+			</td>
+		</tr>
+		
+	</table>
+	 <div class="divtitle">
+		接口参数
+	</div>
+	<table class="tablelist">
+			<tr>
+				<th>
+					参数名称
+				</th>
+				<th>
+					参数类型	
+				</th>
+				<th>
+					必须
+				</th>
+				<th>
+					默认值
+				</th>
+				<th>
+					参数描述
+				</th>
+			</tr>
+			<tr>
+				<td>
+					
+				</td>
+				<td>
+						
+				</td>
+				<td>
+					
+				</td>
+				<td>
+					
+				</td>
+				<td>
+					
+				</td>
+				
+			</tr>
+		</table>
+	
+</div>

@@ -1,0 +1,82 @@
+##前端资源：列表,日历
+#loadWebResources(["list","datePicker"]) 
+#set($thisActionUrl="index.htm")
+#set($screen_title="")
+<div class="searchBox">
+	#set($query=$page.query)
+    <form method="get" id="form_search" action="$thisActionUrl">
+        <h5>
+            <span>搜索</span>
+        </h5>
+        <table>
+			 <tr>
+                <th>登录账号：</th>
+                <td>
+                   <input name="loginAccount" type="text" value='$!query.loginAccount' class="inp-w100"/>
+                </td>
+                
+                <th>用户工号：</th>
+                <td>
+                   <input name="adminWorkNo" type="text" value='$!query.adminWorkNo' class="inp-w100"/>
+                </td>
+				
+                 <th>登录时间：</th>
+                <td>
+                    <input name="loginTimeFrom" class="inp-w70" style="width:70px" type="text" value='$!dataDictTool.getNormalTypeDate($!query.loginTimeFrom)'  dateISO="true" onclick="WdatePicker()"/>
+                    - <input name="loginTimeTo" class="inp-w70" style="width:70px" type="text" value='$!dataDictTool.getNormalTypeDate($!query.loginTimeTo)'  dateISO="true"  onClick="WdatePicker()"/>
+                </td>
+                <td >
+                    <input type="submit" id="btn_search" value="搜索" class="btn ml10" />
+                    <input type="button" id="btn_reset" value="清空" onclick="location.href='$thisActionUrl';" class="btn"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="list" class="listBox mt10">
+    <h5>
+        <span>列表</span>
+    </h5>
+    <table>
+        <tr >
+            <th >序号</th>
+            <th >登录账号</th>
+            <th >用户姓名</th>
+			<th >用户工号</th>
+			<th >用户IP</th> 
+			<th >登录时间</th>
+        </tr>
+        #set($data=$page.data)
+        #if($data.size()>0)
+            #foreach($o in $data)
+                #set($no = ($velocityCount + ($!page.pageNo - 1) * $!page.pageSize))
+                <tr  >
+                    <td >
+                       &nbsp;$no
+                    </td>
+				    <td >
+                        $!o.loginAccount
+                    </td>
+                    <td >
+                        $!o.adminName
+                    </td>
+                   <td> 
+                        $!o.adminWorkNo
+                    </td>
+                    <td >
+                        $!o.loginIp
+                    </td>
+                    <td> 
+                        $dataDictTool.getNormalTypeDate($!o.loginTime)
+                    </td>                   
+                   
+                </tr>
+            #end
+            #else
+                <tr>
+                    <td colspan="10">非常抱歉，没有符合条件的数据！</td>
+                </tr>
+        #end 
+    </table>
+    #pageTabFoot({"queryFormId":"form_search","page":$page,"submitUrl":"${thisActionUrl}#tool","canSetPagesize":true})      
+</div>

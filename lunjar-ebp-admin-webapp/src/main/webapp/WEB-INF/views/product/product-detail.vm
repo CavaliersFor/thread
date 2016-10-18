@@ -1,0 +1,216 @@
+#set($screen_jsArray=["product/product-detail"]) ##加载js 文件
+#loadWebResources(["form","datePicker","imageUploador","htmlEditor"]) 
+#set($product = $!productDto.product)
+#set($serverUrl=$sysConfigTool.get("store.server.url"))
+<div class="formBox">
+	<h3>
+		<i></i>
+        <div class="fl">    		
+            <span>产品管理 >> 产品详情</span>
+		</div>
+		<div class="fr">
+			<a href="javascript:void(0);" onclick="history.back();">&lt;&lt;  返回</a>
+			 
+		</div>
+	</h3>
+	<div class="content">
+			<div></div>
+        	<table class="c2">
+        		<tr>
+        			<td colspan="4" class="title">
+        				产品基本信息 <a class="edit" href="javascript:void(0);" >设置</a>
+        			</td>
+        		</tr>
+        		<tr>
+        			<th width="13%">产品名称</th>
+        			<td width="37%">
+        				$!product.productName
+        			</td>    
+        			<th width="13%">所属行业</th>
+                    <td width="37%">					
+						#getDictionaryName("productType" ${product.productType})
+    				</td>	  
+    			</tr>
+        		<tr>
+        			<th >加密方式</th>
+        			<td >#getDictionaryName("encryptType" $!product.encryptType)</td>        
+        			<th >SDK包类型</th>
+        			<td >
+        				#foreach($!productKeys in $!productKeysList)
+        					#if($!productKeys.keyType==1)
+        						#getDictionaryName("sdkType" $!productKeys.sdkType)
+        					#end
+        				#end
+          			</td>        	
+    			</tr>
+    			<tr>
+        			<th >产品有效期</th>
+        			<td>$!date.format("yyyy-MM-dd HH:mm",${product.startTime}) 至 $!date.format("yyyy-MM-dd HH:mm",${product.endTime})</td>
+        			<th >产品logo</th>
+                    <td>
+                    	#*if(${product.productLogo})
+								<a target="_blank" href="${product.productLogo}">
+									<img id="listimg_$product.id" align="middle"  />
+								</a>
+								<script>
+									Core.showImageWithMaxSize(jQuery("#listimg_$product.id"),"$!{product.productLogo}",70);
+								</script>
+							#else 
+								暂无图片
+							#end*#
+                    	#if($!product.productLogo)
+                    		<img src=$serverUrl/$!product.productLogo>
+                    	#else
+                    		暂无图片
+                    	#end
+                    </td>  
+    			</tr>
+    			<tr>
+        			<th >存储地点</th>
+        			<td>#getDictionaryName("storePosition" $!product.storePosition)</td>
+    			</tr>
+    			<tr>
+        			<th>白名单</th>
+        			<td colspan="3">
+	        			#if($!product.ipWhiteEnable == 0)
+						    关闭
+						#elseif($!product.ipWhiteEnable == 1)
+						    #foreach($ipWhite in $!ipWhiteList)
+								#if($velocityCount>1),#end$!ipWhite
+							#end
+						#end
+					</td>        		
+    			</tr>
+    			<tr>
+        			<th>黑名单</th>
+        			<td colspan="3">
+	        			$!product.ipBlack
+					</td>        		
+    			</tr>
+    		</table>   
+    		<table class="tablelist mt20">
+    			<tr>
+        			<td colspan="3" class="title">
+        				保全点
+        			</td>
+        		</tr>
+        		#if($!productItemList)
+        		<tr align="middle">
+        			<th  >保全点|步骤</th> 
+        			<th >保全点类型</th>
+        			<th >状态 </th>
+        			<th >是否重复验证</th>
+        			<th>CA个人章</th>
+        			<th >操作</th>
+        		</tr>
+				  #foreach($!productItem in $!productItemList)
+				  <tr>
+			        <td>$!productItem.itemName </td>
+			        <td>$pubDataDictTool.getText('productType',$!productItem.itemType) </td>  
+			        <td>#getDictionaryName("productStatus" $!productItem.status)</td>
+			        <td>#getDictionaryName("validateRepeat" $!productItem.isValidateRepeat)</td> 
+			        <td>#getDictionaryName("personSealStatus" $!productItem.isOpenPersonSeal)</td>
+			        <td>
+			        	#if($!product.isOpenCompanySeal == 1)  ##企业章要开通才能开通个人章
+			        		#if($!productItem.isOpenPersonSeal == 1)
+			        			<a href="javascript:;" class="flow" onclick="modifyStatus(${productItem.id},0,2);">关闭个人章</a>
+			        		#elseif($!productItem.isOpenPersonSeal == 0)
+			        			<a href="javascript:;" class="flow" onclick="modifyStatus(${productItem.id},1,2);">开通个人章</a>
+			        		#end
+			        	#end
+			        	#if($!productItem.status==1)
+			        		<a href="javascript:;" class="flow" onclick="modifyStatus(${productItem.id},2,1);">中断保全点</a>
+			        	#elseif($!productItem.status==2)
+			        		<a href="javascript:;" class="flow" onclick="modifyStatus(${productItem.id},1,1);">重启保全点</a>
+			        	#end
+			        </td>
+			     </tr>
+			     #foreach($!productItemFlow in $!productItemFlowList)
+			     	<tr>
+			            #if($!productItem.id == $!productItemFlow.itemId)
+			            	<td>&nbsp;&nbsp;$!productItemFlow.flowName </td>
+			            	<td></td>
+			            	##<td> $pubDataDictTool.getText('productType',$!productItem.itemType)</td>
+			            	<td>#getDictionaryName("productStatus" $!productItemFlow.status)</td>  
+					        <td></td>
+					        <td></td>
+					        <td></td>
+			            #end
+			         </tr>   
+			     #end
+			   #end
+			  #end 
+    	</table>
+    	<table class="tablelist mt20">
+    			<tr>
+        			<td colspan="3" class="title">
+        				接入KEY设置
+        			</td>
+        		</tr>
+				<tr>					
+					<th>环境</th>
+					<th>接入终端</th>
+					<th>accessKey</th>
+					<th>secretkey</th>
+				</tr>
+				#foreach($productKeys in $!sandboxProductKeysList)
+				    <tr>
+				    	<td >沙箱</td>
+				    	<td>#getDictionaryName("sdkType" $!productKeys.sdkType)</td>
+				        <td >$!productKeys.accessKey</td>
+	    				<td >$!productKeys.secretKey </td>
+					</tr>
+			    #end
+				#foreach($productKeys in $!formalProductKeysList)
+				    <tr > 
+					    <td >正式</td>   
+					    <td>#getDictionaryName("sdkType" $!productKeys.sdkType)</td>
+	    				<td >$!productKeys.accessKey</td>
+	    				<td >$!productKeys.secretKey </td>
+    				</tr> 
+				#end
+    		</table>
+	</div>
+</div>
+
+<!--修改产品-->
+	<div  id="work" class="popup" style="display: none">
+		<form class="winFormBox" id="productForm">
+		<table>
+			<tr>
+				<th>产品名称</th>
+				<td>$!product.productName</td>
+				<input type="hidden" name="product.id" value="$product.id">
+			</tr>
+			<tr><th>数据加密算法 </th>
+				<td>#formSelect({"name":"product.encryptType","dictGroup":"encryptType","selectedValue":$!product.encryptType},"class='w250'")<span class="red">*</span></td>
+			</tr>
+			<tr>
+				<th>存储地点 </th>
+				<td>#formSelect({"name":"product.storePosition","dictGroup":"storePosition","selectedValue":$!product.storePosition},"class='w250'")<span class="red">*</span></td>
+			</tr>
+			<tr><th>产品有效期</th>
+				<td>
+					##<input name="product.startTime" id="d4321" onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4322\',{d:-1});}'})"  class="datePicker inp-w110"  value="$!date.format("yyyy-MM-dd",${product.startTime})" type="text"  dateISO="true"  onClick="WdatePicker()"> 至
+        			##<input name="product.endTime" id="d4322" onFocus="WdatePicker({minDate:'#F{$dp.$D(\'d4321\',{d:1});}'})" class="datePicker inp-w110"  value="$!date.format("yyyy-MM-dd",${product.endTime})" type="text"  dateISO="true"   onClick="WdatePicker()">
+					<input id="beginTime"  name="product.startTime" class="Wdate  inp-w110" type="text" onFocus="WdatePicker({maxDate: '#F{$dp.$D(\'endTime\',{d:-1})}',maxDate:'#F{$dp.$D(\'endTime\')}'})"  value="$!date.format("yyyy-MM-dd",${product.startTime})" dateISO="true"    onClick="WdatePicker()" /> 
+					至<input id="endTime"  name="product.endTime" class="Wdate  inp-w110" type="text" onFocus="WdatePicker({minDate: '#F{$dp.$D(\'beginTime\',{d:1})}',minDate:'#F{$dp.$D(\'beginTime\')}'})" value="$!date.format("yyyy-MM-dd",${product.endTime})" dateISO="true"   onClick="WdatePicker()"/>
+				</td>
+			</tr>
+			<tr>
+				<th>黑名单</th>
+				<td>
+					<textarea rows="3" cols="40" name="product.ipBlack">$!product.ipBlack</textarea>
+					<br />多个地址以","分隔
+				</td>
+			</tr>
+			<tr >
+				<th></th>
+				<td >
+					<input type="button" id="editProduct" value="确定" class="btn"  />
+					<input type="button"  id="product_cl" value="取消" class="btn" />
+				</td>
+			</tr>
+		</table>
+		</form>
+	</div>

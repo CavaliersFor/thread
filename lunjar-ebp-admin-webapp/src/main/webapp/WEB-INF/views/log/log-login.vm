@@ -1,0 +1,84 @@
+#loadWebResources(["list","form","datePicker"]) 
+##set($screen_jsArray=["log/api"])
+#set($thisActionUrl="/log/login/list")
+<div class="searchBox">
+    <form method="post" id="form_search" action="$thisActionUrl">
+          <table>
+              <tr>
+                <th>账号：</th>
+                <td>
+					<input placeholder="" name="account" type="text" value="$!query.account"  class="inp-w160"/>
+				</td>
+				<th>客户端IP：</th>
+                <td>
+					<input placeholder="" name="loginIP" type="text" value="$!query.loginIP"  class="inp-w90"/>
+				</td>
+				<th>UserID：</th>
+                <td>
+					<input placeholder="请输入纯数字" id="uid" name="uid" type="text" value="$!query.uid"  class="inp-w90"/>
+				</td>
+                <td colspan=2 class="inp-w160"></td>	
+				</tr>
+				<tr>
+				<th>登录时间：</th>
+                <td>
+					<input id="loginTimeFrom" name="loginTimeFrom" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!query.loginTimeFrom)"  readOnly="true" onclick="WdatePicker({maxDate:'#F{$dp.$D(\'loginTimeTo\')}',dateFmt: 'yyyy-MM-dd 00:00:00'})" class="inp-w80"/>
+				-
+					<input id="loginTimeTo" name="loginTimeTo" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!query.loginTimeTo)"  readOnly="true" onclick="WdatePicker({minDate:'#F{$dp.$D(\'loginTimeFrom\')}',dateFmt: 'yyyy-MM-dd 23:59:59'})" class="inp-w80"/>
+				</td>
+				<th>系统</th>
+				 <td>
+				#formSelect({"name":"userType","dictGroup":"logSubsystemType" ,"firstOption":["","全部"],"selectedValue":"$!query.userType"},"class='select_time required inp-w90'")
+				</td>
+				<th></th>
+                <td>
+					<input type="submit" id="btn_search" value="搜索" class="btn" />
+				</td>	
+                <td colspan=2  class="inp-w160"></td>	
+			 </tr>
+        </table>
+    </form>
+</div>
+<div id="list" class="listBox mt10">
+    <table>
+        <tr>          
+            <th width="10%">序号</th>
+			<th width="10%">账号</th>
+			<th width="10%">UserId</th>
+			<th width="16%">系统</th>   
+            <th width="16%">客户端IP</th>
+            <th width="16%">登录时间</th>  
+        </tr>
+        #set($data=$page.data)
+        #if($data.size()>0)
+            #foreach($o in $data)
+                #set($no = ($velocityCount + ($!page.pageNo - 1) * $!page.pageSize))
+                <tr #if($math.mod($velocityCount,2)==0)  class="bg" #end>
+                    <td >
+                        <label for="chk_$o.id">&nbsp;$no</label>
+                    </td>
+					<td>$!o.account</td>
+					<td>$!o.uid</td>
+					<td>#getDictionaryName("logSubsystemType" ${o.userType})</td>
+					<td>$!o.loginIP</td>
+					<td>$!date.format("yyyy-MM-dd HH:mm:ss",$o.loginTime)</td>
+                </tr>
+            #end
+        #else
+            <tr>
+                <td colspan="11">非常抱歉，没有符合条件的数据！</td>
+            </tr>
+        #end 
+    </table>        
+</div>
+#if($data.size()>0)
+	#pageTabFoot({"queryFormId":"form_search","page":$page,"submitUrl":"${thisActionUrl}#list","canSetPagesize":true}) 
+#end
+<script>
+$("#uid").keyup(function(){      
+    $(this).val($(this).val().replace(/[^0-9.]/g,''));      
+}).bind("paste",function(){  //CTR+V事件处理      
+    $(this).val($(this).val().replace(/[^0-9.]/g,''));       
+}).css("ime-mode", "disabled"); //CSS设置输入法不可用      
+  
+</script>

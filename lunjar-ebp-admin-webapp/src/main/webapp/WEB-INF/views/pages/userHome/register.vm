@@ -1,0 +1,279 @@
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>首页-注册</title>
+<link  href="../../lib/tdz_component/tdz_components.css" rel="stylesheet">
+<link href="../../lib/tdz_component/main.css"rel="stylesheet">
+<link href="../../lib/tdz_component/reset.css"rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="#getAppServer()/scripts/login/index.css">
+
+<script src="http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="../../lib/tdz_component/template.js"></script>
+<script src="#getAppServer()/lib/tdz_component/main.js"></script>
+<script src="../../lib/tdz_component/tdz_components.js"></script>
+<script src="../../lib/tdz_component/public.js"></script>
+<script type="text/javascript" src="#getAppServer()/scripts/login/index.js"></script>
+<script type="text/javascript" src="#getAppServer()/scripts/sha1.js"></script>
+<script type="text/javascript" src="#getAppServer()/scripts/md5.js"></script>
+
+<body class="example">
+<div class="pc-adimn-main">
+	<div class="new-header">
+		<div class="con-w">
+			<div class="left">
+				<img class="logo" src="../../lib/img/logo.png" /><span class="text">|
+					供货商后台管理平台</span>
+			</div>
+			#*
+			<div class="right">
+				<img src="123.jpg" class="userImg" /> <span class="name"
+					title="ADVBC12345">ADVBC12345<span class="line">|</span></span> <i
+					class="edit">
+					<ul class="setting">
+						<li><a href="#">基本信息</a></li>
+						<li><a href="#">修改密码</a></li>
+						<li><a href="#">退出</a></li>
+					</ul>
+				</i>
+			</div>
+			*#
+		</div>
+	</div>
+	<form id="registerForm">
+		<div class="section">
+			<div class="con-main">
+				<div class="logoimg"></div>
+				<ul class="message-input">
+					<li>
+						<div class="left-icon ic-0"></div>
+						<div class="right-input">
+							<input type="text" onblur="checkAccount(this);" name="account"
+								class="input ts-input" placeholder="请输入用户名" />
+						</div>
+					</li>
+					#*
+					<li>
+						<div class="left-icon ic-3"></div>
+						<div class="right-input"><input type="text" name="enterpiseName" class="input ts-input" placeholder="请输入企业名"/></div>
+				    </li>
+				    *#
+					<li>
+						<div class="left-icon ic-1"></div>
+						<div class="right-input">
+							<input type="text" name="phone" class="input ts-input phone"
+								placeholder="请输入手机号码" />
+						</div>
+					</li>
+					<li>
+						<div class="left-icon ic-2"></div>
+						<div class="right-input">
+							<input type="password" name="password"
+								class="input ts-input password" placeholder="请输入密码" />
+						</div>
+					</li>
+					<li>
+						<div class="left-input">
+							<input type="text" name="verCode" class="input ts-input"
+								placeholder="请输入验证码" />
+						</div>
+						<div class="right-button getVerCode">获取验证码</div>
+					</li>
+				</ul>
+				
+				<input type="hidden" name="random" id="random">
+         		<input type="hidden" name="passSign" id="passSign">
+         		
+				<div class="button submit-form">立即注册</div>
+				<p class="tips">
+					已有账号，<a href="/" class="orange">立即登录</a>
+				</p>
+			</div>
+		</div>
+	</form>
+	<div class="footer"></div>
+</div>
+</body>
+<script type="text/javascript">
+	$(function() {
+		//验证码
+		//提交验证
+		$(document).on('click', '.submit-form', function(ev) {
+			checkPhone();
+			var Notnull = true;
+			$('.message-input li .ts-input').each(function() {
+				if ($(this).val() == '') {
+					Notnull = false;
+				}
+			})
+			if (!Notnull) {
+				$.alert({
+					type : 'error',
+					text : '信息不能为空!',
+					time : 3000
+				});
+				return false;
+			}
+			var password = $('input.password').eq(0).val();
+			if (password.length < 6) {
+				$.alert({
+					type : 'error',
+					text : '密码不能少于6位数!',
+					time : 3000
+				});
+				return false;
+			}
+			//提交
+			registerMethod();
+		})
+	})
+
+	//校验用户名是否存在
+	function checkAccount(self) {
+		var _self = jQuery(self);
+		var name = _self.val();
+		jQuery.ajax({
+			url : "/register/checkUserName",
+			data : "username=" + name,
+			type : "post",
+			dataType : "json",
+			success : function(data) {
+				if (data != null && data.success) {
+					jQuery.alert({
+						type : 'success',
+						text : '可以使用',
+						time : 3000
+					});
+				} else {
+					jQuery.alert({
+						type : 'error',
+						text : data.msg,
+						time : 3000
+					});
+				}
+			},
+			error : function(data) {
+				jQuery.alert({
+					type : 'error',
+					text : '操作失败,请稍后重试!',
+					time : 3000
+				});
+			}
+		});
+	}
+	jQuery('.getVerCode').click(function() {
+		var _self = $(this);
+		var flag = _self.attr("data-run");
+		if(flag==1){
+			return;
+		}
+		var phoneVal = jQuery('input[name=phone]').val();
+		if (phoneVal == null || phoneVal=='') {
+			jQuery.alert({
+				type : 'error',
+				text : '请输入电话号码',
+				time : 3000
+			});
+			return ;
+		}
+		jQuery.ajax({
+			url : "/register/getVerCode",
+			data : "phone="+phoneVal,
+			type : "post",
+			dataType : "json",
+			success : function(data) {
+				if (data != null && data.success) {
+					jQuery.alert({
+						type : 'success',
+						text : '发送成功',
+						time : 3000
+					});
+					var phoneVal = $('.phone').val();
+					if(phoneVal == ''){
+						return false;
+					}
+					//获取短信验证码
+			          var validCode=true;
+	        		  var time=60;
+	                  var code=_self;
+	                  if (validCode) {
+	                    validCode=false;
+	                    code.addClass("going");
+	                    code.attr('data-run',1);
+	                  var t=setInterval(function  () {
+	                    time--;
+	                    code.html('还剩'+time+"秒");
+	                    if (time==0) {
+	                      clearInterval(t);
+	                    code.html("重新获取");
+	                      validCode=true;
+	                    code.removeClass("going");
+	                    code.attr('data-run',0);
+	                    }
+	                  },1000)
+	        	  }
+				} else {
+					jQuery.alert({
+						type : 'error',
+						text : data.msg,
+						time : 3000
+					});
+				}
+			},
+			error : function(data) {
+				jQuery.alert({
+					type : 'error',
+					text : '操作失败,请稍后重试!',
+					time : 3000
+				});
+			}
+		});
+		
+
+	});
+	
+	//注册方法
+	function registerMethod(){
+		var passObject = jQuery('input[name=password]');
+		var pass = passObject.val();
+		passObject.val(hex_sha1(pass));
+		
+		var random = new Date().getTime();
+		jQuery("#random").val(random);
+		
+		var passSign = hex_md5(hex_md5(hex_sha1(pass)+random));
+		jQuery("#passSign").val(passSign);
+		
+		jQuery.ajax({
+			url : "/register/register",
+			data : jQuery("#registerForm").serialize(),
+			type : "post",
+			dataType : "json",
+			success : function(data) {
+				if (data != null && data.success) {
+					jQuery.alert({
+						type : 'success',
+						text : '注册成功',
+						time : 3000
+					});
+					location.href="/";
+				} else {
+					jQuery.alert({
+						type : 'error',
+						text : data.msg,
+						time : 3000
+					});
+				}
+			},
+			error : function(data) {
+				jQuery.alert({
+					type : 'error',
+					text : '操作失败,请稍后重试!',
+					time : 3000
+				});
+			}
+		});
+	}
+	
+</script>
+</html>

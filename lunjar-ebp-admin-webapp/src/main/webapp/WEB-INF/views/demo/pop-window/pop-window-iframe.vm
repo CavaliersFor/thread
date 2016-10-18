@@ -1,0 +1,41 @@
+#set($layout="/commons/layout-simple.vm")
+##前端资源：表单
+#loadWebResources(["form"]) 
+<script type="text/javascript">
+	jQuery(function($) {
+		$('form').validate({
+			 submitHandler:afterSubmit
+		});
+	});
+	
+	function afterSubmit(f){			
+		Core.PopUtil.alert('ok',{autohide:true,callback:function(){
+			 if(parent.afterWin4Submit){
+				 var data = Core.FormUtils.getFormValues(jQuery(f));
+				 parent.afterWin4Submit(data);
+			 }
+		}});
+	}
+</script>
+<form method="post" class="p15 winFormBox">
+	<table>
+		<tr>
+			<th>#requiredTag() 文本 </th>
+			<td>    				
+				<input name="fieldText" type="text" class="required" minlength="2" value="$!demo.fieldText"/>
+			</td>
+		</tr>
+		<tr>
+			<th>#requiredTag() 下拉 </th>
+			<td>#formSelect({"id":"fieldSelect","name":"fieldSelect","dictGroup":"sex","selectedValue":$!demo.fieldSelect} "class='required'")</td>
+		</tr>
+		<tr>
+			<th>单选</th>
+			<td>#formRadioList({"id":"fieldRadio","name":"fieldRadio","dictGroup":"sex","selectedValue":$!demo.fieldRadio})</td>
+		</tr>
+		<tr>
+        	<th></th>
+    		<td><input type="submit" id="btnSubmit" value="提　交" class="form_b_ok"/></td>
+  		</tr>
+    </table>
+</form>		

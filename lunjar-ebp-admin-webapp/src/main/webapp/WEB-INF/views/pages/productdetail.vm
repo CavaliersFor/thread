@@ -1,0 +1,4 @@
+#parse("pages/commons/header.vm")
+<div class="content">
+商品详情页面
+</div>

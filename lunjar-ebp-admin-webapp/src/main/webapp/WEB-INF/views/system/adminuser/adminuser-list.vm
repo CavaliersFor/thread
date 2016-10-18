@@ -1,0 +1,108 @@
+#loadWebResources(["list","datePicker"]) 
+#set($screen_jsArray=["system/adminuser/adminuser-list"])
+#set($thisActionUrl="index.htm")
+
+##<div class="r_title">系统管理  > 管理人员管理</div>
+<div class="searchBox">	
+    <form method="get" id="form_search" action="$thisActionUrl">
+##        <h5>
+##            <span>操作员搜索</span>
+##        </h5>
+        <table>
+            <tr>
+                <th>姓名：</th>
+                <td><input name="userName" type="text" value='$!query.userName' /></td>
+				<th>账号：</th>
+                <td><input name="account" type="text" value='$!query.account' /></td>
+                <th>工号：</th>
+                <td><input name="workNo" type="text" value='$!query.workNo' class="inp-w90"/></td>                
+                <th>状态：</th>
+                <td>#formSelect({"name":"status","dictGroup":"adminUserStatus","selectedValue":$!query.status})</td>
+                <th>
+                    <input type="submit" id="btn_search" value="搜索" class="btn" />
+                    <input type="button" id="btn_reset" value="清空" onclick="location.href='$thisActionUrl';" class="btn"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="tool" class="tool">
+    <div class="fl">
+        <span>
+            <button class="bt_add" onclick="location.href='add';">添加</button>         
+        </span>        
+    </div>    
+</div>
+<div class="clear"></div>
+<div id="list" class="listBox">
+##    <h5>
+##        <span>操作员列表</span>
+##    </h5>
+    <table>
+        <tr>          
+            <th width="5%">序号</th>
+            <th>姓名</th>
+            <th>账号</th>
+            <th>工号</th>               
+            <th width="7%">状态</th>         
+			<th width="6%">登录次数</th>
+            <th width="13%">最后登录时间</th>
+            <th width="13%">创建时间</th>
+            <th width="13%">修改时间</th>
+			<th width="22%">操作</th>
+        </tr>
+        #set($data=$page.data)
+        #if($data.size()>0)
+            #foreach($o in $data)
+                #set($no = ($velocityCount + ($!page.pageNo - 1) * $!page.pageSize))
+                <tr #if($math.mod($velocityCount,2)==0)  class="bg" #end>
+                    <td >
+                        <label for="chk_$o.id">&nbsp;$no</label>
+                    </td>                   
+                    <td class="userName">
+                   	 	##<a href="d${o.id}.htm">
+                    	$!o.userName
+                    	##</a>
+                    </td>                                              
+                    <td >$!o.account</td>
+                    <td >$!o.workNo</td>
+					<td class="statusText">
+						#getDictionaryName("adminUserStatus" ${o.status})						
+					</td>                    
+					<td >$!o.loginCount</td>
+    				<td>$!date.format("yyyy-MM-dd HH:mm",${o.lastLoginTime})</td>
+					<td >$!date.format("yyyy-MM-dd HH:mm",${o.gmtCreate})</td>
+    				<td>$!date.format("yyyy-MM-dd HH:mm",${o.gmtModify})</td>
+                    <td >
+                    	<input type="hidden"  value="${o.id}" name="userId"  />
+                    	<a href="e${o.id}.htm?back=listb">修改</a>
+						#set($isSelf=("$loginUser.id"=="${o.id}"))											
+						#if(!$isSelf)
+							<a href="f${o.id}.htm?userName=$!o.userName">分配权限</a>									
+    						#if("${o.status}"=="1")
+    							<input type="hidden"  value="2" name="status" />    						
+								<button  type="button" class="btnLink updateStatus" >冻结</button>
+    						#elseif("${o.status}"=="2")
+    							<input type="hidden"  value="1" name="status" />
+								<button  type="button" class="btnLink updateStatus" >解冻</button>   							
+							#end
+							<button  type="button" class="btnLink resetPwd" >重置密码</button>
+							<button  type="button" class="btnLink delete" >删除</button>
+						#end
+                    </td>
+                </tr>
+            #end
+        #else
+            <tr>
+                <td colspan="10">非常抱歉，没有符合条件的数据！</td>
+            </tr>
+        #end 
+    </table>
+    #pageTabFoot({"page":$page,"queryFormId":"form_search","submitUrl":"${thisActionUrl}#tool","canSetPagesize":true})      
+</div>
+<div class="promptinfo">
+    	<div class="infotit" >提示信息</div>
+        <p>
+       添加新操作员的初始密码是 "123456"<br />重置密码后，密码为 "123456"
+       </p>
+</div>

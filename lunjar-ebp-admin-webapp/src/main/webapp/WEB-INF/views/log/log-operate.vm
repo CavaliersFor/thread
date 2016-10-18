@@ -1,0 +1,92 @@
+#loadWebResources(["list","form","datePicker"]) 
+##set($screen_jsArray=["log/operate"])
+#set($thisActionUrl="/log/operate/list")
+<div class="searchBox">
+    <form method="post" id="form_search" action="$thisActionUrl">
+          <table>
+              <tr>
+				<th>账号：</th>
+                <td>
+					<input placeholder="" name="operateAccount" type="text" value="$!query.operateAccount"  class="inp-w160"/>
+				</td>
+				<th>客户端IP：</th>
+                <td>
+					<input placeholder="" name="ipAddress" type="text" value="$!query.ipAddress"  class="inp-w90"/>
+				</td>
+				<th>UserID：</th>
+                <td>
+					<input placeholder="请输入纯数字" id="operatorId" name="operatorId" type="text" value="$!query.operatorId"  class="inp-w90"/>
+				</td>
+				</tr>
+				<tr>
+				<th>操作时间：</th>
+                <td>
+					<input id="operateTimeFrom" name="operateTimeFrom" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!query.operateTimeFrom)"  readOnly="true" onclick="WdatePicker({maxDate:'#F{$dp.$D(\'operateTimeTo\')}',dateFmt: 'yyyy-MM-dd 00:00:00'})"  class="inp-w80"/>
+					-
+					<input id="operateTimeTo" name="operateTimeTo" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!query.operateTimeTo)"  readOnly="true" onclick="WdatePicker({minDate:'#F{$dp.$D(\'operateTimeFrom\')}',dateFmt: 'yyyy-MM-dd 23:59:59'})"  class="inp-w80"/>
+				</td>				
+				<th>被操作对象：</th>
+                <td>
+				#formSelect({"name":"operateTable","dictGroup":"logOperatedObjectType" ,"firstOption":["","全部"],"selectedValue":"$!query.operateTable"},"class='select_time required inp-w90'")
+				</td>
+				<th>被操作对象ID：</th>
+                <td>
+					<input placeholder="" name="operateRecordId" type="text" value="$!query.operateRecordId"  class="inp-w90"/>
+				</td>
+				<th ></th>
+                <td>
+					<input type="submit" id="btn_search" value="搜索" class="btn" />
+				</td>	
+			 </tr>
+        </table>
+    </form>
+</div>
+<div id="list" class="listBox mt10">
+    <table>
+        <tr>          
+            <th width="5%">序号</th>
+			<th width="5%">账号</th>
+			<th width="5%">userId</th>
+			<th width="5%">被操作对象</th>
+			<th width="5%">被操作对象ID</th>
+			<th width="5%">客户端IP</th>
+			<th width="5%">操作时间</th>
+        </tr>
+        #set($data=$page.data)
+		
+		#if($data)
+            #if($data.size()>0)
+                #foreach($o in $data)
+                    #set($no = ($velocityCount + ($!page.pageNo - 1) * $!page.pageSize))
+                    <tr #if($math.mod($velocityCount,2)==0)  class="bg" #end>
+                        <td >
+                            <label for="chk_$o.id">&nbsp;$no</label>
+                        </td>
+    					<td>$!o.operateAccount</td>
+    					<td>$!o.operatorId</td>
+    					<td>$!o.operateTable</td>
+    					<td>$!o.operateRecordId</td>
+    					<td>$!o.ipAddress</td>
+    					<td>$!date.format("yyyy-MM-dd HH:mm:ss",$o.operateTime)</td>
+                    </tr>
+    			#end
+    			#end
+            #else
+                <tr>
+    				
+                    <td colspan="16">非常抱歉，没有符合条件的数据！</td>
+                </tr>
+            #end 
+    	
+    </table>        
+</div>
+#if($null.isNull($foo) && $data.size()>0)
+	#pageTabFoot({"queryFormId":"form_search","page":$page,"submitUrl":"${thisActionUrl}#list","canSetPagesize":true}) 
+#end
+<script type="text/javascript">
+$("#operatorId").keyup(function(){      
+    $(this).val($(this).val().replace(/[^0-9.]/g,''));      
+}).bind("paste",function(){  //CTR+V事件处理      
+    $(this).val($(this).val().replace(/[^0-9.]/g,''));       
+}).css("ime-mode", "disabled"); //CSS设置输入法不可用      
+</script>

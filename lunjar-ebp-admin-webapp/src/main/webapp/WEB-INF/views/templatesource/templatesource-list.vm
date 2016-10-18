@@ -1,0 +1,117 @@
+#loadWebResources(["list","form"]) 
+#set($screen_jsArray=["templatesource/templatesource"])
+#set($thisActionUrl="list")
+<div class="searchBox">
+    <form method="get" id="form_search" action="$thisActionUrl">
+          <table>
+              <tr>
+                <th>行业领域：</th>
+                <td>
+					#formSelect({"id":"selectParent","name":"productTypeParent","selectedValue":$!query.productTypeParent,"dictGroup":"productType","data":$pubDataDictTool.getDictGroupByParentValue('productType','productType')},"class='w80'")
+				</td>
+				<th class="son_select_show">业务类型：</th><td><select id="productType" name="productType" data-sel="$!query.productType" class="w80 son_select_show"><option>[请选择]</option></select></td>  
+				<th>状态：</th>
+                <td>#formSelect({"name":"status","dictGroup":"templateSourceStatus","selectedValue":$!query.status},"class='w80'")</td>    
+				<th></th>
+                <td><input type="submit" id="btn_search" value="搜索" class="btn" />&nbsp;|&nbsp;<input type="button" id="btn_add" value="上传模版" onclick="editWin()" class="btn"/></td>			
+             </tr>
+        </table>
+    </form>
+</div>
+<div id="list" class="listBox mt10">
+    <table>
+        <tr>          
+            <th width="5%">序号</th>
+			<th width="5%">行业领域</th>
+			<th width="5%">业务类型</th>
+            <th width="9%">版本号</th>
+            <th width="8%">创建时间</th> 
+			<th width="8%">状态</th> 
+			<th width="15%">操作</th>
+        </tr>
+        #set($data=$page.data)
+        #if($data.size()>0)
+            #foreach($o in $data)
+                #set($no = ($velocityCount + ($!page.pageNo - 1) * $!page.pageSize))
+                <tr #if($math.mod($velocityCount,2)==0)  class="bg" #end>
+                    <td >
+                        <label for="chk_$o.id">&nbsp;$no</label>
+                    </td>          
+					<td>${o.productTypeName}</td>
+					<td>${o.itemName}</td>
+                    <td>V$!{o.version}.0</td>                                              
+					<td>$!date.format("yyyy-MM-dd HH:mm:ss",$!{o.gmtCreate})</td>
+					<td class="statusText">
+						#getDictionaryName("templateSourceStatus" ${o.status})		
+					</td> 				
+                    <td >
+					<span class="data">
+						 <input type="hidden"  value="${o.id}" name="id"  />
+						 <input type="hidden"  value="${o.productType}" name="productType"  />
+						 <input type="hidden"  value="$!{o.version}" name="version"  />
+						 <input type="hidden"  value="$!{o.status}" name="status"  />
+                     </span>
+					 #if(${o.status} eq 0)<a href="javascript:void(0);" class="edit updateStatus">启用</a>#end
+					 #if(${o.status} eq 1)<a href="javascript:void(0);" class="edit updateStatus">停用</a>#end
+                    </td>
+                </tr>
+            #end
+        #else
+            <tr>
+                <td colspan="10">非常抱歉，没有符合条件的数据！</td>
+            </tr>
+		#end
+    </table>        
+</div>
+#if($data.size()>0)
+	#pageTabFoot({"queryFormId":"form_search","page":$page,"submitUrl":"${thisActionUrl}#list","canSetPagesize":true}) 
+#end
+#loadImageUploadorWebResources()
+<div id="editForm" style="display:none;">
+	<form class="winFormBox">
+		<table>		
+			<tr>
+        		<th>行业领域：</th>
+    			<td>
+					#formSelect({"id":"selectParent2","name":"productTypeParent","dictGroup":"productType","data":$pubDataDictTool.getDictGroupByParentValue('productType','productType')},"class='w80'")
+				</td>  
+			</tr>
+			<tr>
+        		<th class="son_select_show2">业务类型：</th><td><select id="productType2" name="productType" class="w80 son_select_show2"><option>[请选择]</option></select></td>  
+			</tr>
+			<tr>
+        		<th>版本号：</th>
+    			<td><input id="version2" name="version" type="text" disabled="true" value="" />
+				</td>  
+			</tr>
+			<tr>
+        		<th>路径：</th>
+    			<td>
+					<input id="file_path" name="path" type="text" readOnly="true" />
+					<div id="swfu-placeholder2"><!–swfupload文件选择按钮占位符，执行下面的js后，这里将被替换成swfupload上传按钮–></div>
+					<!--<input id="fileUpload" name="fileUpload" type="file" />-->
+				</td>  
+			</tr>
+		 </table>
+	</form>
+</div>
+<script>
+	var swfuOption = {//swfupload选项
+    upload_url : "#getCurrentSystemUrl('uploadfile')", //接收上传的服务端url
+    flash_url : "#getComponentUrl()/swfupload/swfupload.swf",//swfupload压缩包解压后swfupload.swf的url
+    button_placeholder_id : "swfu-placeholder2",//上传按钮占位符的id
+    file_size_limit : "20480",//用户可以选择的文件大小，有效的单位有B、KB、MB、GB，若无单位默认为KB
+    button_width: "200", //按钮宽度
+    button_height: "20", //按钮高度
+    button_text: "点我上传模版",//按钮文字
+	//button_image_url:"#getComponentUrl()/swfupload/btn_upload.gif",
+	upload_success_handler:function(file,server_data,receivedResponse){
+		if(receivedResponse&&server_data!=null&&server_data!=''){
+			$("#file_path").val(server_data);
+		}else{
+			Core.PopUtil.error('<b style="color:#ff6600;">上传</b>失败！',false);
+		}
+	}
+}
+var swfu = new SWFUpload(swfuOption);//初始化并将swfupload按钮替换swfupload占位符
+</script>

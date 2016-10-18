@@ -1,0 +1,11 @@
+#if($!{partner.status}!=2)
+    <div class="form-but">
+        <button type="submit" class="button-s4">立即审核</button>
+        <button type="button" class="button-s4" onclick="window.location.href='list'">返回</button>
+    </div>
+
+#else
+    <div class="form-but">
+        <button type="button" class="button-s4" onclick="window.location.href='list'">返回</button>
+    </div>
+#end

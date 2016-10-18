@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lunjar.ebp.admin.biz.mappers.AdminUserMapper">
+	<resultMap id="adminUserMap" type="adminUser">
+		<id column="ID" property="id" />		
+		<result column="POSTCODE" property="postcode" />
+		<result column="MOBILE" property="mobile" />
+		<result column="IS_SUPER_ADMIN" property="isSuperAdmin" />
+		<result column="GMT_CREATE" property="gmtCreate" />	
+		<result column="ID_CARD" property="idCard" />
+		<result column="USER_NAME" property="userName" />
+		<result column="ACCOUNT" property="account" />
+		<result column="EMAIL" property="email" />
+		<result column="DEPT_ID" property="deptId" />
+		<result column="REMARK" property="remark" />
+		<result column="BIRTHDAY" property="birthday" />
+		<result column="MODIFIER" property="modifier" />
+		<result column="LAST_LOGIN_TIME" property="lastLoginTime" />
+		<result column="PWD" property="pwd" />
+		<result column="SEX" property="sex" />
+		<result column="CREATOR" property="creator" />
+		<result column="ADDRESS" property="address" />
+		<result column="PHONE" property="phone" />
+		<result column="LOGIN_COUNT" property="loginCount" />
+		<result column="GMT_MODIFY" property="gmtModify" />
+		<result column="STATUS" property="status" />
+		<result column="WORK_NO" property="workNo" />
+		<result column="LOGIN_ERROR_COUNT" property="loginErrorCount"/><!-- 登录错误次数，最多5次 -->			
+		<result column="LATEST_LOCK_TIME" property="latestLockTime"/><!-- 最后锁定时间 -->	
+		<result column="LATEST_UNLOCK_TIME" property="latestUnlockTime"/><!-- 解锁时间 -->	
+	</resultMap>
+
+	<insert id="insert" parameterType="adminUser" keyProperty="id" useGeneratedKeys="true">
+		<selectKey keyProperty="id" order="BEFORE" resultType="long" databaseId="oracle">
+			select
+			SEQ_ADMIN_USER.nextval from dual
+		</selectKey>
+		insert into
+		ADMIN_USER(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		GMT_CREATE,GMT_MODIFY	
+		<if test="postcode != null">,POSTCODE</if>
+		<if test="mobile != null">,MOBILE</if>
+		<if test="isSuperAdmin != null">,IS_SUPER_ADMIN</if>		
+		<if test="idCard != null">,ID_CARD</if>
+		<if test="userName != null">,USER_NAME</if>
+		<if test="account != null">,ACCOUNT</if>
+		<if test="email != null">,EMAIL</if>
+		<if test="deptId != null">,DEPT_ID</if>
+		<if test="remark != null">,REMARK</if>
+		<if test="birthday != null">,BIRTHDAY</if>
+		<if test="modifier != null">,MODIFIER</if>
+		<if test="lastLoginTime != null">,LAST_LOGIN_TIME</if>
+		<if test="pwd != null">,PWD</if>
+		<if test="sex != null">,SEX</if>
+		<if test="creator != null">,CREATOR</if>
+		<if test="address != null">,ADDRESS</if>
+		<if test="phone != null">,PHONE</if>
+		<if test="loginCount != 0">,LOGIN_COUNT</if>
+		<if test="status != null">,STATUS</if>
+		<if test="workNo != null">,WORK_NO</if>
+		<if test="loginErrorCount != null">,LOGIN_ERROR_COUNT</if>
+		<if test="latestLockTime != null">,LATEST_LOCK_TIME</if>
+		<if test="latestUnlockTime != null">,LATEST_UNLOCK_TIME</if>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<include refid="common.now" />
+		,
+		<include refid="common.now" />		
+		<if test="postcode != null">,#{postcode,jdbcType=VARCHAR}</if>
+		<if test="mobile != null">,#{mobile,jdbcType=VARCHAR}</if>
+		<if test="isSuperAdmin != null">,#{isSuperAdmin,jdbcType=INTEGER}</if>		
+		<if test="idCard != null">,#{idCard,jdbcType=VARCHAR}</if>
+		<if test="userName != null">,#{userName,jdbcType=VARCHAR}</if>
+		<if test="account != null">,#{account,jdbcType=VARCHAR}</if>
+		<if test="email != null">,#{email,jdbcType=VARCHAR}</if>
+		<if test="deptId != null">,#{deptId,jdbcType=INTEGER}</if>
+		<if test="remark != null">,#{remark,jdbcType=VARCHAR}</if>
+		<if test="birthday != null">,#{birthday,jdbcType=TIMESTAMP}</if>
+		<if test="modifier != null">,#{modifier,jdbcType=VARCHAR}</if>
+		<if test="lastLoginTime != null">,#{lastLoginTime,jdbcType=TIMESTAMP}</if>
+		<if test="pwd != null">,#{pwd,jdbcType=VARCHAR}</if>
+		<if test="sex != null">,#{sex,jdbcType=VARCHAR}</if>
+		<if test="creator != null">,#{creator,jdbcType=VARCHAR}</if>
+		<if test="address != null">,#{address,jdbcType=VARCHAR}</if>
+		<if test="phone != null">,#{phone,jdbcType=VARCHAR}</if>
+		<if test="loginCount != 0">,#{loginCount,jdbcType=INTEGER}</if>
+		<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+		<if test="workNo != null">,#{workNo,jdbcType=VARCHAR}</if>
+		<if test="loginErrorCount != null">,#{loginErrorCount,jdbcType=INTEGER}</if>
+		<if test="latestLockTime != null">,#{latestLockTime,jdbcType=TIMESTAMP}</if>
+		<if test="latestUnlockTime != null">,#{latestUnlockTime,jdbcType=TIMESTAMP}</if>
+		)
+	</insert>
+
+	<update id="update" parameterType="adminUser">
+		update ADMIN_USER
+		<set>
+			<if test="postcode != null">POSTCODE=#{postcode,jdbcType=VARCHAR},</if>
+			<if test="mobile != null">MOBILE=#{mobile,jdbcType=VARCHAR},</if>
+			<if test="isSuperAdmin != null">IS_SUPER_ADMIN=#{isSuperAdmin,jdbcType=INTEGER},</if>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>			
+			<if test="idCard != null">ID_CARD=#{idCard,jdbcType=VARCHAR},</if>
+			<if test="userName != null">USER_NAME=#{userName,jdbcType=VARCHAR},</if>
+			<if test="account != null">ACCOUNT=#{account,jdbcType=VARCHAR},</if>
+			<if test="email != null">EMAIL=#{email,jdbcType=VARCHAR},</if>
+			<if test="deptId != null">DEPT_ID=#{deptId,jdbcType=INTEGER},</if>
+			<if test="remark != null">REMARK=#{remark,jdbcType=VARCHAR},</if>
+			<if test="birthday != null">BIRTHDAY=#{birthday,jdbcType=TIMESTAMP},</if>
+			<if test="modifier != null">MODIFIER=#{modifier,jdbcType=VARCHAR},</if>
+			<if test="lastLoginTime != null">LAST_LOGIN_TIME=#{lastLoginTime,jdbcType=TIMESTAMP},</if>
+			<if test="pwd != null">PWD=#{pwd,jdbcType=VARCHAR},</if>
+			<if test="sex != null">SEX=#{sex,jdbcType=VARCHAR},</if>
+			<if test="creator != null">CREATOR=#{creator,jdbcType=VARCHAR},</if>
+			<if test="address != null">ADDRESS=#{address,jdbcType=VARCHAR},</if>
+			<if test="phone != null">PHONE=#{phone,jdbcType=VARCHAR},</if>
+			<if test="loginCount != 0">LOGIN_COUNT=#{loginCount,jdbcType=INTEGER},</if>
+			<if test="workNo != null">WORK_NO=#{workNo,jdbcType=VARCHAR},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="status != null">STATUS=#{status,jdbcType=INTEGER},</if>
+			<if test="loginErrorCount != null">LOGIN_ERROR_COUNT=#{loginErrorCount,jdbcType=INTEGER},</if>	
+			<if test="latestLockTime != null">LATEST_LOCK_TIME=#{latestLockTime,jdbcType=TIMESTAMP},</if>
+			<if test="latestUnlockTime != null">LATEST_UNLOCK_TIME=#{latestUnlockTime,jdbcType=TIMESTAMP},</if>	
+		</set>
+		where ID=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="adminUserMap">
+		select * from ADMIN_USER where ID=#{id}
+	</select>
+
+	<select id="loadByAccount" parameterType="string" resultMap="adminUserMap">
+		select * from ADMIN_USER where
+		ACCOUNT=#{account}
+	</select>
+	
+	<select id="loadByWorkNo" parameterType="string" resultMap="adminUserMap">
+		select * from ADMIN_USER where
+		WORK_NO=#{workNo}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM ADMIN_USER adminUser
+		<where>
+			<choose>
+				<when test="idArray!=null ">
+					adminUser.ID in
+					<foreach collection="idArray" index="index" item="item" open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>adminUser.ID > 0</otherwise>
+			</choose>
+			<if test="postcode != null and postcode.trim() !=''">and adminUser.POSTCODE = #{postcode}</if>
+			<if test="mobile != null and mobile.trim() !=''">and adminUser.MOBILE = #{mobile}</if>
+			<if test="isSuperAdmin != null">and adminUser.IS_SUPER_ADMIN = #{isSuperAdmin}</if>
+			<if test="gmtCreateFrom != null">and adminUser.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null"><![CDATA[and adminUser.GMT_CREATE < #{gmtCreateTo} + 1]]></if>			
+			<if test="idCard != null and idCard.trim() !=''">and adminUser.ID_CARD = #{idCard}</if>
+			<if test="userName != null and userName.trim() !=''">
+				and adminUser.USER_NAME like
+				<choose>
+					<when test="_databaseId=='mysql'">CONCAT('%',#{userName},'%')</when>
+					<when test="_databaseId=='oracle'">'%' || #{userName} || '%'</when>
+				</choose>
+			</if>
+			<!--><if test="account != null and account.trim() !=''">and adminUser.ACCOUNT = #{account}</if><-->
+			<if test="account != null and account.trim() !=''">
+				and adminUser.ACCOUNT like
+				<choose>
+					<when test="_databaseId=='mysql'">CONCAT('%',#{account},'%')</when>
+					<when test="_databaseId=='oracle'">'%' || #{account} || '%'</when>
+				</choose>
+			</if>
+			<if test="workNo != null and workNo.trim() !=''">and adminUser.WORK_NO = #{workNo}</if>
+			<if test="email != null and email.trim() !=''">and adminUser.EMAIL = ${email}</if>
+			<if test="deptId != null">and adminUser.DEPT_ID = #{deptId}</if>
+			<if test="remark != null and remark.trim() !=''">and adminUser.REMARK = #{remark}</if>
+			<if test="birthdayFrom != null">and adminUser.BIRTHDAY >= #{birthdayFrom}</if>
+			<if test="birthdayTo != null"><![CDATA[and adminUser.BIRTHDAY < #{birthdayTo} + 1]]></if>
+			<if test="lastLoginTimeFrom != null">and adminUser.LAST_LOGIN_TIME >= #{lastLoginTimeFrom}</if>
+			<if test="lastLoginTimeTo != null"><![CDATA[and adminUser.LAST_LOGIN_TIME < #{lastLoginTimeTo} + 1]]></if>
+			<if test="sex != null and sex.trim() !=''">and adminUser.SEX = #{sex}</if>
+			<if test="phone != null and phone.trim() !=''">and adminUser.PHONE =#{phone}</if>
+			<if test="loginCount != null">and adminUser.LOGIN_COUNT = #{loginCount}</if>
+			<if test="gmtModifyFrom != null">and adminUser.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null"><![CDATA[and adminUser.GMT_MODIFY < #{gmtModifyTo} + 1]]></if>
+			<if test="loginErrorCount != null">and adminUser.LOGIN_ERROR_COUNT = #{loginErrorCount}</if>												
+			<if test="latestLockTimeFrom != null">and adminUser.LATEST_LOCK_TIME >= #{latestLockTimeFrom}</if>
+			<if test="latestLockTimeTo != null"><![CDATA[and adminUser.LATEST_LOCK_TIME < date_add(#{latestLockTimeTo}, interval 1 day)]]></if>
+			<if test="latestUnlockTimeTo != null"><![CDATA[and adminUser.LATEST_UNLOCK_TIME < date_add(#{latestUnlockTimeTo}, interval 1 day)]]></if>
+			<choose>
+				<when test="status != null">and adminUser.STATUS = #{status}</when>
+				<when test="statusArray != null">
+					and adminUser.STATUS in
+					<foreach collection="statusArray" index="index" item="item" open="(" separator=","
+						close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and adminUser.STATUS > 0
+				</otherwise>
+			</choose>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		order by
+		<if test="sort != null and sort.trim() !=''">
+			${sort}
+		</if>
+		<if test="sort == null || sort.trim() ==''">
+			adminUser.GMT_CREATE DESC
+		</if>
+	</sql>
+
+	<select id="queryList" parameterType="adminUserQuery" resultMap="adminUserMap">
+		<include refid="common.pageBegin" />
+		select adminUser.ID
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}</foreach>
+			</when>
+			<otherwise>
+				,adminUser.POSTCODE
+				,adminUser.MOBILE
+				,adminUser.IS_SUPER_ADMIN
+				,adminUser.GMT_CREATE			
+				,adminUser.ID_CARD
+				,adminUser.USER_NAME
+				,adminUser.ACCOUNT
+				,adminUser.EMAIL
+				,adminUser.DEPT_ID
+				,adminUser.REMARK
+				,adminUser.BIRTHDAY
+				,adminUser.MODIFIER
+				,adminUser.LAST_LOGIN_TIME
+				,adminUser.PWD
+				,adminUser.SEX
+				,adminUser.CREATOR
+				,adminUser.ADDRESS
+				,adminUser.PHONE
+				,adminUser.LOGIN_COUNT
+				,adminUser.GMT_MODIFY
+				,adminUser.STATUS
+				,adminUser.WORK_NO
+				,adminUser.LOGIN_ERROR_COUNT
+        		,adminUser.LATEST_LOCK_TIME
+        		,adminUser.LATEST_UNLOCK_TIME
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="adminUserQuery" resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="adminUser">
+		update ADMIN_USER set status=#{status} where
+		ID=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from ADMIN_USER where ID=#{id}
+	</delete>
+
+	<update id="updateLoginInfo" parameterType="long">
+		update ADMIN_USER set
+		LAST_LOGIN_TIME=
+		<include refid="common.now" />
+		,LOGIN_COUNT=LOGIN_COUNT+1 where ID=#{id}
+	</update>
+	
+	<select id="getCountByAccount" parameterType="string" resultType="int">
+		select count(1) from ADMIN_USER where ACCOUNT=#{account} and STATUS != -1
+	</select>
+	
+	<select id="getCountByWorkNo" parameterType="string" resultType="int">
+		select count(1) from ADMIN_USER where WORK_NO=#{workNo} and STATUS != -1
+	</select>
+</mapper>

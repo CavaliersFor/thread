@@ -1,0 +1,99 @@
+#loadWebResources(["list","form","extJs"]) 
+#set($screen_jsArray=["basedata/region"])##加载js 文件
+#set($thisActionUrl="list")
+##<div class="r_title">基础数据管理  > 地区管理</div>
+<script>_queryParentCode='$!query.parentCode'</script>
+<div class="searchBox">
+    <form method="get" id="form_search" action="$thisActionUrl">
+          <table>
+              <tr>
+                <th>名称：</th>
+                <td ><input name="regionName" type="text" value="$!query.regionName"  class="inp-w160"/></td>
+				<th>代码：</th>
+                <td ><input name="code" type="text" value="$!query.code" class="inp-w80"/></td>
+				<th>邮编：</th>
+                <td><input name="zip" type="text" value="$!query.zip"  class="inp-w80"/></td>			
+             </tr>
+			 <tr>
+				<th>省/市/区：</th>
+    			<td id="box_parentCode"></td>
+    			<th>状态：</th>
+                <td>
+					#formSelect({"name":"status","dictGroup":"regionStatus","selectedValue":$!query.status},"class='w80'")
+				</td>    			
+                <th></th>
+             
+				<td>
+                    <input type="submit" id="btn_search" value="搜索" class="btn" />
+					<input type="button" id="btn_reset" value="清空" onclick="location.href='$thisActionUrl';" class="btn ml10"/>  
+					&nbsp;|&nbsp;<input type="button" id="btn_add" value="添加新项" class="btn addChild" onclick="javascript:void(0);" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="list" class="listBox mt10">
+    <table>
+        <tr>          
+            <th width="5%">序号</th>
+            <th width="9%">代码</th>
+            <th>名称</th> 
+			<th width="9%">邮编</th>   
+            <th width="8%">类型</th>         
+			<th width="8%">状态</th>
+			<th width="15%">操作</th>
+        </tr>
+        #set($data=$page.data)
+        #if($data.size()>0)
+            #foreach($o in $data)
+                #set($no = ($velocityCount + ($!page.pageNo - 1) * $!page.pageSize))
+                <tr #if($math.mod($velocityCount,2)==0)  class="bg" #end>
+                    <td >
+                        <label for="chk_$o.id">&nbsp;$no</label>
+                    </td>                   
+                    <td>$!{o.code}</td>                                              
+                    <!--<td style="text-align:left;padding-left:20px;">			
+						$!o.fullNamePath
+						##$!{o.parentCodePath} 
+					</td>-->
+					 <td style="text-align:left;padding-left:20px;">$!{o.regionName}</td>
+					 <td>$!o.zip</td>
+					<td >
+						#getDictionaryName("regionType" ${o.regionType})
+					</td> 
+					<td class="statusText">
+						#getDictionaryName("regionStatus" ${o.status})		
+					</td> 				
+                    <td >
+						 <span class="data">
+    						 <input type="hidden"  value="${o.code}" name="code"  />
+    						 <input type="hidden"  value="$!{o.regionName}" name="regionName"  />
+							 <input type="hidden"  value="${o.status}" name="currentStatus"  />
+							 <input type="hidden"  value="$!{o.zip}" name="zip"  />
+							 <input type="hidden"  value="$!{o.parentCode}" name="parentCode"  />
+							 <input type="hidden"  value="$!{o.regionType}" name="regionType"  />
+							 <input type="hidden"  value="$!{o.parentCode}" name="oldParentCode"  />
+                         </span>
+						 <a href="javascript:void(0);" class="edit">修改</a> 
+						 #if("${o.regionType}"!="4")
+							<!-- <a href="javascript:void(0);" class="addChild">添加下级</a>--> 
+						 #end
+						 #if(${o.status} == 1)
+							#set($operateName="停用")
+						 #else
+							#set($operateName="启用")
+						 #end						 
+                         <a disabled="disabled" href="javascript:void(0);" class="updateStatus">$operateName</a>
+                    </td>
+                </tr>
+            #end
+        #else
+            <tr>
+                <td colspan="10">非常抱歉，没有符合条件的数据！</td>
+            </tr>
+        #end 
+    </table>    
+</div>
+#if($data.size()>0)
+	#pageTabFoot({"queryFormId":"form_search","page":$page,"submitUrl":"${thisActionUrl}#list","canSetPagesize":true}) 
+#end

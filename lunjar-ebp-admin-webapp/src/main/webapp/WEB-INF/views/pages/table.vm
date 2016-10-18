@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>表格</title>
+  <script src="http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js"></script>
+ <link href="/lunjar-ebp-admin-webapp/lib/tdz_component/tdz_components.css" rel="stylesheet">
+	<link href="/lunjar-ebp-admin-webapp/lib/tdz_component/main.css" rel="stylesheet">
+	<script src="/lunjar-ebp-admin-webapp/lib/tdz_component/tdz_components.js"></script>
+	<script src="/lunjar-ebp-admin-webapp/lib/tdz_component/main.css"></script>
+</head>
+<body>
+  <div class="table-example">
+    <h3>普通表格</h3>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>标题</th>
+            <th>标题</th>
+            <th>标题</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr class="odd ">
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr class="odd">
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr class="last">
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+        </tbody>
+      </table>
+      <script>
+      $(function () {
+        $('#tbody').loading({
+          position: 'table-static',
+          colspan: 3,
+          text: '加载中...'
+        }).show();
+      })
+      </script>
+      <div class="pagination-box pagination-normal">
+        <div class="pagination">
+          <div class="page-control">
+            跳至
+            <span><input type="text" class="input"></span>
+            页
+          </div>
+          <ul  class="page-items">
+            <li class="disabled"><a href="javascript:void(0);"><</a></li>
+            <li class="active"><a href="javascript:void(0);">1</a></li>
+            <li><a href="javascript:void(0);">2</a></li>
+            <li><a href="javascript:void(0);">3</a></li>
+            <li><a href="javascript:void(0);">4</a></li>
+            <li class="ellipsis">...</li>
+            <li><a href="javascript:void(0);">5</a></li>
+            <li><a href="javascript:void(0);">></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <h3>带Tab的表格</h3>
+    <div class="table-wrap">
+      <div class="tab">
+        <ul>
+          <li class="active"><a href="#">标签一</a></li>
+          <li class="new"><a href="#">标签二</a></li>
+          <li><a href="#">标签三</a></li>
+        </ul>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>标题</th>
+            <th>标题</th>
+            <th>标题</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="odd ">
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr class="odd">
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr class="last">
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>垂直的 tab</h3>
+    <div class="table-wrap">
+      <div class="tab tab-vertical">
+        <ul>
+          <li class="active"><a href="#">标签一</a></li>
+          <li><a href="#">标签二</a></li>
+          <li><a href="#">标签三</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>带checkbox的表格</h3>
+    <div class="table-wrap">
+      <table class="table table-checkbox">
+        <thead>
+          <tr>
+            <th><div class="checkbox">
+            <span class="checkbox-icon">
+              <i class="icon-checked"></i>
+              <input type="checkbox" />
+            </span>
+          </div></th>
+            <th>宝贝标题</th>
+            <th>标题</th>
+            <th>标题</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="odd">
+            <td><div class="checkbox">
+            <span class="checkbox-icon">
+              <i class="icon-checked"></i>
+              <input type="checkbox" />
+            </span>
+          </div></td>
+            <td class="item">
+              <img src="" alt="" width="40" height="40">
+              <div>
+                <p>2013特价新款2013特价新款2013特价新款2013特价新款</p>
+                <p>商品编码</p>
+              </div>
+            </td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td><div class="checkbox">
+            <span class="checkbox-icon">
+              <i class="icon-checked"></i>
+              <input type="checkbox" />
+            </span>
+          </div></td>
+            <td class="item">
+              <img src="" alt="" width="40" height="40">
+              <div>
+                <p>2013特价新款2013特价新款2013特价新款2013特价新款</p>
+                <p>商品编码</p>
+              </div>
+            </td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr class="odd">
+            <td><div class="checkbox">
+            <span class="checkbox-icon">
+              <i class="icon-checked"></i>
+              <input type="checkbox" />
+            </span>
+          </div></td>
+            <td class="item">
+              <img src="" alt="" width="40" height="40">
+              <div>
+                <p>2013特价新款2013特价新款2013特价新款2013特价新款</p>
+                <p>商品编码</p>
+              </div>
+            </td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr class="last">
+            <td><div class="checkbox">
+            <span class="checkbox-icon">
+              <i class="icon-checked"></i>
+              <input type="checkbox" />
+            </span>
+          </div></td>
+            <td class="item">
+              <img src="" alt="" width="40" height="40">
+              <div>
+                <p>2013特价新款2013特价新款2013特价新款2013特价新款</p>
+                <p>商品编码</p>
+              </div>
+            </td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>带边框表格</h3>
+    <div class="table-wrap-bordered">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>标题</th>
+            <th>标题</th>
+            <th>标题</th>
+            <th>标题</th>
+            <th>标题</th>
+            <th>标题</th>
+            <th>标题</th>
+            <th>标题</th>
+            <th>标题</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="odd ">
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr class="odd">
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr class="last">
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+            <td>内容</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>警告弹窗</h3>
+    <div class="wrap">
+      <a href="javascript:void(0);" class="btn btn-primary" id="alertModal">警告弹窗</a>
+      
+    </div>
+    <h3>普通弹窗</h3>
+    <div class="wrap">
+      <a href="javascript:void(0);" class="btn btn-primary" id="testModal">普通弹窗</a>
+      <!-- Modal -->
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+              <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" data-ok="modal">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <h3>步骤条</h3>
+    <div class="wrap">
+      <ul class="steps">
+        <li class="done"><i class="icon-step-done"></i><span>步骤一：步骤一内容</span></li>
+        <li class="current"><i class="icon-step-start"></i><span>步骤二：步骤二内容</span></li>
+        <li class="next"><i class="icon-step-next"></i><span>步骤三：步骤三内容</span></li>
+        <li class="next"><i class="icon-step-next"></i><span>完成</span></li>
+      </ul>
+    </div>
+    <h3>分页器</h3>
+    <div class="wrap">
+      <div class="pagination-box pagination-small">
+        <div class="page-size-control">
+          <div class="selector selector-large">
+            <a class="selector-text">100条 / 页</a>
+            <i class="icon-down"></i>
+            <input type="hidden" />
+            <ul class="selector-menu">
+              <li>
+                <a class="selector-item" data-value="1">
+                  10条/页<i class="icon-checked"></i>
+                </a>
+              </li>
+              <li>
+                <a class="selector-item" data-value="2">
+                  100条/页<i class="icon-checked"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="pagination">
+          <div class="page-control">
+            跳至
+            <span><input type="text" class="input"></span>
+            页
+          </div>
+          <ul class="page-items">
+            <li class="disabled"><a href="javascript:void(0);"><</a></li>
+            <li class="active"><a href="javascript:void(0);">1</a></li>
+            <li><a href="javascript:void(0);">2</a></li>
+            <li><a href="javascript:void(0);">3</a></li>
+            <li><a href="javascript:void(0);">4</a></li>
+            <li class="ellipsis">...</li>
+            <li><a href="javascript:void(0);">5</a></li>
+            <li><a href="javascript:void(0);">></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="pagination-box pagination-normal">
+        <div class="pagination">
+          <div class="page-control">
+            跳至
+            <span><input type="text" class="input"></span>
+            页
+          </div>
+          <ul  class="page-items">
+            <li class="disabled"><a href="javascript:void(0);"><</a></li>
+            <li class="active"><a href="javascript:void(0);">1</a></li>
+            <li><a href="javascript:void(0);">2</a></li>
+            <li><a href="javascript:void(0);">3</a></li>
+            <li><a href="javascript:void(0);">4</a></li>
+            <li class="ellipsis">...</li>
+            <li><a href="javascript:void(0);">5</a></li>
+            <li><a href="javascript:void(0);">></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="pagination-box pagination-small">
+        <div class="pagination-simple">
+          <span><</span>
+          <span><input type="text" class="input"></span>
+          <span>/</span>
+          <span>5</span>
+          <span>></span>
+        </div>
+      </div>
+    </div>
+    <h3>分页器-js</h3>
+    <div class="wrap">
+      <div class="pagination-box pagination-normal">
+        <div class="pagination" id="pagination"></div>
+      </div>
+
+      <div class="pagination-box pagination-small">
+        <div class="pagination-simple" id="pagination-simple">
+    
+        </div>
+      </div>
+    </div>
+    <h3>Loading</h3>
+    <div class="wrap" id="testLoading" style="height:300px;">
+      sadhaskjdhaskjdhsakjhdkjashdas<br>
+      sadasdsajkdasjkhdjkashdkjasd<br>
+      sadhkjsahdkjashdk
+    </div>
+    <script>
+      $(function () {
+        var loading = $('#testLoading').loading({
+          // position: 'table-absolute',
+          text: '加载中'
+        });
+        loading.show();
+      })
+    </script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>$!title</title>
+<link  href="../../lib/tdz_component/tdz_components.css" rel="stylesheet">
+<link href="../../lib/tdz_component/main.css"rel="stylesheet">
+<link href="../../lib/tdz_component/reset.css"rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="../../scripts/login/index.css">
+
+<script src="http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="../../lib/tdz_component/template.js"></script>
+<script src="../../lib/tdz_component/main.js"></script>
+<script src="../../lib/tdz_component/tdz_components.js"></script>
+<script src="../../lib/tdz_component/jQuery.Antiwild.js"></script>
+<script src="../../lib/tdz_component/public.js"></script>
+<script src="../../scripts/common/common.js"></script>
+<script src="../../scripts/common/ajaxfileupload.js"></script>
+<script type="text/javascript" src="../../scripts/login/index.js"></script>
+</head>
+
+<body class="example">
+   <div class="pc-adimn-main">
+   	<div class="new-header">
+		  <div class="con-w">
+			<div class="left">
+				<img class="logo" src="../../lib/img/logo.png"/><span class="text">|  供货商后台管理平台</span>
+			</div>
+			<div class="right">
+				<img src="$!loginUser.absoluteHeadPicUrl" class="userImg" style="margin-top:9px;"/>
+				<span class="name" title="ADVBC12345">$!loginUser.enterpiseName<span class="line">|</span></span>
+				 <i class="edit">
+				 	<ul class="setting">
+				 		<li><a href="/enterprise/info">基本信息</a></li>
+				 		<li><a href="/enterprise/updatePage">修改密码</a></li>
+				 		<li><a href="/enterprise/userLogout">退出</a></li>
+				 	</ul>
+				 </i>
+			</div>
+			</div>
+		</div>
+   </div>
+	<div class="nav">
+		<ul>
+			#foreach($m in $!menus)
+				<li><a class="nav-item #if($!m.isChecked==1) active #end" href="$!m.url"><i class="icon-item"></i>$!m.menuName</a>
+				</li>
+			#end
+		</ul>
+	</div>
+	<div class="container">
+		<div class="side-nav">
+			<ul>
+				<li class="side-nav-item has-sub-nav active">
+				    <ul class="sub-side-nav">
+				    	#foreach($child in $childMenus)
+							<li class="sub-side-nav-item #if($!child.isChecked==1) active #end"><a href="$!child.url">$!child.menuName</a></li>
+						#end
+					</ul>
+				</li>
+			</ul>
+		</div>

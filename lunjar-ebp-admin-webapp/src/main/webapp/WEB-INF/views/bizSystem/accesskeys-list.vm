@@ -1,0 +1,118 @@
+#loadWebResources(["list","datePicker"]) 
+#set($screen_jsArray=["bizSystem/accesskeys-list"])
+#set($thisActionUrl="list")
+
+##<div class="r_title">基础数据  > 接口管理</div>
+<div class="searchBox">	
+    <form method="get" id="form_search" action="$thisActionUrl">
+        <table>
+            <tr>
+				##<th>接口类型：</th>
+                ##<td>#formSelect({"name":"apiTypes","dictGroup":"apiType","selectedValue":$!query.apiTypes},"class='w80'")</td>
+				<th>AccessKey：</th>
+                <td><input name="accessKey" type="text" value='$!query.accessKey' class="w300"/></td>
+                <th></th>
+                <td></td>
+                <td>
+                    <input type="submit" id="btn_search" value="搜索" class="btn" />
+                    <input type="button" id="btn_reset" value="清空" onclick="location.href='$thisActionUrl';" class="btn"/>
+                    <input type="button" id="btn_add" value="新增" class="btn addBizSystem" onclick="javascript:void(0);" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+##<div id="tool" class="tool">
+##    <div class="fl">
+##        <span>
+##            <button class="bt_add" onclick="location.href='add';">添加</button>         
+##        </span>        
+##    </div>    
+##</div>
+<div class="clear"></div>
+<div id="list" class="listBox">
+    <table>
+        <tr>          
+            <th width="12%">业务系统名称</th>
+            <th width="22%">AccessKey</th>
+            <th width="22%">SecretKey</th>
+			##<th width="8%">接口类型</th>
+            <th width="8%">添加时间</th>
+			<th width="8%">状态</th> 
+			<th width="20%">操作</th>
+        </tr>
+        #set($data=$page.data)
+        #if($data.size()>0)
+            #foreach($o in $data)
+                #set($no = ($velocityCount + ($!page.pageNo - 1) * $!page.pageSize))
+                <tr #if($math.mod($velocityCount,2)==0)  class="bg" #end>
+                    ##<td >
+                   ##     <label for="chk_$o.id">&nbsp;$no</label>
+                   ## </td>                   
+                    <td >
+                   	 	<a href="detail/${o.id}">${o.systemName}</a>
+                    </td>   
+					<td>$!o.accessKey</td>
+                    <td >$!o.secretKey</td>
+					##<td >#getDictionaryName("apiType" ${o.apiTypes})</td>                  
+					<td >$!date.format("yyyy-MM-dd",${o.gmtCreate})</td>  
+					<td >#getDictionaryName("bizSystemStatus" ${o.status})</td>
+                    <td >
+						##<a href="javascript:void(0);" onclick="modify(${o.id})">修改</a> 
+						<input type="hidden"  value="${o.id}" name="apiId"  />
+						#if($o.status==1)
+							<a href="javascript:void(0);" onclick="modifyStatus(${o.id},2)">终止</a>   
+							<a href="javascript:void(0);" onclick="resetSecretKey(${o.id})">重置secretKey</a> 
+						#end
+						#if($o.status==2)
+							<a href="javascript:void(0);" onclick="modifyStatus(${o.id},1)">启用</a> 
+						#end
+                    </td>
+                </tr>
+            #end
+        #else
+            <tr>
+                <td colspan="10">非常抱歉，没有符合条件的数据！</td>
+            </tr>
+        #end 
+    </table>
+    #pageTabFoot({"page":$page,"queryFormId":"form_search","submitUrl":"${thisActionUrl}#tool","canSetPagesize":true})      
+</div>
+
+<!--创建-->
+	<div  id="work" class="popup" style="display: none">
+		<form class="winFormBox" id="apiKeyForm">
+		<table>
+			<tr>
+				<th>业务系统名称</th>
+				<td><input id="ext_code" name="systemName" class="required w250" maxlength="30" type="text"/><span class="red">*</span></td>
+			</tr>
+			##<tr><th>接口类型 </th>
+			##	<td>#formSelect({"name":"apiTypes","dictGroup":"apiType","selectedValue":$!query.apiType},"class='w250'")<span class="red">*</span></td>
+			##</tr>
+			<tr>
+				<th>AccessKey </th>
+				<td><input name="accessKey" id="accessKey"  class="w250" readonly="true" type="text"/></td>
+			</tr>
+			<tr><th>SecretKey </th>
+				<td><input name="secretKey" id="secretKey" class="w250" readonly="true" type="text"/></td>
+			</tr>
+			<tr><th>发件人邮件地址 </th>
+				<td><input name="mailFrom" id="mailFrom" class="w250" type="text"/></td>
+			</tr>
+			<tr><th>发件人邮箱密码 </th>
+				<td><input name="mailPassword" id="mailPassword" class="w250" type="text"/></td>
+			</tr>
+			<tr><th>SMTP服务器地址 </th>
+				<td><input name="mailSmtpServer" id="mailSmtpServer" class="w250" type="text"/></td>
+			</tr>
+			<tr >
+					<td>&nbsp;</td>
+					<td>
+						<input type="button" id="addBizSystem" value="确定" class="btn" />
+						<input type="button"  id="bizSystem_cl" value="关闭" class="btn"  />
+					</td>
+				</tr>
+		</table>
+		</form>
+	</div>

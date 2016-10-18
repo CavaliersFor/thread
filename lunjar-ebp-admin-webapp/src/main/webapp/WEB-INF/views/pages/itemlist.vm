@@ -1,0 +1,821 @@
+#parse("pages/commons/header.vm")
+<script type="text/javascript" src="#getAppServer()/scripts/process/process.js"></script>
+ <div class="content">
+     <div class="breadcrumb">
+		<a class="breadcrumb-item active">订单管理</a>
+	 </div>
+      <!--sraech start-->
+      <div id="sraechoder" class="border-ra-cl">
+      	<form action="/trade/list" method="post"  id="form1">
+      		<input type="hidden" name="pageNo" id="pageNo" value="1"/>
+	        <table>
+	           <tr>
+	              <td>
+	                 <input class="input input-number new_input_wi" type="text"  name="productName" value="$!productName" placeholder="商品名称"/>
+	              </td>
+	              <td>
+	                 <input class="input input-number new_input_wi" type="text"  name="tradeNo" maxlength="10" value="$!tradeQuery.tradeNo" placeholder="订单编号"/>
+	              </td>
+                  <td>
+	                 <input class="input input-number new_input_wi" type="text"  maxlength="15" name="buyerPhone" value="$!tradeQuery.buyerPhone" placeholder="买家手机号"/>
+	              </td>
+	            <!--  <td>订单状态</td>
+	              <td>
+	                <select name="status">
+	                	<option value="0">全部</option>
+	                	<option value="1" #if($!tradeQuery.status==1) selected="selected"  #end>待支付</option>
+	                	<option value="3" #if($!tradeQuery.status==3) selected="selected" #end>待发货</option>
+	                	<option value="5" #if($!tradeQuery.status==5) selected="selected" #end>已发货</option>
+	                	<option value="6" #if($!tradeQuery.status==6) selected="selected" #end>已签收</option>
+	                	<option value="7" #if($!tradeQuery.status==7) selected="selected" #end>交易成功</option>
+	                	<option value="8" #if($!tradeQuery.status==8) selected="selected" #end>已关闭</option>
+	                </select>
+	              </td>-->
+	           </tr>
+	           <tr>
+	           	 <td class="relative_this"style="margin-right:6px;">
+	           	 	<input class="input input-number new_input_wi errorDatepicker" id="startTime" type="text"  name="startTime" value="$!startTime" placeholder="下单时间" />
+	           	 	<i class="icon-date"></i>
+	           	 </td>
+	           	 <td style="width:10px;color: #ccc;margin-right: 5px;">-</td>
+	           	 <td class="relative_this">
+	           	 	<input class="input input-number new_input_wi errorDatepicker" id="endTime" type="text"  name="endTime" value="$!endTime" placeholder="下单时间"/>
+	           	 	<i class="icon-date"></i>
+	           	 </td>
+	           	 <td>
+	           	 <a href="javascript:;" onclick="submitForm1();" class="btn btn-large btn-primary">搜  索</a>
+	           	 </td>
+	           </tr>
+	        </table> 
+	        <!--订单状态和退款状态-->
+	        <input type="hidden" name="status" id="status" value="$!tradeQuery.status">
+	        <!--查询前三个后三个月标识-->
+	        <input type="hidden" name="time" id="time" value="$!time">
+	        <!--不显示某个状态的订单-->
+	        <input type="hidden" name="noShowStatus" id="noShowStatus" value="$!noShowStatus">
+        </form>
+        
+      </div>
+      <!--sraech end-->
+
+     <!--showList start-->
+      <div id="showList" class="table-wrap">
+         <div class="tab" id="FenleiTab">
+	        <ul>
+	          <li #if($!$time==1 && !$!tradeQuery.status) class="active" #end><a href="javascript:;" onclick="tradeStatus('1','2')">近三个月</a></li>
+	          <li #if($!tradeQuery.status==1) class="active" #end><a href="javascript:;" onclick="tradeStatus('1','1')">待付款</a></li>
+	          <li #if($!tradeQuery.status==3) class="active" #end><a href="javascript:;" onclick="tradeStatus('3','1')">待发货</a></li>
+	          <li #if($!tradeQuery.status==5) class="active" #end><a href="javascript:;" onclick="tradeStatus('5','1')">已发货</a></li>
+	          <li #if($!tradeQuery.status==-3) class="active" #end><a href="javascript:;" onclick="tradeStatus('-3','1')">退款中</a></li>
+	          <li #if($!tradeQuery.status==7) class="active" #end><a href="javascript:;" onclick="tradeStatus('7','1')">已成功</a></li>
+	          <li #if($!tradeQuery.status==8) class="active" #end><a href="javascript:;" onclick="tradeStatus('8','1')">已关闭</a></li>
+	          ##<li #if($!$time==2) class="active" #end><a href="javascript:;" onclick="tradeStatus('2','2')">前三个月</a></li>
+	        </ul>
+         </div>
+         <div class="clear"></div>
+
+         <div class="tableList">
+
+           <!--new table start-->
+            <div class="newTabTop">
+            	<div class="checkbox  selectAll">
+                <span class="checkbox-icon">
+                  <i class="icon-checked"></i>
+                  <input type="checkbox" />
+                </span>
+               </div>全选本页面
+               #if($!tradeQuery.status==3 || $!tradeQuery.status==4)
+              	<span class="paDing paDing-l" onclick="sendGoogs('','sendGoodsModalMax','2');">批量发货</span>
+              #end
+              <span class="paDing" onclick="addRemark('','','3');">批量备注</span>
+
+              <div class="right">
+              	<div  #if($!noShowStatus==7) class="checkbox select-chexkbox select-close-outtime checked" #else class="checkbox select-chexkbox select-close-outtime" #end>
+                <span class="checkbox-icon">
+                  <i class="icon-checked"></i>
+                  <input type="checkbox"/>
+                </span>
+               </div>不显示关闭订单
+              </div>
+              <div class="clear"></div>
+              <div class="twoLine"></div>
+            </div>
+              <!--表格开始-->
+            #if($!trades && $!trades.data.size()>0)
+              	#foreach($t in $!trades.data)
+               <table cellpadding="0" cellspacing="0" border="0" align="center" class="NewTable">
+               	 <tr class="mar-p-h">
+               	 	<th><div class="checkbox select-chexkbox">
+		                <span class="checkbox-icon">
+		                  <i class="icon-checked"></i>
+		                  <input type="checkbox" name="tradeIds" data-mode="$!t.trade.distributionMode" value="$!t.trade.id"/>
+		                </span>
+		               </div>
+		               订单编号: $!t.trade.tradeNo&nbsp;&nbsp;下单时间: $!date.format('yyyy-MM-dd HH:mm:ss ',$!t.trade.gmtCreate)
+               	 	</th>
+               	 	<th></th>
+               	 	<th></th>
+               	 	<th></th>
+               	 </tr>
+               #foreach($order in $t.list)
+               	 <tr data-sata="$!t.trade.status">
+               	 	<td class="left border-top" style="vertical-align: top;">
+               	 	  <div class="img f-l">
+               	 	  <img src="$!order.productPicPath" alt="" width="50" height="50">
+               	 	  </div>
+               	 	  <div class="Message f-l">
+               	 	  	<h3>$!order.productName</h3>
+               	 	  	<div><span class="Hui">$!order.propertiesname</span></div>
+               	 	  </div>
+               	 	  <div class="price f-l">
+               	 	  	<div>￥$!order.productRealPrice</div>
+               	 	  </div>
+               	 	  <div class="Num f-l">
+               	 	  	<div>X<span class="red">$!order.num</span></div>
+               	 	  </div>
+               	 	</td>
+                 
+                   #if($velocityCount==1)
+               	 	<td class="center w-gd">
+               	 		<div class="t-l">留言:$!t.trade.buyerRemarks</div>
+               	 		<div class="t-l">备注:
+               	 		#if($!t.trade.saleRemarks)
+               	 			<a class="blue write_bz" onclick="addRemark('$!t.trade.saleRemarks','$!t.trade.id','1')">$!t.trade.saleRemarks<i></i></a>
+               	 		#else
+               	 			<a class="blue" onclick="addRemark('','$!t.trade.id','2')">添加备注</a>
+               	 		#end
+               	 		</div>
+               	 	</td>
+               	 	<td class="w-gd">
+               	 		<div class="dqzt-run" style="font-weight: bold;" data-sata="$!t.trade.status">
+               	 			#if($!t.trade.status==1)
+	                      		待付款
+	                      	#elseif($!t.trade.status==2)
+	                      		待付款
+	                      	#elseif($!t.trade.status==3)
+	                      		待发货
+	                      	#elseif($!t.trade.status==4)
+	                      		待发货
+	                      	#elseif($!t.trade.status==5)
+	                      		已发货
+	                      	#elseif($!t.trade.status==6)
+	                      		已签收
+	                      	#elseif($!t.trade.status==7)
+	                      		交易成功
+	                      	#elseif($!t.trade.status==8)
+	                      		已关闭
+	                      	#elseif($!t.trade.status==9)
+	                      		已关闭
+	                      	#end
+               	 		</div>
+               	 		<div class=""><a class="blue" href="/trade/detail?tradeId=$!t.trade.id">订单详情</a></div>
+               	 		<div>
+               	 		#if($!t.trade.status==3 || $!t.trade.status==4)
+               	 		<a href="javascript:;" class="btn btn-primary changeBtn" onclick="sendGoogs('$!t.trade.id','sendGoodsModalMin','1')">发货</a>
+               	 		#elseif($!t.trade.status==1||$!t.trade.status==2)
+		                  <a href="javascript:;" class="btn btn-primary changeBtn closeTrade" data-tradeId="$!t.trade.id">关闭交易</a>
+		                  #end
+               	 		</div>
+               	 	</td>
+                    <td class="w-gd">
+
+                    	<div>实付: ￥$!t.trade.realPrice</div>
+                    	<div>含快递(￥$!t.trade.expressPrice)</div>
+
+                    </td>
+                    #elseif($velocityCount>1)
+                    <td class="w-gd"></td>
+                    <td class="w-gd"></td>
+                    <td class="w-gd"></td>
+                    #end
+
+               	 </tr>
+               	 #end
+               </table>
+               #end
+      #elseif($!trades.data.size()==0)
+      <div id="nothing">抱歉,没有找到任何您想要的订单！</div>
+			#end
+              <!--表格结束-->
+
+             <div class="newTabTop">
+            	<div class="checkbox  selectAll">
+                <span class="checkbox-icon">
+                  <i class="icon-checked"></i>
+                  <input type="checkbox" />
+                </span>
+               </div>全选本页面
+               #if($!tradeQuery.status==3 || $!tradeQuery.status==4)
+              <span class="paDing paDing-l" onclick="sendGoogs('','sendGoodsModalMax','2')">批量发货</span>
+              #end
+              <span class="paDing" onclick="addRemark('','','3');">批量备注</span>
+
+              <div class="right" style="height: 80px;">
+              	 <!--分页-->
+		          <div class="page-list" id="FenYe">
+		          </div>
+		         <!--分页-->
+              </div>
+              <div class="clear"></div>
+            </div>
+          
+           <!--new table end-->
+        
+         
+         </div><!--end tableList-->
+
+      </div><!--showList end-->
+      
+
+
+
+
+
+
+    </div><!--end content-->
+  </div><!--end container-->
+  
+  <!--备注内容小弹窗-->
+<div class="modal fade new-css MarkBGAll-zIndex" id="myModal" tabindex="10" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close btn-close-win" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">卖家备注</h4>
+        </div>
+        <div class="modal-body">
+        
+        <form action="" id="remarkForm">
+        	<input type="hidden" name="remarkTradeIds" id="remarkTradeIds">
+	         <!--内容部分-->
+	         <div class="bzpopu">
+	           <div class="left">备注内容：</div><textarea name="remark" id="remark"></textarea>
+	         </div>
+	         <!--内容部分end-->
+		</form>
+		
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary this-close-bz" data-ok="modal" onclick="addRemarkMethod();">确定</button>
+            <button type="button" class="btn btn-default btn-close-win Hui-black" data-dismiss="modal">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!--备注内容小弹窗end-->
+
+<!--发货小弹窗-->
+<div class="modal fade new-css MarkBGAll-zIndex"  id="sendGoodsModalMin" tabindex="10" role="dialog" aria-labelledby="myModalLabel">
+</div>
+<!--发货小弹窗end-->
+
+
+<!--批量发货大弹窗内含两种情况-->
+<div class="modal fade new-css biger MarkBGAll-zIndex" id="sendGoodsModalMax" tabindex="10" role="dialog" aria-labelledby="myModalLabel">
+   
+
+</div>
+<!--批量发货弹窗end-->
+
+
+</body>
+
+<script type="text/javascript">
+var addMark = function(){
+    $('#myModal').before('<div id="MarkBG"></div>');
+    $('#MarkBG').fadeIn(100);
+    $('body').addClass('overflow-hidden-scroll');
+  }
+var searchResulu = $!trades.data.size();//搜索内容结果集
+ $(function(){
+   if(searchResulu==0){
+    $('.newTabTop').hide();
+   }
+   //弹窗显示控制
+   //显示弹窗方法 eg；
+   $(document).on('click','.remark',function(){
+    $('#myModal').fadeIn(100);
+   })
+   $(document).on('click','.MarkBGAll-zIndex .btn-close-win,.MarkBGAll-zIndex .this-close-bz',function(){
+     $(this).parents('.MarkBGAll-zIndex').fadeOut(100);
+     $('#MarkBG').remove();//删除蒙版
+     $('body').removeClass('overflow-hidden-scroll');
+   })
+   //下拉选择
+   $(document).on('click','.selectMessage',function(event){
+      event.stopPropagation();
+      var resultTxt = $(this).find('.result span').text();
+      var dl = $(this).find('dl');
+      var dd = dl.find('dd');
+      var _i =  $(this).find('.result i');
+      var changehei = dl.height();
+      dl.css({'bottom':-(changehei+15)})
+      if(dl.is(':hidden')){
+        dl.show();
+        _i.addClass('on');
+      }else{
+        //dl.hide();
+        //_i.removeClass('on');
+      }
+      for(var i=0;i<dd.length;i++){
+              if(dd.eq(i).text()==resultTxt){
+                dd.eq(i).addClass('on');
+              }
+        }
+   })
+   $(document).on('click','.selectMessage dl dd',function(event){
+     event.stopPropagation();
+     var t = $(this).text();
+     $(this).siblings().removeClass('on');
+     $(this).addClass('on');
+     $(this).parents('.selectMessage').find('.result span').html(t);
+     $(this).parents('.selectMessage').find('dl').hide();
+     $(this).parents('.selectMessage').find('i').removeClass('on');
+   })
+   //删除批量发货中的某个订单
+   $(document).on('click','.close_this_list',function(){
+    var length = jQuery("#sendGoodsModalMax .Messagelist").length;
+    var _self = $(this);
+    if(length>1){
+     $(this).tooltip({
+      text: '您确定删除此订单？',
+      icon: 'icon-warnfill',
+      style: 'z-danger',
+      placement: 'top',
+      align: 'right',
+      okHide: function() {
+        _self.parents('.Messagelist').remove();
+        $.alert({
+          text: '删除成功!',
+          time: 3000
+        });
+      },
+      cancelHide: function() {
+        $.alert({
+          type: 'info',
+          text: '取消成功!',
+          time: 3000
+        });
+      }
+      });
+     }else if(length==1){
+          $.alert({
+          type: 'info',
+          text: '最少发货一个',
+          time: 3000
+          });
+        return ;
+     }
+     return false; // 记得要 return false;
+   })
+   //批量填写 
+   $(document).on('click','.all-write-thisName',function(){
+     var companyName = $('#sendGoodsModalMax .item-list .result span').text();//物流公司
+     var ddNum = $('#sendGoodsModalMax .item-list #productNameVal').val();//快递号
+     console.log(companyName)
+     console.log(ddNum)
+     var length = $("#sendGoodsModalMax .Messagelist").length;
+     $("#sendGoodsModalMax .Messagelist").each(function(index){
+        $(this).find('.selectMessage .result span').text(companyName);
+        $(this).find('input[name=codes]').val(ddNum);
+     })
+
+   })
+   
+ })
+</script>
+
+
+<script type="text/javascript">
+$(function(){
+//时间控件
+$('#startTime').datepicker().on("click",function(ev){
+	$('#startTime').datepicker("setStartDate",addDate(new Date(),-3));
+	var endDate = jQuery('#endTime').val();
+	if(endDate==null || endDate==''){
+		endDate = new Date() + 1;
+	}
+	$('#startTime').datepicker("setEndDate",endDate);
+  $('.today').addClass('day');
+});
+$('#endTime').datepicker().on("click",function(ev){
+	$('#endTime').datepicker("setEndDate",new Date() +1);
+	$('#endTime').datepicker("setStartDate",$('#startTime').val());
+  $('.today').addClass('day');
+});
+//分类tab筛选
+$('#FenleiTab li').click(function(){
+   $(this).addClass('active').siblings().removeClass('active');
+
+});
+
+//单选多选
+$(document).on('click','.select-chexkbox',function(){
+	if($(this).hasClass('checked')){
+		$(this).removeClass('checked');
+		$(this).find('input[name=tradeIds]').prop("checked",false);
+	}else{
+		$(this).addClass('checked');
+		$(this).find('input[name=tradeIds]').prop("checked",true);
+	}	
+});
+var forEaInput = function(bloon){
+	for(var i=0;i<$('.NewTable input[name=tradeIds]').length;i++){
+		$('.NewTable input[name=tradeIds]').eq(i).prop("checked",bloon);
+		if(bloon){
+			$('.NewTable .select-chexkbox').addClass('checked')
+		}else{
+			$('.NewTable .select-chexkbox').removeClass('checked');//全选
+		}
+	}
+}
+$(document).on('click','.selectAll',function(){
+   if($(this).hasClass('checked')){
+   	        $(this).removeClass('checked');
+			forEaInput(false);
+		}else{
+			 $(this).addClass('checked');
+			 forEaInput(true);
+		}
+})
+$('.select-close-outtime').click(function(){
+    if($(this).hasClass('checked')){
+	   jQuery("#noShowStatus").val("");
+	   submitForm1();
+   }else{
+    	jQuery("#noShowStatus").val("7");
+    	submitForm1();
+	}
+});
+	//关闭订单
+	$('.closeTrade').click(function(){
+		var id= $(this).attr('data-tradeId');
+		$(this).tooltip({
+			text: '您确定关闭交易吗？',
+			icon: 'icon-warnfill',
+			style: 'z-danger',
+			placement: 'top',
+			align: 'center',
+			okHide: function() {
+				closeTrade(id);
+			},
+			cancelHide: function() {
+				
+			}
+		});
+		return false;	// 记得要 return false;
+});
+	
+});
+
+
+
+	//分页
+	
+	function pageNext(a,b){
+		var nextPageNo = 0;
+		if(a==1){
+			nextPageNo = b-1;
+			//上一页
+			if(nextPageNo<1){
+				//alert("已经是第一页了");
+				return ;
+			}
+		}else if(a==2){
+			//下一页
+			nextPageNo = b+1;
+			if(nextPageNo>$!trades.pageCount){
+				//alert("已经是最后一页了");
+				return ;
+			}
+		}else if(a==3){
+			//
+			nextPageNo = b;
+		}
+
+		jQuery("#pageNo").val(nextPageNo);
+		submitForm1();
+	}
+	var pageCount = $!trades.pageCount;//模拟后台总页数
+	var pageIndex = $trades.pageNo;//当前第几页变量
+	var pageSplice = 5;//分页显示个数
+    var pgSp = new Antiwild({
+    	pageCount : pageCount,//后台总页数
+    	pageIndex : pageIndex,//当前页 >=1 <=pageCount
+    	pageSplice : pageSplice,//分页显示个数 > 1
+    	indexClass:'active',//当前页显示class
+    	pageNode : '#FenYe',//导入的Dom id or class
+    	pageClickFn:function(index){//点击页面执行方法
+          //console.log(index);//索引
+          pageNext("3",(parseInt($('#FenYe li a').eq(index).text())));
+    	},
+    	pageUp : function(){//点击上一页执行方法
+    	  //console.log('上一页');
+    	  pageNext("1",$trades.pageNo);
+    	},
+    	pageDown : function(){//点击下一个执行方法
+    	  //console.log('下一页');
+    	  pageNext("2",$trades.pageNo);
+    	}
+    })
+	function submitForm1(){
+		document.getElementById("form1").submit();
+	}
+	
+	/***
+	*显示发货弹层
+	****/
+	function sendGoogs(tradeId,divId,type){
+		var mode = new Array();
+		if(type==2){
+			//是批量发货
+			var val = jQuery("input[name='tradeIds']:checked");
+			if(val.length == 0){
+				jQuery.alert({
+					type: 'error',
+					text: '您还未选择任何订单',
+					time: 3000
+				});
+				return ;
+			}else{
+				val.each(function(index){
+					if(index==(val.length-1)){
+						tradeId = tradeId+jQuery(this).val();
+					
+					}else{
+						tradeId = tradeId+jQuery(this).val()+",";
+					}
+					var modeVal = jQuery(this).attr('data-mode');
+					mode.push(modeVal);
+				});
+			}
+		}
+		if(mode.indexOf('1')!=-1 && mode.indexOf('2')!=-1){
+			jQuery.alert({
+				type: 'error',
+				text: '您选择的订单,发货方式不同',
+				time: 3000
+			});
+			return ;
+		}
+		 jQuery.ajax({
+			url:"/trade/sendGoogsPage",
+			data:"tradeIds="+tradeId+"&type="+type,
+			type:"post",
+			dataType:"html",
+			success:function(data){
+				jQuery('#'+divId).html(data);
+			},
+			error:function(data){
+				
+			}
+		}); 
+		 
+		//显示弹层和遮罩
+		jQuery('#'+divId).fadeIn(100);
+		addMark();
+	}
+	
+	function sendGoogsMethod(fromId){
+		
+		
+		var flag = false;
+		
+		jQuery("input[name='codes']").each(function(){
+			if(jQuery(this).val()==null || jQuery(this).val()==''){
+				flag =true;
+				return ;
+			}
+		});
+		
+		if(flag){
+			jQuery.alert({
+				type: 'error',
+				text: '运单号不能为空!',
+				time: 3000
+			});
+			return;
+		}
+		
+		
+	     
+		jQuery("input[name='companys']").each(function(index){
+			jQuery(this).val(jQuery('#result'+(index+1)).text());
+		});
+		
+		jQuery.ajax({
+			url:"/trade/sendGoogs",
+			data:jQuery("#"+fromId).serialize(),
+			type:"post",
+			dataType:"json",
+			success:function(data){
+				if(data!=null && data.success){
+					jQuery.alert({
+						type: 'success',
+						text: '发货成功!',
+						time: 3000
+					});
+					jQuery(this).parents('.MarkBGAll-zIndex').fadeOut(100);
+					jQuery('#MarkBG').remove();//删除蒙版
+					jQuery('body').removeClass('overflow-hidden-scroll');
+					submitForm1();
+				}else{
+					jQuery.alert({
+						type: 'error',
+						text: data.msg,
+						time: 3000
+					});
+				}
+			},
+			error:function(){
+				jQuery.alert({
+					type: 'error',
+					text: '发货失败,请稍后重试!',
+					time: 3000
+				});
+			}
+		});
+	}
+	/**
+	*订单状态
+	*/
+	function tradeStatus(status,type){
+		if(type==1){
+			//查询订单状态
+			jQuery("#status").val(status);
+			submitForm1();
+		}else if(type==2){
+			//查询近三个月和前三个月
+			jQuery("#time").val(status);
+			jQuery("#status").val("");
+			submitForm1();
+		}
+	}
+	/***
+	* 加减月份
+	**/
+	function addDate(date,month){ 
+		var d=new Date(date); 
+		//d.setDate(d.getDate()+days); 
+		d.setMonth(d.getMonth()+month);
+		var month=d.getMonth()+1;
+		var day = d.getDate(); 
+		if(month<10){ 
+		month = "0"+month; 
+		} 
+		if(day<10){ 
+		day = "0"+day; 
+		} 
+		var val = d.getFullYear()+"-"+month+"-"+day; 
+		return val; 
+	}
+	
+	/**
+	*添加备注
+	*str1 是原备注的值
+	*str2 是订单号
+	*type是不同的类型标识
+	***/
+	function addRemark(str1,str2,type){
+		var tradeId = str2;
+		if(type==3){
+			//是批量增加备注
+			var val = jQuery("input[name='tradeIds']:checked");
+			if(val.length == 0){
+				jQuery.alert({
+					type: 'error',
+					text: '您还未选择任何订单',
+					time: 3000
+				});
+				return ;
+			}else{
+				val.each(function(index){
+					if(index==(val.length-1)){
+						tradeId = tradeId+jQuery(this).val();
+					}else{
+						tradeId = tradeId+jQuery(this).val()+",";
+					}
+				});
+			}
+		}
+		
+		jQuery("#remarkTradeIds").val(tradeId);
+		jQuery("#remark").val(str1);
+		//显示弹层和遮罩
+		$('#myModal').fadeIn(100);
+		addMark();
+	}
+	/***
+	*添加备注提交方法
+	***/
+	function addRemarkMethod(){
+		jQuery.ajax({
+			url:"/trade/addSaleRemark",
+			data:jQuery("#remarkForm").serialize(),
+			type:"POST",
+			dataType:"JSON",
+			success:function(data){
+				if(data!=null && data.success){
+					jQuery.alert({
+						type: 'success',
+						text: '添加备注成功',
+						time: 3000
+					});
+					submitForm1();
+				}else{
+					jQuery.alert({
+						type: 'error',
+						text: data.msg,
+						time: 3000
+					});
+				}
+			},
+			error:function(){
+				jQuery.alert({
+					type: 'error',
+					text: '添加备注失败,请稍后重试!',
+					time: 3000
+				});
+			}
+		});
+	}
+	/**
+	*关闭订单
+	***/
+	function closeTrade(tradeId){
+		jQuery.ajax({
+			url:"/trade/closeTrade",
+			data:"tradeId="+tradeId,
+			type:"post",
+			dataType:"json",
+			success:function(data){
+				if(data!=null && data.success){
+					jQuery.alert({
+						type: 'success',
+						text: '关闭订单成功',
+						time: 3000
+					});
+					submitForm1();
+				}else{
+					jQuery.alert({
+						type: 'error',
+						text: data.msg,
+						time: 3000
+					});
+				}
+			},
+			error:function(data){
+				jQuery.alert({
+					type: 'error',
+					text: '关闭订单失败,请稍后重试!',
+					time: 3000
+				});
+			}
+		});
+	}
+	
+	$(document).on('keypress','input.search',function(event){
+		var self = $(this);
+	    var code = event.keyCode;
+	    if(code==13){
+	    	searchLogisName(self);
+	    }
+	 })
+	 function searchLogisName(self){
+		 var name = self.val();
+		 jQuery.ajax({
+				url:"/trade/queryLogistics",
+				data:"name="+name,
+				type:"post",
+				dataType:"json",
+				success:function(data){
+					if(data!=null && data.success){
+						var html = '';
+						if(data.list!=null){
+							for(var i=0;i<data.list.length;i++){
+								html = html+'<dd class="">'+data.list[i].name+'</dd>';
+							}
+						}
+						self.parents('dl').find('dd').remove();
+						self.parents('dl').find('dt').after(html)
+						//jQuery("#parentDlId").html(html);
+					}else{
+						jQuery.alert({
+							type: 'error',
+							text: data.msg,
+							time: 3000
+						});
+					}
+				},
+				error:function(){
+					jQuery.alert({
+						type: 'error',
+						text: '操作失败,请稍后重试!',
+						time: 3000
+					});
+				}
+			});
+	 }
+	
+</script>
+</html>

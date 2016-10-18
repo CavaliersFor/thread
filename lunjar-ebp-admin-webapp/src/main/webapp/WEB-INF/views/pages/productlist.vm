@@ -1,0 +1,736 @@
+#parse("pages/commons/header.vm")
+<div class="content">
+  <!--内容部分-->
+  <div class="breadcrumb">
+    <a class="breadcrumb-item active">商品管理</a>
+  </div>
+  <div id="sraechoder" class="border-ra-cl">
+    <form action="/product/list" id="productForm" method="Post">
+      <input type="hidden" name="pageNo" id="pageNo" value="1"/>
+      <input type="hidden" name="status" id="productStatus" value="$!query.status">
+      <div class="commoditymanage-search">
+        <input class="input input-number new_input_wi" type="text"  maxlength="15" name="productName" value="$!productName" placeholder="商品名称"/>
+        <div class="inlineSraech">
+          <div class="left">价格</div>
+          <input class="input input-number new_input_wi" type="text"  maxlength="15" name="salePriceFrom" value="$!query.salePriceFrom" placeholder=""onKeyUp="this.value=this.value.replace(/[^\.\d]/g,'');if(this.value.split('.').length>2){this.value=this.value.split('.')[0]+'.'+this.value.split('.')[1]}"/><span class="Hui">-</span>
+          <input class="input input-number new_input_wi" type="text"  maxlength="15" name="salePriceTo" value="$!query.salePriceTo" placeholder=""onKeyUp="this.value=this.value.replace(/[^\.\d]/g,'');if(this.value.split('.').length>2){this.value=this.value.split('.')[0]+'.'+this.value.split('.')[1]}"/>
+        </div>
+        #*
+        <div class="inlineSraech"style="position:relative;top:10px;">
+          <div class="left">状态</div>
+          <div class="selectMessage"style="width:120px;left:-3px;top:0px;margin-right: 10px;">
+            <div class="result"><span id="result">出售中</span><i class=""></i></div>
+            <dl>
+                 <dd class="">出售中</dd>
+                 <dd class="">仓库中</dd>
+            </dl>
+           </div>
+        </div>
+        *#
+         <a href="javascript:;" class="btn btn-large btn-primary find" style="position:relative;top:-2px;">搜  索</a>      </div>
+      </div>
+    </form>
+  <!--table-->
+  <div id="showList" class="table-wrap">
+    <div class="tab" id="FenleiTab">
+      <ul>
+        <li #if($!query.status==1) class="active" #end><a href="javascript:;" onclick="product.choiceStatus('1')" >出售中</a></li>
+        <li #if($!query.status==2) class="active" #end ><a href="javascript:;" onclick="product.choiceStatus('2')">仓库中</a></li>
+      </ul>
+    </div>
+    <div class="clear"></div>
+    <div class="newTabTop">
+      <div class="checkbox  selectAll">
+        <span class="checkbox-icon"> <i class="icon-checked"></i> <input
+          type="checkbox" />
+        </span>
+      </div>
+      全选本页面 
+      #if($!query.status==2)
+      <span class="paDing paDing-l manyUpOrDown" dataVal="1,1,0">批量上架</span> <span
+        class="paDing manyDelete">删除</span>
+      <div class="clear"></div>
+      #end
+      #if($!query.status==1)
+      <span class="paDing paDing-l manyUpOrDown" dataVal="2,1,0">批量下架</span>
+    #end
+    </div>
+
+    <!--表格开始-->
+    <table cellpadding="0" cellspacing="0" border="0" align="center"
+      class="NewTable commoditymanage
+           commoditymanage2">
+      <tr class="mar-p-h">
+        <th>商品名称</th>
+        <th>价格</th>
+        <th>库存</th>
+        <th>总销量</th>
+        <th>发布时间</th>
+        #if($!query.status==2)
+          <th>结束时间</th>
+        #end
+        <th>操作</th>
+      </tr>
+      #if($!ps && $!ps.data.size()>0)
+        #foreach($!p in $!ps.data)
+          <tr data-sata="">
+            <td class="left border-top" style="vertical-align: top;">
+              <div class="img f-l">
+                  <div class="checkbox select-chexkbox"
+                    style="margin-right: 0; margin-top: 20px;">
+                    <span class="checkbox-icon"> <i class="icon-checked"></i>
+                      <input type="checkbox" name="productsId" value="$!p.product.id" />
+                    </span>
+                  </div>
+                <img src="$!p.product.pathUrl" alt="" width="50" height="50">
+              </div>
+                <form id="savePname$!p.product.id">
+                <input type="hidden" name="productId" value="$!p.product.id"/>
+              <div class="Message f-l">
+                <h3 class="hover-show"><span id="text">$!p.product.name</span><i></i>
+                <!--修改商品标题框-->
+	                <div class="changeTitlePopu">
+	                  <div class="_ptitle">还能输入<span class="red">30</span>个字</div>
+	                  <textarea class = "productTitle" name="productName"></textarea>
+	                  <div class="buttom">
+	                   <a class="btn btn-small btn-primary right-btn savePName" dataVal="$!p.product.id">保 存</a>
+	                 </div>
+	                </div>
+                <!--修改商品标题框-->
+                </h3>
+              </div>
+               </form>
+            </td>
+            <td class="center w-gd"><span class="Edit-price red">￥$!p.product.salePrice<i></i>
+              <!--修改商品弹窗价格-->
+               <div class="_changePrice_">
+               <form id="updatePrice$!p.product.id">
+                 <h3><span class="right close">╳</span></h3>
+                 <div class="overSrc">
+                 <ul>
+                    
+                  #if($!p.skus && $!p.skus.size()>0)
+                    #foreach($sku in $!p.skus)
+                    	<input type="hidden" name="skuIds" value="$!sku.id"/>
+                        <li>
+                          <div class="left" title="$!sku.propertiesname">$!sku.propertiesname：</div>
+                          <div class="right"><input type="text" name="prices" class="input" value="$!sku.price"onKeyUp="this.value=this.value.replace(/[^\.\d]/g,'');if(this.value.split('.').length>2){this.value=this.value.split('.')[0]+'.'+this.value.split('.')[1]}"></div>
+                          <div class="clear"></div>
+                        </li>
+                      #end
+                   #else
+                   <input type="hidden" name="productId" value="$!p.product.id"/>
+                    <li>
+                        <div class="left"><span class="red">一口价：</span></div>
+                        <div class="right"><input type="text" name="prices" class="input" value="$!p.product.salePrice"></div>
+                        <div class="clear"></div>
+                      </li>
+                  #end
+                 </ul>
+                 <div class="buttom">
+                   <a  class="btn btn-small btn-primary right-btn savePrice" dataVal="$!p.product.id">保 存</a>
+                 </div>
+                </div>
+                </form>
+               </div>
+              <!--修改商品弹窗价格end-->
+            </span></td>
+            <td class="w-gd">$!p.product.productNum</td>
+            <td class="w-gd">$!p.product.saleNum</td>
+            <td class="w-gd w-130">
+              <p class="time">$!date.format('yyyy-MM-dd HH:mm:ss ',$!p.product.gmtCreate)</p>
+            </td>
+             #if($!query.status==2)
+              <td class="w-gd w-130">
+                <p class="time">$!date.format('yyyy-MM-dd HH:mm:ss ',$!p.product.gmtModify)</p>
+              </td>
+            #end
+            <td class="w-gd seting">
+              #if($!query.status==1)
+                <a href="javascript:;" class="blue manyUpOrDown" dataVal="2,2,$!p.product.id" >下架</a> 
+              #end
+              #if($!query.status==2)
+                <a href="javascript:;" class="blue manyUpOrDown" dataVal="1,2,$!p.product.id">上架</a> 
+              #end
+              <a href="/product/add?id=$!p.product.id" class="blue">编辑></a>
+            </td>
+          </tr>
+        #end
+      #end
+    </table>
+    <!--表格结束-->
+    <div class="newTabTop">
+    
+      <div class="checkbox  selectAll">
+        <span class="checkbox-icon"> <i class="icon-checked"></i> <input
+          type="checkbox" />
+        </span>
+      </div>
+      全选本页面 
+    #if($!query.status==2)
+      <span class="paDing paDing-l manyUpOrDown" dataVal="1,1,0">批量上架</span>
+      <span class="paDing manyDelete" >删除</span>
+    #end
+    #if($!query.status==1)
+      <span class="paDing paDing-l manyUpOrDown" dataVal="2,1,0">批量下架</span>
+    #end
+      <div class="right" style="height: 30px;">
+        <!--分页-->
+        <div class="page-list" id="FenYe"></div>
+        <!--分页-->
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+  <!--showList end-->
+
+  <!--内容部分-->
+</div>
+<!--end content-->
+</div>
+<!--end container-->
+<script type="text/javascript">
+var addMark = function(){
+    $('#myModal').before('<div id="MarkBG"></div>');
+    $('#MarkBG').fadeIn(100);
+    $('body').addClass('overflow-hidden-scroll');
+  }
+  //限制字数方法
+  jQuery.fn.maxLength = function(max){
+        this.each(function(){
+            var type = this.tagName.toLowerCase();
+            var inputType = this.type? this.type.toLowerCase() : null;
+            if(type == "input" && inputType == "text" || inputType == "password"){
+                //Apply the standard maxLength
+                this.maxLength = max;
+            }
+            else if(type == "textarea"){
+                this.onkeypress = function(e){
+                    var ob = e || event;
+                    var keyCode = ob.keyCode;
+                    var hasSelection = document.selection? document.selection.createRange().text.length > 0 : this.selectionStart != this.selectionEnd;
+                    return !(this.value.length >= max && (keyCode > 50 || keyCode == 32 || keyCode == 0 || keyCode == 13) && !ob.ctrlKey && !ob.altKey && !hasSelection);
+                };
+                this.onkeyup = function(){
+                    var num = this.value.length;
+                    $(this).parents('.changeTitlePopu').find('span.red').text(30-num);
+                    if(this.value.length > max){
+                        this.value = this.value.substring(0,max);
+                    }
+                };
+            }
+        });
+    };
+
+  //弹窗显示控制
+  $(function() {
+    //下拉选择
+   $(document).on('click','.selectMessage',function(){
+      var resultTxt = $(this).find('.result span').text();
+      var dl = $(this).find('dl');
+      var dd = dl.find('dd');
+      var _i =  $(this).find('.result i');
+      var changehei = dl.height();
+      dl.css({'bottom':-(changehei+15)})
+      if(dl.is(':hidden')){
+        dl.show();
+        _i.addClass('on');
+      }else{
+        dl.hide();
+        _i.removeClass('on');
+      }
+      for(var i=0;i<dd.length;i++){
+              if(dd.eq(i).text()==resultTxt){
+                dd.eq(i).addClass('on');
+              }
+        }
+   })
+   $(document).on('click','.selectMessage dl dd',function(event){
+     event.stopPropagation();
+     var t = $(this).text();
+     $(this).siblings().removeClass('on');
+     $(this).addClass('on');
+     $(this).parents('.selectMessage').find('.result span').html(t);
+     $(this).parents('.selectMessage').find('dl').hide();
+     $(this).parents('.selectMessage').find('i').removeClass('on');
+   })
+    //document click even 
+    $(document).on('click','body',function(ev){
+      var el = $(ev.target);
+      //console.log(el)
+      if(el.is('.Edit-price i') ||el.parents().is('._changePrice_')||el.is('.hover-show i')||el.parents().is('.hover-show')){
+      }else{
+        $('._changePrice_').hide();
+        $('.changeTitlePopu').hide();
+        $('.hover-show #text').show();
+      }
+    })
+    //输入框现在字数
+    $('.productTitle').maxLength(30);
+    $(document).on('click','.MarkBGAll-zIndex .btn-close-win',function(){
+     $(this).parents('.MarkBGAll-zIndex').fadeOut(100);
+     $('#MarkBG').remove();//删除蒙版
+     $('body').removeClass('overflow-hidden-scroll');//放开滚动条
+   })
+    //单选多选
+    $(document).on('click', '.select-chexkbox', function() {
+      if ($(this).hasClass('checked')) {
+        $(this).removeClass('checked');
+        $(this).find('input[name=productsId]').prop("checked", false);
+      } else {
+        $(this).addClass('checked');
+        $(this).find('input[name=productsId]').prop("checked", true);
+      }
+    });
+    var forEaInput = function(bloon) {
+      for (var i = 0; i < $('.commoditymanage input[name=productsId]').length; i++) {
+        $('.commoditymanage input[name=productsId]').eq(i).prop(
+            "checked", bloon);
+        if (bloon) {
+          $('.commoditymanage .select-chexkbox').addClass('checked')
+        } else {
+          $('.commoditymanage .select-chexkbox').removeClass(
+              'checked');//全选
+        }
+      }
+    }
+    $(document).on('click', '.selectAll', function() {
+      if ($(this).hasClass('checked')) {
+        $(this).removeClass('checked');
+        forEaInput(false);
+      } else {
+        $(this).addClass('checked');
+        forEaInput(true);
+      }
+    })
+ 
+  })
+  //下架 || 上架
+  $('#operation-this').click(function() {
+    var t = $(this).text();
+    if (t == '上架') {
+      $(this).tooltip({
+        text : '您确定要上架该商品？',
+        icon : 'icon-warnfill',
+        style : 'z-danger',
+        placement : 'top',
+        align : 'center',
+        okHide : function() {
+          $.alert({
+            type : 'success',
+            text : '上架成功!',
+            time : 3000
+          });
+        },
+        cancelHide : function() {
+          $.alert({
+            text : '已取消!',
+            time : 3000
+          });
+        }
+      });
+    } else if (t == '下架') {
+      $(this).tooltip({
+        text : '您确定要下架该商品？',
+        icon : 'icon-warnfill',
+        style : 'z-danger',
+        placement : 'top',
+        align : 'center',
+        okHide : function() {
+          $.alert({
+            type : 'success',
+            text : '下架成功!',
+            time : 3000
+          });
+        },
+        cancelHide : function() {
+          $.alert({
+            text : '已取消!',
+            time : 3000
+          });
+        }
+      });
+    }
+    return false;
+  })
+  //编辑商品信息
+  /*价格*/ 
+  var hoverShow = function(o){
+     $(o).hover(function(){
+      $(this).find('i').fadeIn(150);
+    },function(){
+      $(this).find('i').fadeOut(150);
+    })
+  }
+  hoverShow('.Edit-price');
+  //hoverShow('.commoditymanage .left div.Message h3.hover-show');
+  $('.commoditymanage .left div.Message h3.hover-show').hover(function(){
+     if(!$(this).find('#text').is(':hidden')){
+       $(this).find('i').fadeIn(150);
+     }
+    },function(){
+      $(this).find('i').fadeOut(150);
+    })
+  /*
+  点击显示编辑商品价格
+  */
+   $(document).on('click','.Edit-price i',function(){
+    var wi = $(this).parent('.Edit-price').width();
+    $(this).next('._changePrice_').fadeIn(100);
+    $(this).next('._changePrice_').css({
+      'left' : (wi-10)
+    })
+   })
+  $(document).on('click','._changePrice_ span.close',function(event){
+    event.stopPropagation();
+    $(this).parents('._changePrice_').fadeOut(100);
+  })
+  //编辑商品价格点击确定
+/*   $('._changePrice_ .buttom a.right-btn').click(function(){
+    $.alert({
+            text : '编辑成功!',
+            time : 3000
+          });
+   //隐藏弹窗
+   $(this).parents('._changePrice_').fadeOut(100);
+  }) */
+ /*
+  点击编辑商品标题
+  */
+ $(document).on('click','.commoditymanage .left div.Message h3.hover-show i',function(){
+    var wi = $(this).parent('.hover-show').width();
+    //console.log(wi)
+    var t = $(this).parents('.hover-show').find('#text').text();
+    $(this).parents('.hover-show').find('#text').hide();
+    $(this).parents('.hover-show').find('.productTitle').val(t).focus();
+    $(this).next('.changeTitlePopu').fadeIn(100);
+  
+   })
+ //保存标题 并隐藏输入框
+ /* $('.commoditymanage a.right-btn').click(function(){
+    $.alert({
+            text : '保存成功!',
+            time : 3000
+          });
+    var t = $(this).parents('.commoditymanage').find('.productTitle').val();
+    //赋值
+    $(this).parents('.hover-show').find('#text').html(t).show();
+   //隐藏弹窗
+   $(this).parents('.commoditymanage').fadeOut(100);
+  }) */
+ 
+  var product = {
+        commitForm:function(){
+              jQuery("#productForm").submit();
+            },
+        choiceStatus:function(status){
+          jQuery("#productStatus").val(status);
+          product.commitForm();
+        },
+        manyUpOrDown:function(type1,type2,productId){
+          //type1:表示是上架还是下架 1是上架 2 是下架
+          //type2:表示批量还是单个 1表示批量 2表示单个
+          //productId单个上架或下架才有值，批量的时候是0,上架或下架的商品id
+          var msgSucc = "";
+          var msgError = "";
+          if(type2==1){
+            productId="";
+            var val = jQuery("input[name='productsId']:checked");
+            if(val.length == 0){
+              jQuery.alert({
+                type: 'error',
+                text: '您还未选择任何商品',
+                time: 3000
+              });
+              return ;
+            }else{
+              val.each(function(index){
+                if(index==(val.length-1)){
+                  productId = productId+jQuery(this).val();
+                }else{
+                  productId = productId+jQuery(this).val()+",";
+                }
+              });
+            }
+            
+          }
+          if(type1==2){
+            msgSucc = "下架成功!";
+            msgError = "下架失败!";
+        }else{
+            msgSucc = "上架成功!";
+            msgError = "上架失败!";
+          }
+          jQuery.ajax({
+            url:"/product/productShelves",
+            data:"products="+productId+"&type="+type1,
+            type:"post",
+            dataType:"json",
+            success:function(data){
+              if(data!=null && data.success){
+                jQuery.alert({
+                  type: 'success',
+                  text: msgSucc,
+                  time: 3000
+                });
+                product.commitForm();
+              }else{
+                jQuery.alert({
+                  type: 'error',
+                  text: data.msg,
+                  time: 3000
+                });
+              }
+            },
+            error:function(data){
+              jQuery.alert({
+                type: 'error',
+                text: msgError,
+                time: 3000
+              });
+            }
+          }); 
+        },
+        manyDelete:function(productId){
+        	
+        	
+        	productId="";
+            var val = jQuery("input[name='productsId']:checked");
+            if(val.length == 0){
+              jQuery.alert({
+                type: 'error',
+                text: '您还未选择任何商品',
+                time: 3000
+              });
+              return ;
+            }else{
+              val.each(function(index){
+                if(index==(val.length-1)){
+                  productId = productId+jQuery(this).val();
+                }else{
+                  productId = productId+jQuery(this).val()+",";
+                }
+              });
+            }
+        	
+        	jQuery.ajax({
+                url:"/product/delete",
+                data:"products="+productId,
+                type:"post",
+                dataType:"json",
+                success:function(data){
+                  if(data!=null && data.success){
+                    jQuery.alert({
+                      type: 'success',
+                      text: '删除成功!',
+                      time: 3000
+                    });
+                    product.commitForm();
+                  }else{
+                    jQuery.alert({
+                      type: 'error',
+                      text: data.msg,
+                      time: 3000
+                    });
+                  }
+                },
+                error:function(data){
+                  jQuery.alert({
+                    type: 'error',
+                    text: msgError,
+                    time: 3000
+                  });
+                }
+              }); 
+        },
+        updatePrice:function(id){
+        	jQuery.ajax({
+                url:"/product/updateProductAndSku",
+                data:jQuery("#updatePrice"+id).serialize(),
+                type:"post",
+                dataType:"json",
+                success:function(data){
+                  if(data!=null && data.success){
+                    jQuery.alert({
+                      type: 'success',
+                      text: '保存价格成功!',
+                      time: 3000
+                    });
+                    product.commitForm();
+                  }else{
+                    jQuery.alert({
+                      type: 'error',
+                      text: data.msg,
+                      time: 3000
+                    });
+                  }
+                },
+                error:function(data){
+                  jQuery.alert({
+                    type: 'error',
+                    text: '报错价格失败',
+                    time: 3000
+                  });
+                }
+              }); 
+        },
+        updatePName:function(id){
+        	jQuery.ajax({
+                url:"/product/updateProductAndSku",
+                data:jQuery("#savePname"+id).serialize(),
+                type:"post",
+                dataType:"json",
+                success:function(data){
+                  if(data!=null && data.success){
+                    jQuery.alert({
+                      type: 'success',
+                      text: '修改商品名称成功!',
+                      time: 3000
+                    });
+                    product.commitForm();
+                  }else{
+                    jQuery.alert({
+                      type: 'error',
+                      text: data.msg,
+                      time: 3000
+                    });
+                  }
+                },
+                error:function(data){
+                  jQuery.alert({
+                    type: 'error',
+                    text: '修改商品名称失败',
+                    time: 3000
+                  });
+                }
+              }); 
+        }
+      };
+  
+  jQuery(document).on('click','.find',function(){
+      product.commitForm();
+  });
+  
+  jQuery(document).on('click','.manyDelete',function(){
+	  
+	  $(this).tooltip({
+	      text: '您确定要删除这些商品?',
+	      icon: 'icon-warnfill',
+	      style: 'z-danger',
+	      placement: 'top',
+	      align: 'center',
+	      okHide: function() {
+	          product.manyDelete();
+	      },
+	      cancelHide: function() {
+	        
+	      }
+	    });
+	    return false;
+  });
+  
+  
+  
+  jQuery(document).on('click','.manyUpOrDown',function(){
+    
+    var str = jQuery(this).attr("dataVal").split(",");
+    
+    var tipMsg = "";
+    
+    if(str[0]==1 && str[1]==1){
+      tipMsg="您确定上架这些商品吗？";
+    }
+    if(str[0]==2 && str[1]==1){
+      tipMsg="您确定下架这些商品吗？";
+    }
+    
+    if(str[0]==1 && str[1]==2){
+      tipMsg="您确定上架该商品吗？";
+    }
+    
+    if(str[0]==2 && str[1]==2){
+      tipMsg="您确定下架该商品吗？";
+    }
+    
+    $(this).tooltip({
+      text: tipMsg,
+      icon: 'icon-warnfill',
+      style: 'z-danger',
+      placement: 'top',
+      align: 'center',
+      okHide: function() {
+          product.manyUpOrDown(str[0],str[1],str[2]);
+      },
+      cancelHide: function() {
+        
+      }
+    });
+    return false;
+  });
+  
+  
+//分页
+  
+  function pageNext(a,b){
+    var nextPageNo = 0;
+    if(a==1){
+      nextPageNo = b-1;
+      //上一页
+      if(nextPageNo<1){
+        //alert("已经是第一页了");
+        return ;
+      }
+    }else if(a==2){
+      //下一页
+      nextPageNo = b+1;
+      if(nextPageNo>$!ps.pageCount){
+        //alert("已经是最后一页了");
+        return ;
+      }
+    }else if(a==3){
+      //
+      nextPageNo = b;
+    }
+
+    jQuery("#pageNo").val(nextPageNo);
+    product.commitForm();
+  }
+  var pageCount = $!ps.pageCount;//模拟后台总页数
+  var pageIndex = $!ps.pageNo;//当前第几页变量
+  var pageSplice = 5;//分页显示个数
+    var pgSp = new Antiwild({
+      pageCount : pageCount,//后台总页数
+      pageIndex : pageIndex,//当前页 >=1 <=pageCount
+      pageSplice : pageSplice,//分页显示个数 > 1
+      indexClass:'active',//当前页显示class
+      pageNode : '#FenYe',//导入的Dom id or class
+      pageClickFn:function(index){//点击页面执行方法
+          //console.log(index);//索引
+          pageNext("3",(parseInt($('#FenYe li a').eq(index).text())));
+      },
+      pageUp : function(){//点击上一页执行方法
+        //console.log('上一页');
+        pageNext("1",$!ps.pageNo);
+      },
+      pageDown : function(){//点击下一个执行方法
+        //console.log('下一页');
+        pageNext("2",$!ps.pageNo);
+      }
+    })
+    
+  
+    jQuery(document).on('click','.savePrice',function(){
+    	var pid = jQuery(this).attr("dataVal");
+    	product.updatePrice(pid);    	
+    	$(this).parents('._changePrice_').fadeOut(100);
+    });
+  
+    jQuery(document).on('click','.savePName',function(){
+    	var pid = jQuery(this).attr("dataVal");
+    	product.updatePName(pid);    	
+    	$(this).parents('._changePrice_').fadeOut(100);
+    });
+  
+  </script>
+</body>
+</html>

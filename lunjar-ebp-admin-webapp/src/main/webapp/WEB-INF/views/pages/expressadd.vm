@@ -1,0 +1,439 @@
+#parse("pages/commons/header.vm")
+<div class="content">
+	<!--内容部分-->
+	<div class="breadcrumb">
+		<a class="breadcrumb-item active">物流管理/快递设置</a>
+	</div>
+	<form action="" id="postForm" method="post">
+		<input type="hidden" name="id" value="$!e.id">
+		<div class="express-setting">
+			<div class="first">计价方式</div>
+			<div class="radio-select" style="margin-top: 0px;">
+				<div
+					class="radio #if($!e.valuation==1) checked #end #if(!$!e.valuation)checked #end">
+					<span class="radio-icon icon-checked-radio"> <span
+						class="path1"></span> <span class="path2"></span> <input
+						type="radio" name="valuation" value="1" #if($!e.valuation==1)
+						checked="checked" #end #if(!$!e.valuation)checked="checked" #end />
+					</span> <span class="radio-text">按件数</span>
+				</div>
+				<div class="radio #if($!e.valuation==2) checked #end">
+					<span class="radio-icon icon-checked-radio"> <span
+						class="path1"></span> <span class="path2"></span> <input
+						type="radio" name="valuation" value="2" #if($!e.valuation==2)
+						checked="checked" #end />
+					</span> <span class="radio-text">按重量</span>
+				</div>
+				<div class="radio #if($!e.valuation==3) checked #end">
+					<span class="radio-icon icon-checked-radio"> <span
+						class="path1"></span> <span class="path2"></span> <input
+						type="radio" name="valuation" value="3" #if($!e.valuation==3)
+						checked="checked" #end />
+					</span> <span class="radio-text">按体积</span>
+				</div>
+			</div>
+			<div class="title">运费设置</div>
+			<div class="kd-seting-table">
+				<h3 class="ta-bg">快递运费设置</h3>
+				<table>
+					<tbody>
+						<tr>
+							<th width="320">配送区域</th>
+							<th>首件(个)</th>
+							<th>邮费(元)</th>
+							<th>续件(个)</th>
+							<th>邮费(元)</th>
+						</tr>
+					</tbody>
+					<tbody class="info-content">
+					#if($!e.listInfo && $!e.listInfo.size()>0)
+						#foreach($info in $!e.listInfo)
+						<tr>
+							#if($velocityCount==1)
+							<td>$!info.addresss<input type="hidden" 
+								value="$!info.addresss" name="addressss"></td>
+							#else
+							<td>指定地区<a href="javascript:;" title="编辑运送区域" class="pd-l-0"><i class="icon-re text-muted addAddress-i"></i></a><a
+								href="javascript:;" title="删除运送区域" class="pd-l"><i class="removeTrForText"></i></a><div class="Hui js-html-add">$!info.addresss</div><input type="hidden" 
+								value="$!info.addresss" name="addressss"></td>
+							#end
+								
+							<td><input type="text" class="input number"
+								value="$!info.firstNum" name="firstNums"></td>
+							<td><input type="text" class="input number"
+								value="$!info.firstPrice" name="firstPrices"></td>
+							<td><input type="text" class="input number"
+								value="$!info.addNum" name="addNums"></td>
+							<td><input type="text" class="input number"
+								value="$!info.addPrice" name="addPrices"></td>
+						</tr>
+						#end
+						#else
+							<tr>
+	                		<td>全国默认地区
+	                		<input type="hidden" value="全国默认地区" name="addressss">
+							</td>
+	                		<td>
+	                		<input type="text" class="input number" name="firstNums">
+	                		</td>
+	                		<td>
+	                		<input type="text" class="input number" name="firstPrices">
+	                		</td>
+	                		<td>
+	                		<input type="text" class="input number" name="addNums">
+	                		</td>
+	                		<td><input type="text" class="input number" name="addPrices">
+	                		</td>
+	                	   </tr>
+							
+						#end
+					</tbody>
+				</table>
+				<h3 class="ta-bg ta-add">
+					<span id="addMessaage">+指定地区城市设置邮费</span>
+				</h3>
+			</div>
+
+
+			<div class="ms-seting-buttom">
+				<a href="javascript:;" class="btn btn-primary" onclick="saveExpress();">保存</a> <a
+					href="javascript:history.back(-1);" class="btn  broder-green btn-gray">取消</a>
+			</div>
+	</form>
+</div>
+<!--选择地区弹窗-->
+<div class="modal fade new-css biger MarkBGAll-zIndex"
+	id="selectAddress_" tabindex="10" role="dialog"
+	aria-labelledby="myModalLabel"
+	style="width: 600px; height: 460px; top: 80px;"></div>
+<!--选择地区弹窗-->
+<!--切换计价方式小弹窗-->
+<div class="modal fade new-css MarkBGAll-zIndex" id="myModal-jjfs"
+	tabindex="10" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close btn-close-win"
+					data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">警告</h4>
+			</div>
+			<div class="modal-body">
+				<div class="left-icon"></div>
+				<div class="text">
+					<p>切换计价所设置当前模板的运费信息将被清空,确认继续?</p>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary this-close-bz"
+					data-ok="modal" id="ok-go">确定</button>
+				<button type="button"
+					class="btn btn-default btn-close-win Hui-black"
+					data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!--切换计价方式小弹窗-->
+
+<!--内容部分-->
+</div>
+<!--end content-->
+</div>
+<!--end container-->
+<script type="text/javascript">
+	var firstChecked = $('.radio-select .radio.checked').index();
+	var addMark = function() {//增加蒙版
+		$('body').before('<div id="MarkBG"></div>');
+		$('#MarkBG').fadeIn(100);
+		$('body').addClass('overflow-hidden-scroll');
+	}
+	var removeMark = function() {//删除蒙版
+		$('#MarkBG').remove();//删除蒙版
+		$('body').removeClass('overflow-hidden-scroll');
+	}
+	$(function() {
+		//radio
+		var CHECKED_CLASS = 'checked';
+		var clearCheckedRadio = function(name) {
+			var $input = $('.radio.checked').find('input[name="' + name + '"]');
+			var $radio = $input.parents('.radio');
+			$radio.removeClass('checked');
+			$input.prop('checked', false).trigger('change');
+			$radio.trigger('checkbox.change', false);
+		};
+		var check = function(checked) {
+			var $checkbox = $(this);
+			var $input = $checkbox.find('input');
+			if ($checkbox.is('.disabled, :disabled')) {
+				return;
+			}
+			if ($checkbox.is('.half-checkbox')) {
+				checked = true;
+				$checkbox.removeClass('half-checkbox');
+				$checkbox.find('.icon-halfcheck').removeClass('icon-halfcheck')
+						.addClass('icon-checked');
+			}
+			if ($checkbox.is('.radio')) {
+				clearCheckedRadio($input.attr('name'));
+			}
+			checked ? $checkbox.addClass(CHECKED_CLASS) : $checkbox
+					.removeClass(CHECKED_CLASS);
+			$input.prop('checked', checked).trigger('change');
+			$checkbox.trigger('checkbox.change', checked);
+		};
+		$(document).on('click', '.radio', function() {
+
+			var checked = $(this).is('.checked');
+			if (checked) {
+				return false;
+			} else {
+				addMark();
+				$('#myModal-jjfs').fadeIn('100');
+				check.call(this, true);
+			}
+			return false
+		})
+		//计价方式确认
+		$(document).on('click', '#myModal-jjfs #ok-go', function() {
+			removeMark();
+			$('#myModal-jjfs').fadeOut(100);
+			firstChecked = $('.radio-select .radio.checked').index();
+			//重置table
+			$('.info-content tr.more-add').remove();
+		})
+		//number
+		$('input.number').keyup(function() {
+			var v = $(this).val();
+			$(this).val(v.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g, ''));
+		})
+		/*
+		 *table表格操作
+		 */
+		//删除
+		$(document).on('click', '.removeTrForText', function() {
+			$(this).parents('tr').remove();
+		})
+		//增加
+		var trStr = '<tr class="more-add">'
+				+ '<td>'
+				+ '指定地区'
+				+ '<a href="javascript:;" title="编辑运送区域" class="pd-l-0">'
+				+ '<i class="icon-re text-muted addAddress-i"></i></a>'
+				+ '<a href="javascript:;" title="删除运送区域" class="pd-l">'
+				+ '<i class="removeTrForText"></i></a>'
+				+ '<div class="Hui js-html-add">未指定地区</div>' + '<input type="hidden" name="addressss"></td>'
+				+ '<td><input type="text" class="input number" name="firstNums"></td>'
+				+ '<td><input type="text" class="input number" name="firstPrices"></td>'
+				+ '<td><input type="text" class="input number" name="addNums"></td>'
+				+ '<td><input type="text" class="input number" name="addPrices"></td>' + '</tr>';
+		$(document).on('click', '#addMessaage', function() {
+			$('.kd-seting-table table .info-content').append(trStr);
+		})
+		//选择地址
+		$(document).on(
+				'click',
+				'.MarkBGAll-zIndex .btn-close-win',
+				function() {//关闭弹窗
+					$(this).parents('.MarkBGAll-zIndex').fadeOut(100);
+					removeMark();
+					//清楚编辑标记
+					$('.info-content tr').removeClass('setting-this');
+					//计价方式取消
+					$('.radio-select .radio').removeClass('checked');
+					$('.radio-select .radio input').prop('checked', false);
+					$('.radio-select .radio').eq(firstChecked).addClass(
+							'checked');
+					$('.radio-select .radio').eq(firstChecked).find('input')
+							.prop('checked', true);
+				})
+		//打开弹窗
+		$(document).on('click', '.addAddress-i', function() {
+			$(this).parents('tr').addClass('setting-this');
+			addMark();
+			$('#selectAddress_').fadeIn(100);
+			addWin(this);
+		})
+		//单选
+		$(document).on('click', '.select-chexkbox', function() {
+			if ($(this).hasClass('checked')) {
+				$(this).removeClass('checked');
+				$(this).find('input.AllSelectClass').prop("checked", false);
+				$(this).parents('li').removeClass('going-select');
+			} else {
+				$(this).addClass('checked');
+				$(this).find('input.AllSelectClass').prop("checked", true);
+				$(this).parents('li').addClass('going-select');
+			}
+		});
+		//全选
+		var forEaInput = function(bloon) {
+			for (var i = 0; i < $('ul.right-res input.checkboxForEach').length; i++) {
+				$('ul.right-res input.checkboxForEach').eq(i).prop("checked",
+						bloon);
+				if (bloon) {
+					$('ul.right-res .select-chexkbox').addClass('checked');
+					$('ul.right-res li').addClass('going-select');
+				} else {
+					$('ul.right-res .select-chexkbox').removeClass('checked');//全选
+					$('ul.right-res li').removeClass('going-select');
+				}
+			}
+		}
+		//全选
+		$(document).on('click', '.selectAll', function() {
+			if ($(this).hasClass('checked')) {
+				$(this).removeClass('checked');
+				forEaInput(false);
+			} else {
+				$(this).addClass('checked');
+				forEaInput(true);
+			}
+		})
+		//城市切换 导出二级城市
+		$(document).on('change', 'select.select-add', function() {
+			var _self = jQuery(this);
+			jQuery.ajax({
+				url : "/express/getCity",
+				data : "code="+_self.val(),
+				type : "POST",
+				dataType : "JSON",
+				success : function(data) {
+					if(data!=null && data.success){
+						var html = '<li>'+
+						'<div class="checkbox selectAll">'+
+							'<span class="checkbox-icon"> <i class="icon-checked"></i>'+
+							'<input type="checkbox" />'+
+							'</span>'+
+						'</div>全选</li>';
+						var html2 = "";
+						for(var i=0;i<data.list.length;i++){
+							html2=html2+'<li>'+
+						'<div class="checkbox select-chexkbox">'+
+							'<span class="checkbox-icon"> <i class="icon-checked"></i>'+
+								'<input type="checkbox" class="AllSelectClass checkboxForEach" />'+
+							'</span></div>'+data.list[i].regionName+'</li>';
+						}
+						jQuery("#city").html(html+html2);
+					}
+				},
+				error : function() {
+					alert("系统繁忙,稍后重试");
+				}
+			});
+		})
+		//选择二级
+		var forEachGoingSelect = function() {
+			$('.right-res .radio.checked').each(function() {
+				var alldata = '';
+				alldata += $.strTrim($(this).text()) + ',';
+				return $.removeStrLast(alldata);//去掉最后一个
+			})
+		}
+		
+        $(document).on('click','.right-res .checkbox',function(){
+        	var userDateAddress = [];
+            var oldText = $('#selectResult').html();
+            console.log(oldText)
+            if(oldText === '' || oldText ==='未指定地区'){
+            }else{
+               userDateAddress = oldText.split(',');
+            }
+            var parT = $('select.select-add option:selected').text();//父级选中的值
+            var thisText = $.strTrim($(this).parents('li').text());
+            if(thisText == '全选'){
+                    if($(this).hasClass('checked')){//如果是选中
+                    var le = $(this).parents('ul').find('li').length;
+                    for(var i=0;i<le;i++){
+                        var t = $.strTrim($(this).parents('ul').find('li').eq(i).text());
+                        if(i !==0){
+                            userDateAddress.push(t)//赋值
+                            userDateAddress = $.uniqueArr(userDateAddress);//去重
+                        }
+                    }
+                  }else{
+                    var le = $(this).parents('ul').find('li').length;
+                    for(var i=0;i<le;i++){
+                        var t = $.strTrim($(this).parents('ul').find('li').eq(i).text());
+                        if(i !==0){
+                            $.arrRemoveIndex(userDateAddress,t);//删除当前值
+                        }
+                    }
+                  }
+                }else{
+                   if($(this).hasClass('checked')){//如果是选中
+                      userDateAddress.push(thisText)//赋值
+                      userDateAddress = $.uniqueArr(userDateAddress);//去重
+                   }else{
+                      $.arrRemoveIndex(userDateAddress,thisText);//删除当前值
+                   }
+                }
+            $('#selectResult').html(userDateAddress.join(','))
+        })
+		//点击确定
+		$(document).on('click', '#sureAddress', function() {
+			var t = $('#selectResult').text();
+			$('.info-content tr.setting-this').find('.js-html-add').html(t);
+			$('.info-content tr.setting-this').find('input:eq(0)').val(t);
+			//清楚编辑标记
+			$('.info-content tr').removeClass('setting-this');
+			$('#selectAddress_').fadeOut(100);
+			removeMark();
+		})
+
+	})
+
+	function addWin(self) {
+		var _self = $(self);
+		var oldText = _self.parents('td').find('.js-html-add').text();
+		//console.log(oldText)
+		jQuery.ajax({
+			url : "/express/addWin",
+			data : "address="+oldText,
+			type : "POST",
+			dataType : "html",
+			success : function(data) {
+				jQuery("#selectAddress_").html(data);
+			},
+			error : function() {
+				alert("系统繁忙,稍后重试");
+			}
+		});
+	}
+	
+	function saveExpress(){
+		var data = jQuery("#postForm").serialize();
+		 jQuery.ajax({
+				url:"/express/save",
+				data:data,
+				type:"POST",
+				dataType:"json",
+				success:function(data){
+					if(data!=null && data.success){
+				        jQuery.alert({
+							type: 'success',
+							text: '保存成功',
+							time: 3000
+						});
+				        location.href="/express/list";
+					}else{
+						jQuery.alert({
+							type: 'error',
+							text: data.msg,
+							time: 3000
+						});
+					}
+				},
+				error:function(){
+					jQuery.alert({
+						type: 'error',
+						text: '操作失败,请稍后重试!',
+						time: 3000
+					});
+				}
+			});
+	}
+</script>
+</body>
+</html>

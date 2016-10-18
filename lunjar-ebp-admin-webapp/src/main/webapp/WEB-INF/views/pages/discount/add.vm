@@ -1,0 +1,659 @@
+#parse("pages/commons/header.vm")
+<script type="text/javascript" src="../../../scripts/process/process.js"></script>
+<div class="content">
+     <!--内容部分-->
+         <div class="breadcrumb">
+      <a class="breadcrumb-item active">优惠设置/创建满减活动</a>
+       </div>
+        <form action="" id="addDiscountForm">
+        	<input type="hidden" value="$!d.id" name="id">
+         <div class="mlj-setting">
+          <div class="hdName">活动名称<input type="text" class="input" name="name" value="$!d.name" placeholder="0~50个字符" maxlength="150"></div>
+          <div class="topRadio">优惠内容</div>
+          <div class="radio-select" style="margin-top:0px;">
+                    <div class="radio checked">
+                        <span class="radio-icon icon-checked-radio"> <span
+                            class="path1"></span> <span class="path2"></span> <input
+                            type="radio" value="1" name="staticType" checked="checked"/>
+                        </span> <span class="radio-text">满元</span>
+                    </div>
+                    #*
+                    <div class="radio">
+                        <span class="radio-icon icon-checked-radio"> <span
+                            class="path1"></span> <span class="path2"></span> <input
+                            type="radio" value="2" name="staticType"/>
+                        </span> <span class="radio-text">满件</span>
+                    </div>
+                    *#
+                </div>
+                <div class="clear"></div>
+                <!--操作表-->
+                  <table class="mlj-setting-table">
+                    <tbody class="mlj-con">
+                      <tr>
+                         <td style="width: 42px;text-align: center;padding:15px 0 15px 10px;"><a href="javascript:;" id="removeDiscoun" class="blue"></a></td>
+                          <td>订单满&nbsp;&nbsp;<input type="text" name="conditions" value="$!d.conditions" class="input number min-w">&nbsp;&nbsp;元</td>
+                          <td>
+                            <div class="checkbox select-chexkbox-baoYou #if($!d.discountFee && $!d.discountFee!=0) checked #end"style="margin-right: 0;margin-top:-3px;" onclick="choiceFee(this);">
+                            	<input type="hidden" name="isFree" #if($!d.discountFee && $!d.discountFee!=0) value="1" #else value="2" #end >
+                            <span class="checkbox-icon">
+                              <i class="icon-checked"></i>
+                              <input type="checkbox" class="thisInput" #if($!d.discountFee && $!d.discountFee!=0)  checked="checked" #end />
+                            </span>
+                           </div>
+                           减&nbsp;&nbsp;<input type="text" name="discountFee" class="input number min-w #if($!d.discountFee && $!d.discountFee!=0) #else disabled #end mj-dg-this" #if($!d.discountFee && $!d.discountFee!=0) value="$!d.discountFee" #else  #end >&nbsp;&nbsp;元
+                          </td>
+                          <td>
+                              <div class="checkbox select-chexkbox-baoYou #if($!d.isPost==1) checked #end" style="margin-right: 0;margin-top:-3px;" onclick="choiceFee(this,2);">
+                              <input type="hidden" name="isPost" #if($!d.isPost) value="$!d.isPost" #else value="2" #end>
+                            <span class="checkbox-icon">
+                              <i class="icon-checked"></i>
+                              <input type="checkbox" class="thisInput"   #if($!d.isPost==1) checked="checked" #end />
+                            </span>
+                           </div>&nbsp;&nbsp;包邮<span class="blue addAddressSpan">设置包邮地区</span><span class="resultAddess">包邮地区:
+                           <span id="resultAddessflo" class="resultAddessflo" title="$!d.freePostArea">$!d.freePostArea</span>
+                           <input type="hidden" name="freePostArea" value="$!d.freePostArea">
+                           </span>
+                          </td>
+                      </tr>
+                      </tbody>
+                  </table>
+                  #if(!$!d.id)
+                  	<h4 class="btm-h"><span class="add-mlj">+添加优惠层级</span></h4>
+                  #end
+                <!--操作表-->
+                 <div class="ms-seting-buttom"style="text-align: left;">
+               <a href="javascript:;" class="btn btn-primary"style="margin-left: 270px;" onclick="saveDis();">保存</a>
+               <a href="javascript:history.back(-1);" class="btn  broder-green btn-gray">返回</a>
+              </div>
+         </form>
+         </div>
+        
+      <!--设置包邮地区弹窗start-->
+      <div class="modal fade new-css biger MarkBGAll-zIndex"id="CombinaProduct" tabindex="10" role="dialog"aria-labelledby="myModalLabel" style="display:none;width:700px;top:25px;">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-close-win"data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">选择地区</h4>
+      </div>
+      <div class="modal-body"style="padding:20px;border-radius: 0;">
+          <div class="topButtom">
+            <a href="javascript:;" class="btn btn-large btn-primary"style="margin-right: 10px;" id="selectAllModle">全选</a>
+            <a href="javascript:;" class="btn btn-large btn-primary" id="reverseSelect">反选</a>
+          </div>
+          <ul class="selectBox">
+            <li>
+             <div class="box">
+              <div class="checkbox selectAll"
+                    style="margin-top:0px;">
+                    <span class="checkbox-icon"> <i class="icon-checked"></i>
+                      <input type="checkbox"  value="" class="parInput" />
+                    </span>
+                    <span class="checkbox-text">华东</span>
+                </div>
+              </div>
+              <div class="js-children">
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">上海</span>
+                  </div>
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">江苏</span>
+                </div>
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">浙江</span>
+                </div>
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">福建</span>
+                </div>
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">安徽</span>
+                </div>
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">江西</span>
+                </div>
+              </div>
+            </li>
+             <li>
+             <div class="box">
+              <div class="checkbox selectAll"
+                    style="margin-top:0px;">
+                    <span class="checkbox-icon"> <i class="icon-checked"></i>
+                      <input type="checkbox"  value="" />
+                    </span>
+                    <span class="checkbox-text">华北</span>
+                </div>
+              </div>
+              <div class="js-children">
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">天津</span>
+                  </div>
+                 <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">河北</span>
+                  </div>
+                  <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">山东</span>
+                  </div>
+                  <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">山西</span>
+                  </div>
+                  <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">内蒙古</span>
+                  </div>
+
+              </div>
+            </li>
+            <li>
+             <div class="box">
+              <div class="checkbox selectAll"
+                    style="margin-top:0px;">
+                    <span class="checkbox-icon"> <i class="icon-checked"></i>
+                      <input type="checkbox"  value="" />
+                    </span>
+                    <span class="checkbox-text">华南</span>
+                </div>
+              </div>
+              <div class="js-children">
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">广东</span>
+                  </div>
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">广西</span>
+                  </div>
+                  <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">海南</span>
+                  </div>
+
+              </div>
+            </li>
+            <li>
+             <div class="box">
+              <div class="checkbox selectAll"
+                    style="margin-top:0px;">
+                    <span class="checkbox-icon"> <i class="icon-checked"></i>
+                      <input type="checkbox"  value="" />
+                    </span>
+                    <span class="checkbox-text">华中</span>
+                </div>
+              </div>
+              <div class="js-children">
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">河南</span>
+                  </div>
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">湖北</span>
+                  </div>
+                  <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">湖南</span>
+                  </div>
+
+              </div>
+            </li>
+            <li>
+             <div class="box">
+              <div class="checkbox selectAll"
+                    style="margin-top:0px;">
+                    <span class="checkbox-icon"> <i class="icon-checked"></i>
+                      <input type="checkbox"  value="" />
+                    </span>
+                    <span class="checkbox-text">东北</span>
+                </div>
+              </div>
+              <div class="js-children">
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">辽宁</span>
+                  </div>
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">吉林</span>
+                  </div>
+                  <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">黑龙江</span>
+                  </div>
+
+              </div>
+            </li>
+            <li>
+             <div class="box">
+              <div class="checkbox selectAll"
+                    style="margin-top:0px;">
+                    <span class="checkbox-icon"> <i class="icon-checked"></i>
+                      <input type="checkbox"  value="" />
+                    </span>
+                    <span class="checkbox-text">西南</span>
+                </div>
+              </div>
+              <div class="js-children">
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">重庆</span>
+                  </div>
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">四川</span>
+                  </div>
+                  <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">贵州</span>
+                  </div>
+                  <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">云南</span>
+                  </div>
+
+              </div>
+            </li>
+            <li>
+             <div class="box">
+              <div class="checkbox selectAll"
+                    style="margin-top:0px;">
+                    <span class="checkbox-icon"> <i class="icon-checked"></i>
+                      <input type="checkbox"  value="" />
+                    </span>
+                    <span class="checkbox-text">西北</span>
+                </div>
+              </div>
+              <div class="js-children">
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">陕西</span>
+                  </div>
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">甘肃</span>
+                  </div>
+                  <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">青海</span>
+                  </div>
+                  <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">宁夏</span>
+                  </div>
+
+              </div>
+            </li>
+            <li>
+             <div class="box">
+              <div class="checkbox selectAll"
+                    style="margin-top:0px;">
+                    <span class="checkbox-icon"> <i class="icon-checked"></i>
+                      <input type="checkbox"  value="" />
+                    </span>
+                    <span class="checkbox-text">其他</span>
+                </div>
+              </div>
+              <div class="js-children">
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">西藏</span>
+                  </div>
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">新疆</span>
+                  </div>
+                  <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">港澳台</span>
+                  </div>
+
+              </div>
+            </li>
+            <li>
+             <div class="box">
+              <div class="checkbox selectAll"
+                    style="margin-top:0px;">
+                    <span class="checkbox-icon"> <i class="icon-checked"></i>
+                      <input type="checkbox"  value="" />
+                    </span>
+                    <span class="checkbox-text">海外</span>
+                </div>
+              </div>
+              <div class="js-children">
+                <div class="checkbox select-chexkbox-Me"
+                      style="margin-top:0px;">
+                      <span class="checkbox-icon"> <i class="icon-checked"></i>
+                        <input type="checkbox" class="inputName" value="" />
+                      </span>
+                      <span class="checkbox-text">海外</span>
+                  </div>
+              </div>
+            </li>
+          </ul>
+         
+        
+      </div>
+              
+    </div>
+   <div class="modal-footer">
+     <button type="button" class="btn btn-primary this-close-bz" data-ok="modal">确定</button>
+      <button type="button" class="btn btn-default btn-close-win Hui-black" data-dismiss="modal">取消</button>
+  </div>
+ </div>
+</div>
+      <!--设置包邮地区弹窗end-->  
+   <!--内容部分-->
+     </div><!--end content-->
+   </div><!--end container-->
+   <script type="text/javascript">
+   $(function(){
+       //弹窗
+       popuFn({
+        obj  : '.addAddressSpan',
+        popu : '#CombinaProduct',
+        go : function(_self){
+        	_self.parents('tr').addClass('going-select');
+        	//回显
+            var _val = $('tr.going-select input[name=freePostArea]').val();
+            inptArr = [];
+        	if(_val){
+        		 inptArr  = $('tr.going-select input[name=freePostArea]').val().split(',');
+        	}
+        	
+        	$('.selectBox .js-children .checkbox,.selectBox .selectAll').removeClass('checked');
+        	
+        	$('.selectBox .js-children .checkbox').each(function(){
+        		var t =  $(this).find('.checkbox-text').text();
+        		for(var i=0;i<inptArr.length;i++){
+        			if(inptArr[i]==t){
+        				$(this).addClass('checked');
+        			}
+        		}
+        	})
+        	
+        },
+        _return : function(){
+        	$('.mlj-con tr').removeClass('going-select');
+        },
+        fn : function(){
+          var allCheckbox = $('.selectBox .js-children .checkbox').length;//默认个数
+          var notCheckBox = $('.selectBox .js-children .checkbox:not(.checked)').length;//未选
+          var hasCheckedLen = $('.selectBox .js-children .checkbox.checked').length;//已选个数
+          console.log('全部个数'+allCheckbox)
+          console.log('未选个数'+notCheckBox)
+          console.log('已选个数'+hasCheckedLen)
+          if( notCheckBox == allCheckbox ){//没有选择
+            return;
+          }
+          if( hasCheckedLen == allCheckbox  ){//全选
+             $('tr.going-select .resultAddessflo').html('全国包邮').attr('title','全国包邮');
+             $('tr.going-select input[name=freePostArea]').val('全国包邮');
+             return;
+          }
+          var str = '',str2 = '';
+          if((notCheckBox>hasCheckedLen) || (notCheckBox==hasCheckedLen)){//选择较少或相等 直接赋值
+            $('.selectBox .js-children .checkbox.checked').each(function(){
+               str += $(this).find('.checkbox-text').text()+',';
+            })
+            $('tr.going-select .resultAddessflo').html($.removeStrLast(str)).attr('title',$.removeStrLast(str));
+            $('tr.going-select input[name=freePostArea]').val($.removeStrLast(str));
+          }else if(notCheckBox<hasCheckedLen){//选择较多 未选较少 则 不含
+            $('.selectBox .js-children .checkbox:not(.checked)').each(function(){
+               str += $(this).find('.checkbox-text').text()+',';
+            })
+            $('.selectBox .js-children .checkbox.checked').each(function(){
+               str2 += $(this).find('.checkbox-text').text()+',';
+            })
+            $('tr.going-select .resultAddessflo').html('不含'+$.removeStrLast(str)).attr('title','不含'+$.removeStrLast(str));;
+            $('tr.going-select input[name=freePostArea]').val($.removeStrLast(str2));
+          }
+        }
+       })
+       //checbox
+       checkBox({
+        obj : '.inputName',//当前input
+        pardiv : 'li',
+        input  : '.js-children .inputName',//带层级input
+        child  : '.js-children .select-chexkbox-Me'//带层级div.select-chexkbox
+       })
+       //全选反选
+       selectAllorRever({
+        parDom    : '.selectBox',
+        selectAll : '#selectAllModle',
+        Rever     : '#reverseSelect'
+       })
+       var firstChecked = $('.radio-select .radio.checked').index();
+       var appendTrDpm = function(type){
+           var text = '';
+           if(type==0){
+              text = '元';
+           }else{
+              text = '件';
+           }
+           var  trStr =    '<tr>'
+                  +'<td style="width: 42px;text-align: center;padding:15px 0 15px 10px;"><a href="javascript:;" id="removeDiscoun" class="blue">删除</a></td>'
+                  +'<td>订单满&nbsp;&nbsp;<input type="text" name="conditions" class="input number min-w">&nbsp;&nbsp;'+text+'</td>'
+                  +'<td>'
+                    +'<div class="checkbox select-chexkbox-baoYou "style="margin-right: 0;margin-top:-3px;" onclick="choiceFee(this);"><input type="hidden" name="isFree" value="2">'
+                    +'<span class="checkbox-icon">'
+                      +'<i class="icon-checked"></i>'
+                      +'<input type="checkbox" class="thisInput"/>'
+                    +'</span>'
+                   +'</div>'
+                   +' 减&nbsp;&nbsp;<input type="text" name="discountFee" class="input number min-w disabled mj-dg-this">&nbsp;&nbsp;元'
+                  +'</td>'
+                  +'<td>'
+                      +'<div class="checkbox select-chexkbox-baoYou" style="margin-right: 0;margin-top:-3px;" onclick="choiceFee(this,2);"><input type="hidden" name="isPost" value="2">'
+                    +'<span class="checkbox-icon">'
+                      +'<i class="icon-checked"></i>'
+                     +' <input type="checkbox" class="thisInput"/>'
+                    +'</span>'
+                   +'</div>&nbsp;&nbsp;包邮'
+                    +'<span class="blue addAddressSpan">设置包邮地区</span>'
+                    +'<span class="resultAddess">包邮地区:<span id="resultAddessflo" class="resultAddessflo" title=""></span>'
+                    +' <input type="hidden" name="freePostArea" value=""></span>'
+                  +'</td>'
+             +'</tr>';
+             return trStr;
+       }
+        //radio
+        radioFn(function(){
+          firstChecked = $('.radio-select .radio.checked').index();
+              if(firstChecked==0){
+                $('.mlj-con').html(appendTrDpm(firstChecked));
+              }else if(firstChecked==1){
+                $('.mlj-con').html(appendTrDpm(firstChecked));
+              }
+            });
+        //单选多选
+        $(document).on('click','.select-chexkbox-baoYou',function(){
+            if($(this).hasClass('checked')){
+                $(this).removeClass('checked');
+                $(this).find('input.thisInput').prop("checked",'');
+                //满减多少元
+            //$(this).parents('td').find('.mj-dg-this').attr("disabled",true).addClass('disabled').val('');
+            $(this).parents('td').find('.mj-dg-this').addClass('disabled').val('');
+            }else{
+                $(this).addClass('checked');
+                $(this).find('input').prop("checked",true);
+                //满减多少元
+           // $(this).parents('td').find('.mj-dg-this').attr("disabled",false).removeClass('disabled').focus();
+            $(this).parents('td').find('.mj-dg-this').removeClass('disabled').focus();
+            }
+        });
+       //number
+        $(document).on('keyup','input.number',function(){
+            var v = $(this).val();
+            $(this).val(v.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,''));
+        })
+        //添加优惠层级
+             $(document).on('click','.add-mlj',function(){
+               $('.mlj-con').append(appendTrDpm(firstChecked));
+             })
+
+   })
+   
+   //保存折扣
+   function saveDis(){
+    var data = jQuery("#addDiscountForm").serialize();
+    console.log(data);
+    jQuery.ajax({
+		url:"/discount/save",
+		data:data,
+		type:"POST",
+		dataType:"json",
+		success:function(data){
+			if(data!=null && data.success){
+				jQuery.alert({
+					type: 'success',
+					text: '保存成功',
+					time: 3000
+				});
+				location.href="/discount/list";
+			}else{
+				jQuery.alert({
+					type: 'error',
+					text: data.msg,
+					time: 3000
+				});
+			}
+		},
+		error:function(){
+			jQuery.alert({
+				type: 'error',
+				text: '操作失败,请稍后重试!',
+				time: 3000
+			});
+		}
+	});
+   }
+   
+   function choiceFee(self,type){
+	     if(jQuery(self).hasClass('checked')){
+	      //取消
+	    $(self).find('input').val(2);
+	      if(type==2){
+	    	$(self).parents('td').find('.resultAddessflo').css({
+	    		'visibility' :'hidden'
+	    	});
+	      }
+	    }else{
+	      //选中
+	      console.log( $(this).find('input'));
+	      if(type==2){
+	      	$(self).parents('td').find('.resultAddessflo').css({
+	    		'visibility' :''
+	    	});
+	      }
+	        $(self).find('input').val(1);
+	    }
+   }
+   
+   
+   </script>
+</body>
+</html>

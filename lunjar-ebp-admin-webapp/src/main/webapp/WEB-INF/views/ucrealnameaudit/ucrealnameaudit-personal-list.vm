@@ -1,0 +1,53 @@
+#loadWebResources(["list","form","extJs"])
+###set($screen_jsArray=["ucrealnameaudit/ucrealnameaudit-personal-list"])
+#set($thisActionUrl="/ucrealnameaudit/personal")
+
+#parse("ucrealnameaudit/ucrealnameaudit-search-tool.vm")
+
+<div id="list" class="listBox mt10">
+    <table>
+        <tr>          
+            <th width="5%">序号</th>
+            <th width="5%">账号</th>
+			<th width="10%">姓名</th>
+            <th width="10%">证件号</th>
+            <th width="10%">手机</th>
+            <th width="10%">邮箱</th>
+            <th width="10%">实名状态</th>
+##            <th width="15%">证件正面照</th>
+##            <th width="15%">证件反面照</th>
+			<th width="15%">操作</th>
+        </tr>
+		
+        #set($data=$page.data)
+        #if($data and $data.size() > 0)
+            #foreach($o in $data)
+                #set($no = ($velocityCount + ($!page.pageNo - 1) * $!page.pageSize))
+                <tr #if($math.mod($velocityCount,2)==0)  class="bg" #end>
+                    <td ><label for="chk_$o.id">&nbsp;$velocityCount</label> </td>
+                    <td>$!o.registerName</td>
+                    <td>$!o.userName</td>
+                    <td>$!o.idCard</td>
+                    <td>$!o.mobile</td>
+                    <td>$!o.email</td>
+                    <td>#direct($fieldTextTool.convertPartnerStatus("$!o.auditStatus"))</td>
+##                    <td><img id="photoUrl1" alt="" src="$fieldTextTool.convertPictureUrl($!o.headsPhotoUrl,'/images/personal-front.png')" align="middle" style="top: 0px;width:128px;height:80px;"></td>
+##                    <td><img id="photoUrl2" alt="" src="$fieldTextTool.convertPictureUrl($!o.tailsPhotoUrl,'/images/personal-back.png')" align="middle" style="top: 0px;width:128px;height:80px;"></td>
+                    <td >
+                        #if("$!o.auditStatus"=="4") ##审核中
+                            <a class="act_pass" href="personal/$!{o.userId}">审核</a>
+                        #else
+                            <a class="act_pass" href="personal/$!{o.userId}">查看</a>
+                        #end
+                    </td>
+                </tr>
+            #end
+        #else
+            <tr>
+                <td colspan="10">非常抱歉，没有符合条件的数据！</td>
+            </tr>
+        #end 
+    </table>
+    #pageTabFoot({"queryFormId":"form_search","page":$page,"submitUrl":"${thisActionUrl}","canSetPagesize":true})
+</div>
+###parse("ucrealnameaudit/ucrealnameaudit-dialog.vm")

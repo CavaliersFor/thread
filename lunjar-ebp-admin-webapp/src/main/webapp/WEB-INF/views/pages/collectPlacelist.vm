@@ -1,0 +1,273 @@
+#parse("pages/commons/header.vm")
+<style>
+         th.prev{visibility: hidden !important;}
+         th.switch{visibility: hidden !important;}
+         th.next{visibility: hidden !important;}
+</style>
+  <link href="../../../lib/tdz_component/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+  <script type="text/javascript" src="../../../lib/tdz_component/my_select.js"></script>
+  <script type="text/javascript" src="../../../lib/tdz_component/bootstrap-datetimepicker.min.js"></script>
+  <script type="text/javascript" src="../../../lib/tdz_component/bootstrap-datetimepicker.fr.js"></script>
+   <script type="text/javascript" src="#getAppServer()/scripts/address/address.js"></script>
+<div class="content">
+	<!--内容部分-->
+	<div class="breadcrumb">
+		<a class="breadcrumb-item active">物流管理/自提设置</a>
+	</div>
+	<form action="/collectPlace/list" method="post" id="collectForm">
+		<input type="hidden" name="pageNo" id="pageNo" value="1" />
+
+		<div class="collectPlacelist-setting">
+			<div class="topbutton">
+				<a href="javascript:;" class="btn btn-large btn-primary"
+					id="addNewZTD" data-tradeId="-1">+新增自提点</a>
+			</div>
+			<table class="collectPlacelist-table">
+				<tr>
+					<th>自提点名称</th>
+					<th>所在地区</th>
+					<th>详细地址</th> 
+					##<th>邮编</th>
+					<th>联系电话</th>
+					<th>取货时间段</th>
+					<th>操作</th>
+					<th>是否使用</th>
+				</tr>
+				<tbody class="con-tr">
+
+					#if($!ps && $!ps.data.size()>0) #foreach($!p in $!ps.data)
+					<tr>
+						<td>$!p.clpName</td>
+						<td>$!p.province $!p.city $!p.region</td>
+						<td>$!p.clpAddress</td> 
+						##<td>$!p.clpAddress</td>
+						<td>$!p.clpTelephone</td>
+						<td>$!p.startTime - $!p.endTime</td>
+						<td><a href="javascript:;" class="blue cz Edit-ztwl" data-tradeId="$!p.id">编辑</a><a
+							href="javascript:;" class="cz blue deleteCollect" data-tradeId="$!p.id">删除</a></td>
+						<td>
+							<div class="switch #if($!p.clpStatus==1) open  #end" onchange="updateCollect(this,$!p.id);">
+								<span class="switch-open"><i class="icon-checked"></i></span> <span
+									class="switch-close">╳</span> <span class="switch-overlay"></span>
+								<input type="checkbox" class="coverPar" #if($!p.clpStatus==1)
+									checked="checked" #end >
+							</div>
+						</td>
+					</tr>
+					#end #end
+				</tbody>
+			</table>
+			<div class="newTabTop">
+				<div class="right" style="height: 80px;">
+					<!--分页-->
+					<div class="page-list" id="FenYe"></div>
+					<!--分页-->
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+	</form>
+	<!--新增自提点弹窗-->
+	<div class="modal fade new-css biger MarkBGAll-zIndex"
+		id="addNewZTD-popu" tabindex="10" role="dialog"
+		aria-labelledby="myModalLabel"
+		style="width: 600px; height: 460px; top: 80px;">
+		
+	</div>
+	<!--新增自提点弹窗-->
+
+	<!--内容部分-->
+</div>
+<!--end content-->
+</div>
+<!--end container-->
+<script type="text/javascript">
+   var addMark = function(){//增加蒙版
+        $('body').before('<div id="MarkBG"></div>');
+        $('#MarkBG').fadeIn(100);
+        $('body').addClass('overflow-hidden-scroll');
+    }
+   var removeMark = function(){//删除蒙版
+        $('#MarkBG').remove();//删除蒙版
+        $('body').removeClass('overflow-hidden-scroll');
+        }
+    $(function(){
+     //number
+        $('input.number').keyup(function(){
+            var v = $(this).val();
+            $(this).val(v.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,''));
+        })
+     $(document).on('click','.MarkBGAll-zIndex .btn-close-win',function(){//关闭弹窗
+             $(this).parents('.MarkBGAll-zIndex').fadeOut(100);
+             removeMark();
+      })
+     //打开新增自提点弹窗
+     $(document).on('click','#addNewZTD,.Edit-ztwl',function(){
+       $('#addNewZTD-popu').fadeIn(100);
+       var id= $(this).attr('data-tradeId');
+       console.log("编辑id="+id)
+       addMark();
+       addWin(id);
+     })
+    })
+    
+    
+    //分页
+	
+	function pageNext(a,b){
+		var nextPageNo = 0;
+		if(a==1){
+			nextPageNo = b-1;
+			//上一页
+			if(nextPageNo<1){
+				//alert("已经是第一页了");
+				return ;
+			}
+		}else if(a==2){
+			//下一页
+			nextPageNo = b+1;
+			if(nextPageNo>$!ps.pageCount){
+				//alert("已经是最后一页了");
+				return ;
+			}
+		}else if(a==3){
+			//
+			nextPageNo = b;
+		}
+
+		jQuery("#pageNo").val(nextPageNo);
+		document.getElementById("collectForm").submit();
+	}
+	var pageCount = $!ps.pageCount;//模拟后台总页数
+	var pageIndex = $!ps.pageNo;//当前第几页变量
+	var pageSplice = 5;//分页显示个数
+    var pgSp = new Antiwild({
+    	pageCount : pageCount,//后台总页数
+    	pageIndex : pageIndex,//当前页 >=1 <=pageCount
+    	pageSplice : pageSplice,//分页显示个数 > 1
+    	indexClass:'active',//当前页显示class
+    	pageNode : '#FenYe',//导入的Dom id or class
+    	pageClickFn:function(index){//点击页面执行方法
+          //console.log(index);//索引
+          pageNext("3",(parseInt($('#FenYe li a').eq(index).text())));
+    	},
+    	pageUp : function(){//点击上一页执行方法
+    	  //console.log('上一页');
+    	  pageNext("1",$!ps.pageNo);
+    	},
+    	pageDown : function(){//点击下一个执行方法
+    	  //console.log('下一页');
+    	  pageNext("2",$!ps.pageNo);
+    	}
+    })
+	//是否可用
+    function updateCollect(self,id){
+		var status = 1;//1使用中 2停止使用
+		if(jQuery(self).hasClass('open')){
+			//可用
+			status=1;
+		}else{
+			//不可用
+			status=2;
+		}
+		
+		jQuery.ajax({
+			url:"/collectPlace/update",
+			data:"id="+id+"&status="+status,
+			type:"POST",
+			dataType:"json",
+			success:function(data){
+				if(data!=null && data.success){
+					jQuery.alert({
+						type: 'success',
+						text: '更新成功',
+						time: 3000
+					});
+					location.reload();
+				}else{
+					jQuery.alert({
+						type: 'error',
+						text: data.msg,
+						time: 3000
+					});
+				}
+			},
+			error:function(){
+				jQuery.alert({
+					type: 'error',
+					text: '操作失败,请稍后重试!',
+					time: 3000
+				});
+			}
+		});
+	}
+	
+  //删除自提点
+    $('.deleteCollect').click(function(){
+    	var id= $(this).attr('data-tradeId');
+    	$(this).tooltip({
+    		text: '您确定删除该自提点吗？',
+    		icon: 'icon-warnfill',
+    		style: 'z-danger',
+    		placement: 'left',
+    		align: 'center',
+    		okHide: function() {
+    			deletCollect(id);
+    		},
+    		cancelHide: function() {
+    			
+    		}
+    	});
+    	return false;	// 记得要 return false;
+    });
+	//删除自提点
+  function deletCollect(id){
+	  jQuery.ajax({
+			url:"/collectPlace/delete",
+			data:"id="+id,
+			type:"POST",
+			dataType:"json",
+			success:function(data){
+				if(data!=null && data.success){
+					jQuery.alert({
+						type: 'success',
+						text: '删除成功',
+						time: 3000
+					});
+					location.reload();
+				}else{
+					jQuery.alert({
+						type: 'error',
+						text: data.msg,
+						time: 3000
+					});
+				}
+			},
+			error:function(){
+				jQuery.alert({
+					type: 'error',
+					text: '操作失败,请稍后重试!',
+					time: 3000
+				});
+			}
+		});
+  }
+  //显示新增自提点页面方法
+  function addWin(id) {
+		jQuery.ajax({
+			url : "/collectPlace/addPage",
+			data : "id="+id,
+			type : "POST",
+			dataType : "html",
+			success : function(data) {
+				jQuery("#addNewZTD-popu").html(data);
+			},
+			error : function() {
+				jQuery("#addNewZTD-popu").html("<b>系统错误</b>");
+			}
+		});
+	}
+  
+   </script>
+</body>
+</html>

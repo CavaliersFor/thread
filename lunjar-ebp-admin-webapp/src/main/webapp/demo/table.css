@@ -1,0 +1,25 @@
+.table-example {
+  padding: 20px;
+  background-color: #fff; }
+  .table-example h3 {
+    margin: 20px 0 10px 0;
+    color: #545860; }
+  .table-example .wrap {
+    padding: 20px;
+    border: 1px solid #d9d9d9; }
+  .table-example .dropdown {
+    margin-right: 150px; }
+
+.table-checkbox td.item {
+  width: 400px; }
+
+.button-small-list,
+.button-default-list,
+.button-large-list,
+.button-xlarge-list {
+  margin-bottom: 15px; }
+  .button-small-list .btn,
+  .button-default-list .btn,
+  .button-large-list .btn,
+  .button-xlarge-list .btn {
+    margin-right: 10px; }

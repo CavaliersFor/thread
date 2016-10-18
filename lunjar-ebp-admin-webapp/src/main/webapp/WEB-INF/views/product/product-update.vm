@@ -1,0 +1,173 @@
+#set($screen_jsArray=["product/product-detail"]) ##加载js 文件
+#loadWebResources(["list","datePicker"])
+#set($product = $!productDto.product)
+<div class="formBox">
+<form method="post" action="update" id="productForm">
+	<h3>		
+        <div class="fl">    		
+            <span>产品管理 >> 产品设置</span>
+		</div>
+		<div class="fr">
+			<a href="javascript:void(0);" onclick="window.history.go(-1)">&lt;&lt;  返回</a>
+		</div>
+	</h3>
+	<div class="content">
+        	<table class="c2">
+        		<tr>
+        			<td colspan="4">
+        				设置产品基本参数   当前产品：$!product.productName
+        				<input name="product.id" id="productId" type="hidden" value="$!product.id"/> 
+        				<input name="pIpBlack" id="pIpBlack" type="hidden" value="$!product.ipBlack"/> 
+        			</td>
+        		</tr>
+        		<tr>
+        			<th  width="13%">对接加密方式</th>
+        			<td width="37%">
+	        			<input type="radio" id="AES256" name="product.encryptType" value="1"
+					        #if($!product.encryptType == 1)
+					       checked
+					        #end
+					        />
+					     <label for="AES256">AES256</label>
+					    <input type="radio" id="3DES" name="product.encryptType" value="2"
+					        #if($!product.encryptType == 2)
+					           checked
+					        #end
+					            />
+					     <label for="3DES">3DES</label>
+					    <input type="radio" id="GM" name="product.encryptType" value="3"
+					        #if($!product.encryptType == 3)
+					           checked
+					        #end
+					            />
+					    <label for="GM">国密</label>        
+       			  </td>
+       			  <th  width="13%">存储地点</th>
+       			  <td width="37%">
+       			  	<input type="radio" id="aly" name="product.storePosition" value="1"
+				        #if($!product.storePosition == 1)
+				       		checked
+				        #end
+				        />
+				    <label for="aly">阿里云</label>      
+				    <input type="radio" id="bdy" name="product.storePosition" value="2"
+				        #if($!product.storePosition == 2)
+				           checked
+				        #end
+				            />
+				     <label for="bdy">百度云</label>        
+				    <input type="radio" id="other" name="product.storePosition" value="9"
+				        #if($!product.storePosition == 9)
+				           checked
+				        #end
+				            />
+				    <label for="other">其他</label>           
+       			  </td>
+        		</tr>
+        		<tr>
+        			<th>产品有效期</th>
+        			<td  colspan="3">
+        				<input name="product.startTime" class="datePicker inp-w150"  value="$!date.format("yyyy-MM-dd",${product.startTime})" type="text" onClick="WdatePicker({readOnly:true})"> 至
+        				 <input name="product.endTime" class="datePicker inp-w150"  value="$!date.format("yyyy-MM-dd",${product.endTime})" type="text" onClick="WdatePicker({readOnly:true})">
+        			</td>
+         			##<th>是否重复验证</th>
+        			##<td>
+        			##	<input type="checkbox" name="sdkType"  readonly="readonly"
+					##	   #if($!productKeys.sdkType == 1)
+					##	  	 checked
+					##	   #end
+					##	         />是      
+					##</td>
+        		</tr>
+			</table>
+			<table class="c2">
+				<tr>
+        			<td colspan="4">
+        				IP访问规则控制
+        			</td>
+        		</tr>
+        		<tr>
+        			<td>黑名单设置</td>
+        			<td>
+        			<input type="radio" id="open" name="product.ipWhiteEnable" value="1"
+				        #if($product.ipBlack)
+				           checked
+				       #end
+				           onclick="closeIpBlack(1)" />
+				       <label for="open">启用，启用后将限制黑名单内的IP访问API接口、限制登录注册</label>      </br>
+				      <input type="radio" id="close" name="product.ipWhiteEnable" value="0"
+				        #if(!$product.ipBlack)
+				           checked
+				       #end
+				          onclick="closeIpBlack(0)"  />
+				       <label for="close"> 关闭</label>  
+       			  </td>
+        		</tr>
+        		<tr>
+        			<td >黑名单规则列表</td>
+        			<td id="black">
+        			    <input type="text" class="required" id="ipBlack"  name="ipBlack"/>   <input type="button" value="添加"  onclick="addIpBlack(${product.id});"/><br/>
+        			  ##$!fieldTextTool.convertIpBlack($!product.ipBlack)
+        			</td>
+        		</tr>
+        		<div id="ipBlackC"></div>
+        	</table>
+        	<table class="c2">
+        		<tr>
+        			<td colspan="5">
+        				保全点|步骤
+        			</td>
+        		</tr>
+        		#if($!productItemList)
+        		<tr>
+        			<th>业务名称</th> 
+        			<th>业务类型</th>
+        			<th>业务状态 </th>
+        			<th>模板状态</th>
+        			<th>操作</th>
+        		</tr>
+				  #foreach($!productItem in $!productItemList)
+				  <tr>
+			        <td>$!productItem.itemName </td>
+			        <td> $pubDataDictTool.getText('productType',$!productItem.itemType)  </td>
+			        <td>#getDictionaryName("productStatus" $!productItem.status)</td>
+			        <td>
+			        	##if(templateList != null && templateList.size>0)
+			        		##$!templateList.get(0).status
+			        	##end
+			        </td>
+			        <td>
+			        	#if($!productItem.status==1)
+			        		<a href="javascript:;" class="flow" onclick="modifyStatus(${productItem.id},2);">中断业务</a>
+			        	#elseif($!productItem.status==2)
+			        		<a href="javascript:;" class="flow" onclick="modifyStatus(${productItem.id},1);">重启业务</a>
+			        	#end
+			         </td>
+			     </tr>
+			     #foreach($!productItemFlow in $!productItemFlowList)
+			     	<tr>
+			            #if($!productItem.id == $!productItemFlow.itemId)
+			            	<td>&nbsp;&nbsp;$!productItemFlow.flowName </td>
+			            	<td> $pubDataDictTool.getText('productType',$!productItem.itemType) </td>
+			            	<td>#getDictionaryName("productStatus" $!productItemFlow.status)</td>
+					        <td>
+					        	#foreach($!template in $!templateList)
+					        		 #if($!template.itemId == $!productItemFlow.itemId)  
+					        		 	 #getDictionaryName("templateStatus" $!template.status)
+					        		 #end
+					        	#end
+					        </td>
+					        <td></td>
+			            #end
+			         </tr>   
+			     #end
+			   #end
+			  #end 
+    	</table>
+	</div>
+	<div class="form-but">
+		<input type="submit" class="button-s4" value="保 存"/>
+		<input type="button" class="button-s4" value="取 消" onclick="javascript:history.back(-1);"/>
+    </div> 	
+    </form>
+</div>

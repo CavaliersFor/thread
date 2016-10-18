@@ -1,0 +1,156 @@
+#set($screen_jsArray=["demo/crud-list"]) ##加载js 文件
+#set($thisActionUrl="list.htm")
+#set($screen_title="列表示例")
+##前端资源：列表,日历
+#loadWebResources(["list","datePicker","form"]) 
+
+<div class="searchBox">
+	##$beanTool.beanToMap($query)
+	<form id="form_search" action="$thisActionUrl">    
+    	<h5>
+            <span>搜索</span>
+        </h5>
+		<table>	
+            <tr>
+                <th class="w50">省份：</th>
+                <td>
+                    <select id="province" name="fieldProvince" class="w105"></select>
+                </td>
+                <th class="w50">城市：</th>
+                <td>
+                    <select id="city" name="fieldCity" style="width:126px;"></select>
+                </td>
+				<script>
+                    var _regionConfig = {
+                        provinceSelectId:'province'	,
+                        citySelectId:'city'	,
+                        provinceValue:'$!query.fieldProvince',
+                        cityValue:'$!query.fieldCity'
+                    }	
+					new App.regionBox(_regionConfig);
+           		 </script>			
+                <th class="w80">更新时间：</th>
+                <td>
+                    <input name="gmtModifyFrom" class="w85 datePicker" type="text" value='$!date.format("yyyy-MM-dd",$!query.gmtModifyFrom)'  dateISO="true" onclick="WdatePicker()"/>
+                    - <input name="gmtModifyTo" class="w85 datePicker" type="text" value='$!date.format("yyyy-MM-dd",$!query.gmtModifyTo)'  dateISO="true"  onClick="WdatePicker()"/>
+                </td>				
+            </tr>
+            <tr>
+                <th>下拉：</th>
+                <td>                    
+					#formSelect({"name":"fieldSelect","dictGroup":"education","selectedValue":$!query.fieldSelect},"class='w105'")	
+                </td>
+                <th>文本：</th>
+                <td>
+                    <input name="fieldText" type="text" value='$!query.fieldText' class="w120"/>
+                </td>
+                <th>状态：</th>
+                <td>#formCheckboxList({"name":"statusArray","dictGroup":"publishStatus","selectedValues":$!query.statusArray})</td>
+                <td>
+                    <input type="submit" id="btn_search" value="搜索"  class="btn ml5"/>
+					<input type="button"  id="btn_reset" value="清空" onclick="location.href='$!thisActionUrl'" class="btn" />  
+                </td>
+            </tr>
+        </table>	
+	</form>
+</div>
+#set($data=$page.data)
+<div id="toolAndListBox">
+    <div id="tool" class="tool">
+        <div class="fl">
+           <span>
+                <button type="button" class="bt_add" onclick="location.href='add';">添加</button>    			
+    		</span>
+			#if($data.size()>0)
+    		<span>
+				<button type="button" class="bt_del">删除</button> 	
+            </span>
+    		<span>
+				<button type="button" class="bt_wu bt_publish">发布</button>   
+            </span>
+    		<span>
+				<button type="button" class="bt_wu bt_unpublish">下线</button>      			
+            </span>
+			#end
+        </div> 
+		#if($data.size()>0)
+    	 <div class="fr">
+    		#set($sortOptions = [['_11','按发布时间降序排列'],
+    			['_12','按发布时间升序排列'],
+    			['_21','按更新时间降序排列'],
+    			['_22','按更新时间升序排列']
+    			])
+    		#sortBar({"selectName":"sortCode","queryFormId":"form_search","sortOptions":$sortOptions
+    		,"currentOption":$query.sortCode
+    		,"submitAction":"${thisActionUrl}#tool","label":"选择排序方式："})
+         </div>
+		 #end
+    </div>
+    <div class="listBox">
+    	<h5>
+            <span>列表</span>
+        </h5>
+    	<table>
+    		<tr >         
+    			<th width="3%"><input type="checkbox" class="chk_all" id="chk_all1"/></th>
+    			<th width="3%" nowrap>序号</th>
+    			<th width="8%">图片</th>
+    			<th >文本</th>
+    			<th>数字</th>
+    			<th>下拉</th>
+    			<th>单选</th>
+    			<th>多选</th>
+    			<th>省市</th>		
+    			<th width="12%">创建时间/更新时间</th>
+    			<th width="7%">状态</th>
+    			<th width="12%">操作</th>
+    		</tr>
+    		#if($data.size()>0)
+        		#foreach($o in $data)
+        			#set($no = ($!velocityCount + ($!page.pageNo - 1) * $!page.pageSize))
+            		<tr #if($math.mod($velocityCount,2)==0)  class="bg" #end>                
+            			<td >
+        					<input type="checkbox" value="$o.id" name="idsStr" id="chk_$o.id" />				
+        				</td>
+        				<td >
+        					$no
+        				</td>
+        				<td >					
+                            <div align="center">#imageShow({"imageUrl":$!{o.imagePathList},"picBoxSize":[52,52],"clickUrl":"#getUploadFileUrl(${o.imagePath})"})</div>						
+        				</td>
+        				<td>$!{o.fieldText}</td>
+            			<td>$!number.format('#,##0',$!{o.fieldNumber})</td>
+            			<td  >$!{o.fieldSelectText}</td>
+            			<td  >$!{o.fieldRadioEnum.text}</td>
+            			<td  >$!{o.fieldCheckboxText}</td>
+        				<td  >$!{o.fieldProvinceName}$!{o.fieldCityName}</td>
+    					<td  >$date.format("yyyy-MM-dd HH:mm",${o.gmtCreate})<br/>$date.format("yyyy-MM-dd HH:mm",${o.gmtModify})</td>
+                        <td class="tdStatus">
+                            <span style="color:${o.statusEnum.color}" >${o.statusEnum.text} </span>
+        				</td>
+        				<td align="right">
+							<form class="data">
+            					<input type="hidden"  value="$o.id" name="id" />
+    							<input type="hidden"  value="$o.fieldText" name="fieldText" />
+                            </form>
+							#if("${o.statusEnum}"=="NO_PUBLISH")
+								<input type="hidden"  value="PUBLISHED" name="newStatus" />
+								<button type="button" class="btnLink updateStatus">发布</button>
+    						#else
+    							<input type="hidden"  value="NO_PUBLISH" name="newStatus" />
+								<button type="button" class="btnLink updateStatus">下线</button>
+    						#end
+                            <button type="button" class="btnLink" onclick="location.href='e${o.id}';">修改</button>       					
+							<button type="button" class="btnLink delete">删除</button>    
+        				</td>
+            		</tr>
+        		 #end 
+    		#else
+                <tr>
+                    <td colspan="12">非常抱歉，没有符合条件的数据！</td>
+                </tr>
+            #end 
+        </table>	
+    	#pageTabFoot({"page":$page,"queryFormId":"form_search","submitUrl":"${thisActionUrl}#tool","canSetPagesize":true})
+    </div>
+</div>

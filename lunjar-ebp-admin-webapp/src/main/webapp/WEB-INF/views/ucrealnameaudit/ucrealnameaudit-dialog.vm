@@ -1,0 +1,14 @@
+<div id="editWin" class="hide">
+    <div class="loading hide">正在加载数据,请稍候...</div>
+    <form id="editForm">
+        <input type="hidden" name="auditId" />
+        <input type="hidden" name="auditStatus" />
+        <table class="tabledata">
+            <tr align="center">
+                <td align="center">
+                    <textarea name="auditReason" cols="54" rows="6" placeholder="填写不通过理由"></textarea>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

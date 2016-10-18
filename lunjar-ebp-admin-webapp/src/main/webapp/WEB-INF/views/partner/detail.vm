@@ -1,0 +1,17 @@
+#loadWebResources(["form"])
+##<link rel="stylesheet" type="text/css" href="#getWebresourcesUrl()/css/imgbox.css"/>
+#if($type==1)
+##	#set($screen_jsArray=["partner/partner-audit","partner/partner-audit-enterprise","common/jquery.min","common/jquery.imgbox.pack.min"])
+	#set($screen_jsArray=["partner/partner-audit","partner/partner-audit-enterprise"])
+##	#set($screen_jsArray=["partner/partner-audit","partner/partner-audit-enterprise","common/jquery.imgbox.pack.min"])
+	#parse("partner/detail-enterprise.vm")
+#else
+##	#set($screen_jsArray=["partner/partner-audit","partner/partner-audit-personal","common/jquery.min","common/jquery.imgbox.pack.min"])
+	#set($screen_jsArray=["partner/partner-audit","partner/partner-audit-personal"])
+##	#set($screen_jsArray=["partner/partner-audit","partner/partner-audit-personal","common/jquery.imgbox.pack.min"])
+	#parse("partner/detail-personal.vm")
+#end
+
+<div id="mainBox" style="margin-left: 0px;height: 520px;">
+    <iframe frameborder="0" width="100%" height="100%" src="detail-product-list?partnerId=$!{partner.id}" ></iframe>
+</div>

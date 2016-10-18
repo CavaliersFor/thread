@@ -1,0 +1,419 @@
+#parse("pages/commons/header.vm")
+ <div class="content">
+ <!--内容部分-->
+ <div class="breadcrumb">
+  <a class="breadcrumb-item active">组合商品/#if($!m.id) 编辑组合 #else 创建组合#end</a>
+ </div>
+ <div class="Combination-list-caery">
+ 	<form action="" method="post" id="addCombinForm">
+ 	<input type="hidden" name="id" value="$!m.id">
+     <ul>
+        <li>
+          <div class="left">组合名称</div>
+          <div class="right">
+            <input type="text" class="input" style="width:500px;" maxlength="90" name="cpName" value="$!m.cpName">
+          </div>
+          <div class="addTip">限定30个字以内</div>
+          <div class="clear"></div>
+        </li>
+        <li>
+          <div class="left">搭配商品</div>
+          <div class="right">
+             <div class="table-control">
+                 <table>
+                    <tr>
+                       <th width="80">搭配商品</th>
+                       <th>显示名</th>
+                       <th>原价</th>
+                       <th>排序</th>
+                       <th>操作</th>
+                    </tr>
+                    <tbody class="content-that">
+                    #if($ds && $!ds.size()>0)
+                    	#foreach($d in $ds)
+	                       <tr>
+	                       	<input type="hidden" name="productId" value="$!d.productId"/>
+	                         <td><img src="$!d.productAbsPicPath" width="80" height="80"></td>
+	                         <td calss="">
+                           <div class="min-width">$!d.productName</div>
+                           #if($!d.status==2)
+                           <div class="boxState"><i></i>该商品已经下架<a href="/product/add?id=$!d.productId" class="blue">恢复上架</a></div>
+                           #end
+                            #if($!d.status==3)
+                           	<div class="boxState"><i></i>该商品已被删除</div>
+                           #end
+                           </td>
+	                         <td>$!d.productRealPrice</td>
+	                         <td>
+	                           <a href="javascript:;" class="move-icon moveUp icon-1" title="上移">上移</a>
+	                           <a href="javascript:;" class="move-icon moveDown icon-2" title="下移">下移</a>
+	                         </td>
+	                         <td><a class="blue trRemove">删除</a></td>
+	                       </tr>
+                       #end
+                      #else
+                      	##没有数据
+                     #end
+                    </tbody>
+                 </table>
+                 <h4><span id="addProduct" class="blue">+添加搭配商品</span>  <span class="Hui">最多添加5件商品</span></h4>
+             </div>
+             <input type="hidden" value="$!combinPids" id="comChoicePid">
+          </div>
+           <div class="clear"></div>
+        </li>
+
+        <li>
+          <div class="left">组合原价</div>
+          <div class="right">
+            <div class="disabled" id="yTotal">$!total</div>
+          </div>
+          <div class="addTip">元</div>
+          <div class="clear"></div>
+        </li>
+
+        <li>
+          <div class="left"></div>
+          <div class="right">
+            组合商品价格
+            <input type="text" class="input" style="width:120px;" name="cpPrice" value="$!m.cpPrice">
+          </div>
+          <div class="addTip Hui"style="width:430px;">搭配商品价格不得高于单个宝贝原价总和,高于原价总和时,按原价总和购买</div>
+          <div class="clear"></div>
+        </li>
+        
+        <li>
+          <div class="left">组合描述</div>
+          <div class="right">
+            <textarea class="combindText" name="cpDesc">$!m.cpDesc</textarea>
+          </div>
+          <div class="clear"></div>
+        </li>
+		<input type="hidden" name="isFreePost" id="isFreePost" value="#if($!m.isFreePost) $!m.isFreePost #else 1 #end"/>
+         <li>
+          <div class="left">设置物流</div>
+          <div class="right">
+             <div class="radio-select min-mar-right"style="margin-top:5px;">
+              <div data-id="1" class="radio #if($!m.isFreePost==1) checked #end #if(!$!m.isFreePost) checked #end first-radio" onclick="clickFree(this);">
+                <span class="radio-icon icon-checked-radio">
+                  <span class="path1"></span>
+                  <span class="path2"></span>
+                  <input type="radio" name="" />
+                </span>
+                <span class="radio-text">卖家承担运费</span>
+              </div><br/>
+              <div data-id="2" class="radio #if($!m.isFreePost==2) checked #end" onclick="clickFree(this);">
+                <span class="radio-icon  icon-checked-radio">
+                  <span class="path1"></span>
+                  <span class="path2"></span>
+                  <input type="radio" name="" />
+                </span>
+                <span class="radio-text">买家承担运费 <span class="Hui">(按运费模板计算)</span></span>
+              </div>
+           </div>
+          </div>
+         </li>
+     </ul>
+     </form>
+ </div>
+
+ <div class="clear"></div>
+ <div class="Release"style="margin-top: 55px;">
+       <a href="javascript:;" class="btn btn-large btn-primary" id="saveAllVal" >发布</a>
+       <a href="javascript:history.back(-1);" class="btn btn-large btn-gray">取消</a>
+ </div>
+ 
+
+<!--添加商品弹窗 start-->
+  <div class="modal fade new-css biger MarkBGAll-zIndex"id="add-dp-product" tabindex="10" role="dialog"aria-labelledby="myModalLabel" style="display:none;width:620px;top:25px;">
+   
+</div>
+ <!--添加商品弹窗 end-->
+
+
+  
+ <!--内容部分-->
+ </div><!--end content-->
+</div><!--end container-->
+</body>
+<script type="text/javascript">
+var addMark = function(){//增加蒙版
+    $('body').before('<div id="MarkBG"></div>');
+    $('#MarkBG').fadeIn(100);
+    $('body').addClass('overflow-hidden-scroll');
+  }
+var removeMark = function(){//删除蒙版
+    $('#MarkBG').remove();//删除蒙版
+    $('body').removeClass('overflow-hidden-scroll');
+    $('.modal.going').show();
+}
+$(function(){
+  //table表移动
+   //移动 上
+  $(document).on('click','.content-that .moveUp',function(){
+     var arr =  $(this).parents('.content-that').find('tr').toArray();//父集数组
+     var id = $('.content-that .moveUp').index(this);
+     $.changeLeftArr(arr,id);
+     $(this).parents('.content-that').html(arr);
+  })
+  //移动 下
+  $(document).on('click','.content-that .moveDown',function(){
+     var arr =  $(this).parents('.content-that').find('tr').toArray();//父集数组
+     var id = $('.content-that .moveDown').index(this);
+     $.changeRightArr(arr,id);
+     $(this).parents('.content-that').html(arr);
+  })
+  //删除搭配商品
+  $(document).on('click','.trRemove',function(){
+     $(this).parents('tr').remove();
+
+  })
+  //关闭弹窗
+  $(document).on('click','.MarkBGAll-zIndex .btn-close-win',function(){//关闭弹窗
+         $(this).parents('.MarkBGAll-zIndex').fadeOut(100);
+         removeMark();
+       })
+  //打开弹窗添加组合商品
+  $(document).on('click','#addProduct',function(){//关闭弹窗
+    showProds();
+    $('#add-dp-product').fadeIn(100);
+    addMark();
+  })
+  //选择商品单选
+  var dataImgSrc = [],dataProductName=[],dataPrice=[],dataPid=[];//储存已选值
+  $(document).on('click','.select-chexkbox',function(){
+    if($(this).hasClass('checked')){
+      $(this).removeClass('checked');
+      $(this).find('input[name=productsId]').prop("checked",false);
+      $(this).parents('tr').removeClass('Editing');
+      var imgSrc = $(this).parents('tr').find('img').attr('src');//图片路径
+      var productName = $(this).parents('tr').find('.productName').text();//商品名称
+      var productPrice = $(this).parents('tr').find('.price').text();//商品价格
+      var productPid = $(this).parents('tr').find('input').val();//pid
+      $.arrRemoveIndex(dataImgSrc,imgSrc);
+      $.arrRemoveIndex(dataProductName,productName);
+      $.arrRemoveIndex(dataPrice,productPrice);
+      $.arrRemoveIndex(dataPid,productPid);
+    }else{
+      $(this).addClass('checked');
+      $(this).find('input[name=productsId]').prop("checked",true);
+      $(this).parents('tr').addClass('Editing');
+      var imgSrc = $(this).parents('tr').find('img').attr('src');//图片路径
+      var productName = $(this).parents('tr').find('.productName').text();//商品名称
+      var productPrice = $(this).parents('tr').find('.price').text();//商品价格
+      var productPid = $(this).parents('tr').find('input').val();//pid
+      dataImgSrc.push(imgSrc);
+      dataProductName.push(productName);
+      dataPrice.push(productPrice);
+      dataPid.push(productPid);
+    }
+  });
+
+  var appendTrView = function(data,len){
+      var tableTrView = '';
+      for(var i=0;i<len;i++){
+         tableTrView += '<tr><input type="hidden" name="productId" value="'+data.pid[i]+'"/>'
+                        +' <td><img src="'+data.src[i]+'" width="80" height="80"></td>'
+                        +'<td calss=""><div class="min-width">'+data.name[i]+'</div></td>'
+                         +'<td>'+data.price[i]+'</td>'
+                         +'<td>'
+                           +'<a href="javascript:;" class="move-icon moveUp icon-1" title="上移">上移</a>'
+                           +'<a href="javascript:;" class="move-icon moveDown icon-2" title="下移">下移</a>'
+                         +'</td>'
+                         +'<td><a class="blue trRemove">删除</a></td>'
+                       +'</tr>';
+      }
+      return tableTrView;
+  }
+  
+  //弹窗点击确定
+   $(document).on('click','#sure-select-zh',function(){//关闭弹窗
+    var hasLe = $('.Combination-list-caery .content-that tr').length;//已经存在长度
+   
+    var nowLe = $('.viewChange tr.Editing').length;
+    
+    if(nowLe<1){
+    	$.alert({
+            type: 'error',
+            text: '请选择一个商品!',
+            time: 3000
+          });
+       return false;
+    }
+    
+    var comChoicePid = jQuery("#comChoicePid").val();
+	var comChoicePidArr = [];
+    if(comChoicePid!=null && ""!==comChoicePid){
+	    if(comChoicePid.indexOf(",")!=-1){
+	    	//有逗号
+	    	comChoicePidArr = comChoicePid.split(',');
+	    }else{
+	    	comChoicePidArr.push(comChoicePid);
+	    }
+    }
+    
+	var newComChoicePid = comChoicePid;
+    
+	   console.log("dataPid:"+dataPid);
+	   if(dataPid!=null && dataPid.length>0){
+		    for(var i=0;i<dataPid.length;i++){
+		    	if(comChoicePid!=null && ""!==comChoicePid){
+			  		newComChoicePid = newComChoicePid+","+dataPid[i];
+		    	}else{
+		    		if((i+1)==dataPid.length){
+		    			newComChoicePid = newComChoicePid+dataPid[i];
+		    		}else{
+		    			newComChoicePid = newComChoicePid+dataPid[i]+",";
+		    		}
+		    	}
+		    	if(comChoicePidArr.indexOf(dataPid[i])!=-1){
+		    		console.log("选中的id:"+dataPid[i]);
+		    		$.alert({
+		                type: 'error',
+		                text: '已经选择该商品!',
+		                time: 3000
+		              });
+		           return false;
+		    	}
+	  	  }
+    	}
+	   
+	   
+	   
+	   jQuery("#comChoicePid").val(newComChoicePid)
+	   console.log("comChoicePid:"+newComChoicePid);
+    
+    if((hasLe+nowLe)>5){
+     $.alert({
+          type: 'error',
+          text: '一个组合最多添加5件商品!',
+          time: 3000
+        });
+     return false;
+    }else{
+      var data = {};
+          data.src = dataImgSrc;
+          data.name = dataProductName;
+          data.price = dataPrice;
+          data.pid = dataPid; 
+      $('.content-that').append(appendTrView(data,nowLe));
+      var yTotal = jQuery("#yTotal").text();
+      if(yTotal==null || ""==yTotal){
+    	  yTotal = 0;
+      }
+      if(yTotal!=null && dataPrice!=null && dataPrice.length>0){
+    	  for(var i=0;i<dataPrice.length;i++){
+    		  yTotal = parseFloat(yTotal)+parseFloat(dataPrice[i]);
+    	  }
+    	  jQuery("#yTotal").text(yTotal)
+      }
+      dataImgSrc = [];
+      dataProductName=[];
+      dataPrice=[];
+      dataPid=[];
+    }
+    $('#add-dp-product').fadeOut(100);
+    removeMark();
+  })
+  
+})
+
+
+
+$(function(){
+  
+   //radio
+   var CHECKED_CLASS = 'checked';
+   var clearCheckedRadio = function(name) {
+    var $input = $('.radio.checked').find('input[name="' + name + '"]');
+    var $radio = $input.parents('.radio');
+    $radio.removeClass('checked');
+    $input.prop('checked', false).trigger('change');
+    $radio.trigger('checkbox.change', false);
+  };
+  var check = function(checked) {
+    var $checkbox = $(this);
+    var $input = $checkbox.find('input');
+    if($checkbox.is('.disabled, :disabled')) {
+      return;
+    }
+    if($checkbox.is('.half-checkbox')) {
+      checked = true;
+      $checkbox.removeClass('half-checkbox');
+      $checkbox.find('.icon-halfcheck').removeClass('icon-halfcheck').addClass('icon-checked');
+    }
+    if($checkbox.is('.radio')) {
+      clearCheckedRadio($input.attr('name'));
+    }
+    checked ? $checkbox.addClass(CHECKED_CLASS) : $checkbox.removeClass(CHECKED_CLASS);
+    $input.prop('checked', checked).trigger('change');
+    $checkbox.trigger('checkbox.change', checked);
+  };
+    $(document).on('click', '.radio', function() {
+      var checked = $(this).is('.checked');
+      if(checked) {
+        return false;
+      }
+      check.call(this, true);
+      return false
+    });
+
+});
+//设置物流
+function clickFree(self){
+	var val = jQuery(self).attr("data-id");
+	jQuery("#isFreePost").val(val);
+}
+
+
+jQuery("#saveAllVal").click(function(){
+	var data = jQuery("#addCombinForm").serialize();
+	console.log(data);
+	 jQuery.ajax({
+			url:"/combinationProduct/save",
+			data:data,
+			type:"POST",
+			dataType:"json",
+			success:function(data){
+				if(data!=null && data.success){
+			        jQuery.alert({
+						type: 'success',
+						text: '保存成功',
+						time: 3000
+					});
+			        location.href="/combinationProduct/list";
+				}else{
+					jQuery.alert({
+						type: 'error',
+						text: data.msg,
+						time: 3000
+					});
+				}
+			},
+			error:function(){
+				jQuery.alert({
+					type: 'error',
+					text: '操作失败,请稍后重试!',
+					time: 3000
+				});
+			}
+		});
+});
+
+//显示商品页面
+function showProds(){
+	jQuery.ajax({
+		url : "/combinationProduct/listpro",
+		data : "",
+		type : "POST",
+		dataType : "html",
+		success : function(data) {
+			jQuery("#add-dp-product").html(data);
+		},
+		error : function() {
+			jQuery("#add-dp-product").html("<b>系统错误</b>");
+		}
+	});
+}
+</script>
+</html>

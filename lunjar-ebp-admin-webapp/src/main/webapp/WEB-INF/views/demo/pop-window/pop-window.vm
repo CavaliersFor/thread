@@ -1,0 +1,86 @@
+#set($screen_title="弹出窗口示例")
+##前端资源：表单
+#loadWebResources(["form"]) 
+#set($screen_jsArray=["demo/pop-window","demo/pop-window-win3"]) ##加载js 文件
+
+<style>
+	.line:{border-top:1px dotted #ccc;}
+</style>
+<ul class="p15">
+	<div class="mb10 line">
+        <li>
+            • <a href="#" id="link1" >窗口内嵌表单，表单内容定义在页面中（推荐）</a>
+        </li>
+    	<div class="ml10 mt5 pb10">
+    		打开窗口，操作成功后，自动关闭窗口，并且报处理结果返回
+        </div>
+	</div>
+	<div class="mb10 line">
+    	<li>
+            • <a href="#" id="link11" >窗口内嵌表单，表单内容在javascript中拼接</a>
+        </li>
+    	<div class="ml10 mt5 pb10">
+    		打开窗口，操作成功后，自动关闭窗口，并且报处理结果返回
+        </div>
+	</div>
+	<div class="mb10 line">
+    	<li>
+            • <a href="#" id="link2" >窗口选择，窗口内容在定义在页面中</a>
+        </li>
+    	<div class="ml10 mt5 pb10">
+    		打开窗口，选择记录，并且把选择结果返回
+        </div>
+	</div>
+	<div class="mb10 line">
+    	<li>
+           • <a href="#" id="link3" >窗口选择，窗口内容在javascript中拼接</a>	  
+        </li>
+    	<div class="ml10 mt5 pb10">
+    		窗口内容参见 <a href="#getJsPath()/demo/pop-window-win3.js" " target="_blank"> pop-window-win3.js </a>
+    	</div>
+	</div>
+	<div class="mb10 line">
+    	<li>
+           • <a href="#" id="link4"  >弹出窗口内嵌iframe</a>
+        </li> 
+    	<div class="ml10 mt5 pb10">
+    		打开窗口，窗口内再内嵌一个iframe
+        </div>
+	</div>	
+	<div class="mb10 ">
+        <li>
+           • <a href="#" id="link6"  >弹出窗口，多个按钮选择</a>
+        </li>
+    	<div class="ml10 mt5 pb10">
+    		
+        </div>
+	</div>
+</ul>
+<div id="win1Box" class="hide">
+    <form method="post" class="winFormBox">
+    	<table>
+    		<tr>
+    			<th>#requiredTag()文本 </th>
+    			<td>    				
+    				<input name="fieldText" type="text" class="required" minlength="2" />
+    			</td>
+    		</tr>
+    		<tr>
+    			<th>#requiredTag()下拉</th>
+    			<td>#formSelect({"name":"fieldSelect","dictGroup":"sex"} "class='required'")</td>
+    		</tr>
+    		<tr>
+    			<th>单选</th>
+    			<td>#formRadioList({"name":"fieldRadio","dictGroup":"sex"})</td>
+    		</tr>
+    		<tr>
+            	<th></th>
+        		<td><input type="submit"  value="提　交" class="form_b_ok"/></td>
+      		</tr>
+        </table>
+    </form>
+</div>
+	
+<div id="win2Box" class="hide">
+    #parse("/demo/pop-window/pop-window-win2.vm")
+</div>

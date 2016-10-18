@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans	
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<import resource="webui-mvc.xml" />
+	<import resource="exception-mvc.xml" />
+
+	<!-- 使用annotation 自动注册bean -->
+	<context:component-scan base-package="com.lunjar.bps.core.web.controller,com.lunjar.ebp.admin.web.controller"
+		use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+		<context:include-filter type="annotation"
+			expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+	</context:component-scan>
+
+	<!-- velocity config -->
+	<!-- velocityConfigurer 定义在webui-mvc.xml -->
+	<bean id="adminVelocityConfigurer" parent="velocityConfigurer"
+		class="com.lunjar.products.core.web.velocity.config.FixedVelocityConfigurer">
+		<constructor-arg value="macros/macros-admin.vm" />
+	</bean>
+	<!--静态文件访问配置 start-->
+	<mvc:default-servlet-handler/>
+	<mvc:resources location="/lib/tdz_component/" mapping="/lib/tdz_component/**"/>
+	<!--静态文件访问配置 end-->
+	<!-- velocity View Resolver -->
+	<bean id="adminVelocityViewResolver" parent="velocityViewResolver"
+		class="com.lunjar.products.core.web.velocity.resolver.FixedVelocityLayoutViewResolver">
+		<property name="layoutUrl" value="commons/layout-default.vm" />
+	</bean>
+
+	<!-- <bean id="viewPathExtendResolver" class="com.ancun.products.core.web.resolver.ViewPathExtendResolver"></bean> -->
+
+	<!-- 后台 没登录状态的resolver -->
+	<bean id="noLoginExceptionResolver" class="com.lunjar.products.core.web.exception.resolvers.NoLoginExceptionResolver">
+		<property name="loginUrl" value="/outSession" />
+	</bean>
+
+	<!-- 拦截器 排除的url -->
+	<bean id="adminCommonInterceptorExcludor" class="com.lunjar.products.core.utils.Excludor">
+		<property name="excludes">
+			<list>
+				<value>/pagenotfind</value>
+				<value>/index.*</value>
+				<value>/login</value>
+				<value>/logout</value>
+				<value>/</value>
+				<value>/outSession</value>
+				<value>/amqTest</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 登录失效和权限控制 -->
+	<bean id="adminAuthInterceptor" class="com.lunjar.ebp.admin.web.interceptor.AdminAuthInterceptor"
+		init-method="init">
+		<property name="excludor" ref="adminCommonInterceptorExcludor"></property>
+	</bean>
+
+	<!-- 后台 没登录状态的resolver 
+	<bean id="operateLogInterceptor" class="com.ancun.bps.core.web.interceptor.OperateLogInterceptor"
+		init-method="init">
+		<property name="excludor" ref="adminCommonInterceptorExcludor"></property>
+	</bean>-->
+
+	<!--<mvc:resources mapping="*.xml" location="/" /> -->
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<!-- monitorIntercepter 定义在 core-mvc.xml -->
+			<ref bean="monitorIntercepter" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="" />
+			<mvc:exclude-mapping path="/" />
+			<mvc:exclude-mapping path="/pagenotfind" />
+			<mvc:exclude-mapping path="/index" />
+			<mvc:exclude-mapping path="/login" />
+			<mvc:exclude-mapping path="/logout" />
+			<mvc:exclude-mapping path="/validateCode" />
+			<ref bean="adminAuthInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<!-- csrfIntercepter 定义在 core-mvc.xml -->
+			<ref bean="csrfIntercepter" />
+		</mvc:interceptor>
+		<!--  
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="" />
+			<mvc:exclude-mapping path="/" />
+			<mvc:exclude-mapping path="/pagenotfind" />
+			<mvc:exclude-mapping path="/index" />
+			<mvc:exclude-mapping path="/login" />
+			<mvc:exclude-mapping path="/logout" />
+			<mvc:exclude-mapping path="/validateCode" />
+			<ref bean="operateLogInterceptor" />
+		</mvc:interceptor>-->
+
+	</mvc:interceptors>
+	<!--上传文件-->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> 
+		 <property name="defaultEncoding" value="UTF-8"/>  
+	</bean>
+</beans>

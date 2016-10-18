@@ -1,0 +1,176 @@
+#parse("pages/commons/header.vm")
+  <script type="text/javascript" src="#getAppServer()/scripts/page/page.js"></script>
+  <script type="text/javascript" src="#getAppServer()/scripts/process/process.js"></script>
+ <div class="content">
+ <!--内容部分-->
+ <div class="breadcrumb">
+  <a class="breadcrumb-item active">组合商品</a>
+ </div>
+ <div class="Category-top-right-button">
+ 	<a href="/combinationProduct/add" class="btn btn-large btn-primary" id="addParTbody">+创建组合</a>
+ </div>
+
+ <div class="Combination-list">
+ 	<form action="/combinationProduct/list" method="post" id="comListForm">
+ 		<input type="hidden" name="pageNo" id="pageNo" value="1"/>
+ 	</form>
+     <table class="Combination-list-table">
+        <tr>
+           <th class="f-l-0">名称</th>
+           <th>一口价</th>
+           <th>当前状态</th>
+           <th>操作</th>
+        </tr>
+        <tbody class="list-combina">
+        	#if($!list && $!list.data.size()>0)
+        		#foreach($!c in $!list.data)
+			        <tr>
+			           <td class="t-l">
+			           <span class="text-left">$!c.cpName</span>
+			           #if($!c.product1Id)
+			           		<img src="$!c.product1AbsPicPath"  width="50" height="50"/>
+			           #end
+			           #if($!c.product1Id && $!c.product2Id)
+				           <i class="add"></i>
+				           <img src="$!c.product2AbsPicPath"  width="50" height="50"/>
+			           #end
+			           #if($!c.product2Id && $!c.product3Id)
+				           <i class="add"></i>
+				           <img src="$!c.product3AbsPicPath"  width="50" height="50"/>
+			           #end
+			           #if($!c.product3Id && $!c.product4Id)
+			           <i class="add"></i>
+			           <img src="$!c.product4AbsPicPath"  width="50" height="50"/>
+			           #end
+			           #if($!c.product4Id && $!c.product5Id)
+			           <i class="add"></i>
+			           <img src="$!c.product5AbsPicPath"  width="50" height="50"/>
+			           #end
+			           </td>
+			           <td>￥$!c.cpPrice</td>
+			           <td>
+			           		#if($!c.cpStatus==1)
+			           			有效
+			           			##<div class="blue lookReason">查看原因</div>
+			           		#end
+			           		#if($!c.cpStatus==2)
+			           			失效
+			           			<div class="blue lookReason" dataVal="$!c.id">查看原因</div>
+			           		#end
+			           	</td>
+			           <td>
+			             <a href="/combinationProduct/add?id=$!c.id" class="blue">编辑</a>
+			             <a href="javascript:;" data-id="$!c.id" class="blue deleteConbin">删除</a>
+			           </td>
+			        </tr>
+		        #end
+        	#end
+        </tbody>
+     </table>
+ </div>
+ 
+
+
+ <div class="newTabTop">
+  <div class="right" style="height: 80px;">
+     <!--分页-->
+  <div class="page-list" id="FenYe">
+  </div>
+ <!--分页-->
+  </div>
+ <div class="clear"></div>
+  </div>
+
+<!--查看失效原因弹窗-->
+<div class="modal fade new-css biger MarkBGAll-zIndex" id="look-Reason" tabindex="10" role="dialog" aria-labelledby="myModalLabel"style="width:520px;height:300px;top:80px;">
+     
+ </div>
+<!--查看失效原因弹窗-->
+  
+ <!--内容部分-->
+ </div><!--end content-->
+</div><!--end container-->
+</body>
+<script type="text/javascript">
+$(function(){
+	//查看失效原因
+	popuFn({
+		obj  : '.lookReason',//触发
+        popu : '#look-Reason',//窗口
+	})
+	PAGE.createPage($!list.pageCount,$!list.pageNo,"comListForm");
+});
+//删除
+jQuery(".deleteConbin").click(function(){
+	var id = jQuery(this).attr("data-id");
+	$(this).tooltip({
+		text: '您确定删除该组合商品吗？',
+		icon: 'icon-warnfill',
+		style: 'z-danger',
+		placement: 'left',
+		align: 'center',
+		okHide: function() {
+			deletCombin(id)
+		},
+		cancelHide: function() {
+			
+		}
+	});
+	return false;	// 记得要 return false;
+});
+
+function deletCombin(id){
+	  jQuery.ajax({
+			url:"/combinationProduct/delete",
+			data:"id="+id,
+			type:"POST",
+			dataType:"json",
+			success:function(data){
+				if(data!=null && data.success){
+					jQuery.alert({
+						type: 'success',
+						text: '删除成功',
+						time: 3000
+					});
+					location.reload();
+				}else{
+					jQuery.alert({
+						type: 'error',
+						text: data.msg,
+						time: 3000
+					});
+				}
+			},
+			error:function(){
+				jQuery.alert({
+					type: 'error',
+					text: '操作失败,请稍后重试!',
+					time: 3000
+				});
+			}
+		});
+}
+
+jQuery(".lookReason").click(function(){
+	var data = jQuery(this).attr("dataVal");
+	jQuery.ajax({
+		url:"/combinationProduct/showCause",
+		data:"id="+data,
+		type:"POST",
+		dataType:"html",
+		success:function(data){
+			console.log(data);
+			jQuery("#look-Reason").html(data);
+		},
+		error:function(){
+			jQuery.alert({
+				type: 'error',
+				text: '操作失败,请稍后重试!',
+				time: 3000
+			});
+		}
+	});
+});
+
+</script>
+</html>

@@ -1,0 +1,64 @@
+#loadWebResources(["list","form","extJs"]) 
+#set($thisActionUrl="list")
+<div class="searchBox">
+    <form method="get" id="form_search" action="$thisActionUrl">
+          <table>
+              <tr>
+                <th>接入者名称：</th>
+                <td ><input name="partnerName" type="text" value="$!query.partnerName" placeholder=""  class="inp-w160"/></td>
+				<th>实名状态：</th>
+				<td >
+                    #formSelect({"name":"status","dictGroup":"partnerStatus","selectedValue":$!query.status})
+				</td>
+				<td >
+                    <input type="submit" value="搜索" class="btn"/>
+                    <input type="button" id="btn_reset" value="清空" onclick="location.href='$thisActionUrl';" class="btn"/>
+                </td>
+             </tr>
+        </table>
+    </form>
+</div>
+<div id="list" class="listBox mt10">
+    <table>
+        <tr>          
+            <th width="5%">序号</th>
+            <th width="10%">接入者名称</th>
+			<th width="10%">接入者类型</th>
+            <th width="10%">联系人</th>
+            <th width="10%">联系电话</th>
+            <th width="15%">邮箱</th>
+			<th width="15%">实名状态</th>
+			<th width="15%">操作</th>
+        </tr>
+		
+        #set($data=$page.data)
+        #if($data.size()>0)
+            #foreach($o in $data)
+                #set($no = ($velocityCount + ($!page.pageNo - 1) * $!page.pageSize))
+                <tr #if($math.mod($velocityCount,2)==0)  class="bg" #end>
+                    <td >
+                        <label for="chk_$o.id">&nbsp;$velocityCount</label>    
+                    </td>                   
+                    <td>$!o.partnerName</td>
+        			<td>
+                        $!fieldTextTool.convertPartnerType("$!{o.type}")
+					</td>
+        			<td>$!o.linkPerson</td>
+                    <td>$!o.linkPhone</td>
+                    <td>$!o.userEmail</td>
+        			<td class="statusText">
+                        #direct($!fieldTextTool.convertPartnerStatus("$!{o.status}"))
+        			</td> 
+                    <td >
+                        <a href="/partner/detail?type=$!o.type&uid=$!o.uid&partnerId=$!o.id" class="edit">查看</a>
+                    </td>
+                </tr>
+            #end
+        #else
+            <tr>
+                <td colspan="10">非常抱歉，没有符合条件的数据！</td>
+            </tr>
+        #end 
+    </table>
+    #pageTabFoot({"queryFormId":"form_search","page":$page,"submitUrl":"${thisActionUrl}#list","canSetPagesize":true})      
+</div>

@@ -1,0 +1,113 @@
+#loadWebResources(["list","form","extJs","datePicker"]) 
+#set($thisActionUrl="list")
+<div class="searchBox">
+    <form method="post" id="form_search" action="$thisActionUrl">
+          <table>
+              <tr>
+				<!--<th>名字：</th>
+				<td><input type="text" name="registerName" value="$!query.registerName" /></td>-->
+				<th>注册手机：</th>
+				<td><input type="text" name="mobile" value="$!query.mobile" /></td>
+				<th>注册邮箱：</th>
+				<td><input type="text" name="email" value="$!query.email" /></td>
+				<th>类型：</th>
+                <td>#formSelect({"name":"userType","dictGroup":"ucUserType","selectedValue":$!query.userType},"class='w80'")</td>
+				<th>状态：</th>
+                <td>#formSelect({"name":"status","dictGroup":"ucStatus","selectedValue":$!query.status},"class='w80'")</td>
+				<th>审核：</th>
+                <td>#formSelect({"name":"checkStatus","dictGroup":"ucCheckStatus","selectedValue":$!query.checkStatus},"class='w80'")</td>
+				<th></th>
+                <td><input type="submit" id="btn_search" value="搜索" class="btn" /></td>			
+             </tr>
+        </table>
+    </form>
+</div>
+<div id="list" class="listBox mt10">
+    <table>
+        <tr>          
+            <th width="5%">序号</th>
+			<th width="12%">名字</th> 
+			<th width="12%">手机</th>   
+            <th width="12%">邮箱</th>
+			<th width="12%">注册</th>
+			<th width="12%">类型</th> 
+			<th width="12%">状态</th>
+			<th width="10%">审核</th>
+			<th width="25%">操作</th>
+        </tr>
+        #set($data=$page.data)
+        #if($data.size()>0)
+            #foreach($o in $data)
+                #set($no = ($velocityCount + ($!page.pageNo - 1) * $!page.pageSize))
+                <tr #if($math.mod($velocityCount,2)==0)  class="bg" #end>
+                    <td >
+                        <label for="chk_$o.id">&nbsp;$no</label>
+                    </td>    
+					<td>$!{o.registerName}</td> 
+					<td>$!{o.mobile}</td>
+					<td>$!{o.email}</td>
+					<td>$dateUtils.format($!{o.gmtCreate},"yyyy-MM-dd HH:mm:ss")</td>
+					<td>#getDictionaryName("ucUserType" $!{o.userType})</td>   
+					<td class="td_status_${o.id}">#getDictionaryName("ucStatus" ${o.status})</td>
+					<td>#getDictionaryName("ucCheckStatus" $!{o.checkStatus})</td>
+					<td class="td_update_${o.id}">
+					#if($!{o.status} eq 3)
+					 <a data-id="$!{o.id}" data-status="2" data-text="解锁" href="javascript:void(0);" class="view a_onclick">解锁</a>
+					#end
+					#if($!{o.status} eq 4)
+					 <a data-id="$!{o.id}" data-status="2" data-text="解冻" href="javascript:void(0);" class="view a_onclick">解冻</a>
+					#else
+					 <a data-id="$!{o.id}" data-status="4" data-text="冻结" href="javascript:void(0);" class="view a_onclick">冻结</a>
+					#end
+                    </td>
+                </tr>
+            #end
+        #else
+            <tr>
+                <td colspan="10">非常抱歉，没有符合条件的数据！</td>
+            </tr>
+        #end 
+    </table>        
+</div>
+#if($data.size()>0)
+	#pageTabFoot({"queryFormId":"form_search","page":$page,"submitUrl":"${thisActionUrl}#list","canSetPagesize":true}) 
+#end
+<script>
+$(function(){
+	function updateStatus(id,status,text){
+    	Core.PopUtil.confirm('确定<b style="color:#ff6600;">'+text+'</b>该用户状态?',function(){
+    		$.post("update/status"+ App.ajaxActionSuffix,{id:id,status:status},function(result){
+    			if(App.isSubmitSuccess(result)){
+    				Core.PopUtil.alert('该用户状态<b style="color:#ff6600;">'+text+'</b>成功!'
+    						,{autohide:true, callback:function(){
+    						if(status==2){
+                    			$(".td_status_"+id).html("<span style=\"color:green\">正常</span>");
+                    			$(".td_update_"+id).html("<a data-id=\""+id+"\" data-status=\"4\" data-text=\"冻结\" href=\"javascript:void(0);\" class=\"view a_onclick\">冻结</a>");
+                    		}else{
+                    			$(".td_status_"+id).html("<span style=\"color:purple\">冻结</span>");
+                    			$(".td_update_"+id).html("<a data-id=\""+id+"\" data-status=\"2\" data-text=\"解冻\" href=\"javascript:void(0);\" class=\"view a_onclick\">解冻</a>");
+                    		}
+    						$(".a_onclick").each(function(){
+                        		$(this).click(function(){
+                        			var _id=$(this).attr("data-id");
+                            		var _status=$(this).attr("data-status");
+                            		var _text=$(this).attr("data-text");
+                            		updateStatus(_id,_status,_text);	
+                        		});
+                        	});
+    				}});				
+    			}
+    		});
+    	});
+    }
+
+	$(".a_onclick").each(function(){
+		$(this).click(function(){
+			var _id=$(this).attr("data-id");
+    		var _status=$(this).attr("data-status");
+    		var _text=$(this).attr("data-text");
+    		updateStatus(_id,_status,_text);	
+		});
+	});
+});
+</script>

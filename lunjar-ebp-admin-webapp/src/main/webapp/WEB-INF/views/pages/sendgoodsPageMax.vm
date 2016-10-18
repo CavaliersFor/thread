@@ -1,0 +1,92 @@
+<div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close btn-close-win" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">批量发货</h4>
+        </div>
+        <div class="modal-body">
+		<form action="" id="sendGoodsMaxForm">
+	         <!--内容部分-->
+	         <div class="plfh">
+	         #if($!distributionMode==1)
+		           <!--快递发货-->
+		           <ul class="item-list">
+		               <li class="par-li">
+		               <span class="te-left">发货方式：</span><strong>快递发货</strong>
+		               </li>
+		               <li  class="par-li" style="margin-top: 0;">
+		               <span class="te-left">物流公司：</span>
+		               <div class="selectMessage"style="width:200px;left:-3px;top:8px;">
+		                    <div class="result"><span id="result">$!companys.get(0).name</span><i class=""></i></div>
+		                    <div class="result-div">
+			                    
+			                    </div>
+		                    <dl style="height:240px;">
+		                    <dt><input type="text" class="input search" placeholder="搜索" ></dt>
+		                      #foreach($c in $companys)
+			                       <dd class="">$!c.name</dd>
+			                    #end
+		                    </dl>
+		                </div>
+		                   
+		               </li>
+		               <li class="par-li"><span class="te-left">快递号：</span><input class="input input-number new_input_wi" type="text"  name="productName" value="$!productName" placeholder="请填写运单号" id="productNameVal"/>
+		               <a href="javascript:;"  class="btn btn-large all-write-thisName" style="color: #fff;background-color: #409bd2;border-color: #409bd2;line-height:26px;height:28px;">批量填写</a>
+		               </li>
+		           </ul>
+				#foreach($t in $!trades)
+		           <div class="Messagelist">
+					<input type="hidden" name="tradeIds" value="$t.id">
+					<input type="hidden" name="companys" value="">
+		             <h3>订单编号：$t.tradeNo<span class="close_this_list">╳</span></h3>
+		             <p>$t.buyerName,$t.buyerPhone,$t.buyerAddress</p>
+		             <div class="d-t">
+		                 <span class="_left">物流公司：</span>
+		                 <div class="selectMessage"style="width:200px;float:left;">
+		                    <div class="result"><span id="result$velocityCount">$!companys.get(0).name</span><i class=""></i></div>
+		                    <div class="result-div">
+			                    
+			                    </div>
+		                    <dl style="height:240px;">
+		                    	<dt><input type="text" class="input search" placeholder="搜索" ></dt>
+		                       #foreach($c in $companys)
+			                       <dd class="">$!c.name</dd>
+			                    #end
+		                    </dl>
+		                 </div>
+		                 <div style="float:left;margin-left: 10px;height:28px;">
+		                   <input class="input input-number new_input_wi" type="text"  name="codes" placeholder="请填写运单号" />
+		                 </div>
+		                 <div class="clear"></div>
+		             </div>
+		          </div>
+		        #end
+		          <!--快递发货-->
+			#else
+				
+			          <!--上门自提-->
+			             <ul class="item-list">
+			               <li class="par-li">
+			               <span class="te-left">发货方式：</span><strong>上门自提</strong>
+			               </li>
+			             </ul>
+			             #foreach($t in $!trades)
+				            <div class="Messagelist">
+			             	<input type="hidden" name="tradeIds" value="$t.id">
+				               <h3>订单编号：$t.tradeNo<span class="close_this_list">╳</span></h3>
+				               <p>自提点:$!t.buyerAddress</p>
+				               <p>自提时间:$!t.pickUpTime</p>
+				            </div>
+				          <!--上门自提-->
+		        	 	#end
+			#end
+			</div>
+	        <!--内容部分end-->
+        </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-ok="modal" onclick="sendGoogsMethod('sendGoodsMaxForm')">确定</button>
+            <button type="button" class="btn btn-default btn-close-win Hui-black" data-dismiss="modal">取消</button>
+        </div>
+      </div>
+    </div>

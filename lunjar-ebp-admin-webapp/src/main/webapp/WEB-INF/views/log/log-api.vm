@@ -1,0 +1,108 @@
+#loadWebResources(["list","form","datePicker"]) 
+##set($screen_jsArray=["log/api"])
+#set($thisActionUrl="/log/api/list")
+<div class="searchBox">
+    <form method="post" id="form_search" action="$thisActionUrl">
+          <table>
+              <tr>
+				 <th>调用方：</th>
+                <td>
+					<input  name="invokerName" type="text" value="$!query.invokerName"  class="inp-w160"/>
+				</td>
+                <th>客户端IP：</th>
+                <td>
+					<input placeholder="" name="clientAddr" type="text" value="$!query.clientAddr"  class="inp-w90"/>
+				</td>
+				<th>接口名称：</th>
+                <td>
+					<input placeholder="" name="apiName" type="text" value="$!query.apiName"  class="inp-w90"/>
+				</td>
+				<th>接口地址：</th>
+                <td>
+					<input placeholder="" name="apiUrl" type="text" value="$!query.apiUrl"  class="inp-w90"/>
+				</td>
+				<th ></th>
+                <td ></td>	
+				</tr>
+				<tr>
+				<th>请求时间：</th>
+                <td>
+					<input name="reqtimeFrom" id="reqtimeFrom" type="text"dateISO="true" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!query.reqtimeFrom)"  readOnly="true" onclick="WdatePicker({maxDate:'#F{$dp.$D(\'reqtimeTo\')}',dateFmt: 'yyyy-MM-dd 00:00:00'})" class="inp-w80"/>
+					-
+					<input name="reqtimeTo" id="reqtimeTo"  type="text"dateISO="true" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!query.reqtimeTo)"  readOnly="true" onclick="WdatePicker({minDate:'#F{$dp.$D(\'reqtimeFrom\')}',dateFmt: 'yyyy-MM-dd 23:59:59'})" class="inp-w80"/>
+				</td>
+				<th>响应编号：</th>
+                <td>
+					<input placeholder="" name="repcode" type="text" value="$!query.repcode"  class="inp-w90"/>
+				</td>
+				<th>响应内容：</th>
+                <td>
+					<input placeholder="" name="repContent" type="text" value="$!query.repContent"  class="inp-w90"/>
+				</td>
+				<th>耗时大于：</th>
+                <td>
+					<input placeholder="请输入纯数字" id="timeConsume" name="timeConsume" type="text" value="$!query.timeConsume"  class="inp-w90"/>毫秒
+				</td>
+				<th ></th>
+                <td >
+					<input type="submit" id="btn_search" value="搜索" class="btn" />
+				</td>
+             </tr>
+			 
+        </table>
+    </form>
+</div>
+<div id="list" class="listBox mt10">
+    <table>
+        <tr> 
+            <th width="5%">序号</th>
+			<th width="5%">调用方</th>
+			<th width="5%">接口名称</th>
+			<th width="10%">接口地址</th>   
+            <th width="5%">接口类型</th>
+			<th width="10%">客户端IP</th>
+            <th width="10%">请求时间</th>  
+			<th width="10%">响应时间</th>
+			<th width="5%">耗时(ms)</th>
+			<th width="5%">响应编号</th>
+			<th width="5%">响应内容</th>
+
+        </tr>
+        #set($data=$page.data)
+        #if($data.size()>0)
+            #foreach($o in $data)
+                #set($no = ($velocityCount + ($!page.pageNo - 1) * $!page.pageSize))
+                <tr #if($math.mod($velocityCount,2)==0)  class="bg" #end>
+                    <td >
+                        <label for="chk_$o.id">&nbsp;$no</label>
+                    </td>
+					<td>$!o.invokerName</td>
+					<td>$!o.apiName</td>
+					<td>$!o.apiUrl</td>
+					<td>#getDictionaryName("apiType" $!{o.apiType})</td>
+					<td>$!o.clientAddr</td>
+					<td>$!date.format("yyyy-MM-dd HH:mm:ss",$o.reqtime)</td>
+					<td>$!date.format("yyyy-MM-dd HH:mm:ss",$o.reptime)</td>
+					<td>$!o.timeConsume</td>
+					<td>$!o.repcode</td>
+					<td>$!o.repContent</td>
+                </tr>
+            #end
+        #else
+            <tr>
+                <td colspan="11">非常抱歉，没有符合条件的数据！</td>
+            </tr>
+        #end 
+    </table>        
+</div>
+#if($data.size()>0)
+	#pageTabFoot({"queryFormId":"form_search","page":$page,"submitUrl":"${thisActionUrl}#list","canSetPagesize":true}) 
+#end
+<script>
+$("#timeConsume").keyup(function(){      
+    $(this).val($(this).val().replace(/[^0-9.]/g,''));      
+}).bind("paste",function(){  //CTR+V事件处理      
+    $(this).val($(this).val().replace(/[^0-9.]/g,''));       
+}).css("ime-mode", "disabled"); //CSS设置输入法不可用      
+  
+</script>

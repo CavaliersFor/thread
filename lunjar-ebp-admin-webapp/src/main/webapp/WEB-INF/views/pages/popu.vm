@@ -1,0 +1,241 @@
+
+<!--发货小弹窗-->
+<div class="modal fade new-css" id="myModal" tabindex="10" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close btn-close-win" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">发货</h4>
+        </div>
+        <div class="modal-body">
+
+         <!--内容部分-->
+
+           <!--上门自提-->
+           <p class="t-i-0">物流方式：<strong>上门自提</strong></p>
+           <p class="t-i-0">自提点：广东省汽车客运站</p>
+           <p class="t-i-0">自提时间：2016-09-13 12:00-18:00</p>
+            <!--上门自提-->
+
+            <!--快递发货-->
+           <div class="message">
+              <ul>
+                 <li class="first">收货信息</li>
+                 <li>小丸子,136313707089,广东省 广州市 越秀区 环市东路1号大楼,514000</li>
+              </ul>
+           </div>
+           <p class="t-i-0">物流方式：<strong>快递发货</strong></p>
+           <div class="select-kd">
+               <span class="left">物流公司：</span>
+               <div class="selectMessage"style="width:200px;top:-2px;">
+                    <div class="result"><span id="result">顺丰快递</span><i class=""></i></div>
+                    <dl>
+                       <dd class="">1111111</dd>
+                       <dd>2222</dd>
+                       <dd>3333</dd>
+                       <dd>1111111</dd>
+                    </dl>
+                </div>
+           </div>
+           <div class="bt-wlgs">
+             <span class="left"></span>
+                <input class="input input-number new_input_wi" type="text"  name="productName" value="" placeholder="请填写运单号" />
+            </div>
+
+            <!--快递发货-->
+         <!--内容部分end-->
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-ok="modal" >确定</button>
+            <button type="button" class="btn btn-default btn-close-win Hui-black" data-dismiss="modal">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!--发货小弹窗end-->
+
+<!--备注内容小弹窗-->
+<div class="modal fade new-css" id="myModal" tabindex="10" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close btn-close-win" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">卖家备注</h4>
+        </div>
+        <div class="modal-body">
+        
+         <!--内容部分-->
+         <div class="bzpopu">
+           <div class="left">备注内容：</div><textarea></textarea>
+         </div>
+         <!--内容部分end-->
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-ok="modal" >确定</button>
+            <button type="button" class="btn btn-default btn-close-win Hui-black" data-dismiss="modal">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!--备注内容小弹窗end-->
+
+<!--批量发货大弹窗内含两种情况-->
+<div class="modal fade new-css biger" id="myModal" tabindex="10" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close btn-close-win" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">批量发货</h4>
+        </div>
+        <div class="modal-body">
+
+         <!--内容部分-->
+         <div class="plfh">
+           <!--快递发货-->
+           <ul class="item-list">
+               <li class="par-li">
+               <span class="te-left">发货方式：</span><strong>快递发货</strong>
+               </li>
+               <li  class="par-li" style="margin-top: 0;">
+               <span class="te-left">物流公司：</span>
+               <div class="selectMessage"style="width:200px;left:-3px;top:8px;">
+                    <div class="result"><span id="result">顺丰快递</span><i class=""></i></div>
+                    <dl>
+                       <dd class="">1111111</dd>
+                       <dd>2222</dd>
+                       <dd>3333</dd>
+                       <dd>1111111</dd>
+                    </dl>
+                </div>
+                   
+               </li>
+               <li class="par-li"><span class="te-left">起始快递号：</span><input class="input input-number new_input_wi" type="text"  name="productName" value="$!productName" placeholder="请填写运单号"/>
+               <a href="javascript:;"  class="btn btn-large btn-primary">批量填写</a>
+               </li>
+           </ul>
+
+           <div class="Messagelist">
+             <h3>订单编号：12233434342342<span class="close_this_list">╳</span></h3>
+             <p>卖家1,13631306070,广东省 广州市 环市东路 111号综合楼,510000</p>
+             <div class="d-t">
+                 <span class="_left">物流公司：</span>
+                 <div class="selectMessage"style="width:200px;left:-3px;top:13px;">
+                    <div class="result"><span id="result">选择结果</span><i class=""></i></div>
+                    <dl>
+                       <dd class="">1111111</dd>
+                       <dd>2222</dd>
+                       <dd>3333</dd>
+                       <dd>1111111</dd>
+                    </dl>
+                 </div>
+                 <div style="display:inline-block;">
+                   <input class="input input-number new_input_wi" type="text"  name="productName" value="" placeholder="请填写运单号" />
+                 </div>
+             </div>
+          </div>
+          <!--快递发货-->
+
+          <!--上门自提-->
+             <ul class="item-list">
+               <li class="par-li">
+               <span class="te-left">发货方式：</span><strong>上门自提</strong>
+               </li>
+             </ul>
+            <div class="Messagelist">
+               <h3>订单编号：12233434342342<span class="close_this_list">╳</span></h3>
+               <p>自提点:广东省汽车客运站</p>
+               <p>自提时间:2016-09-09 12:00-18:00</p>
+            </div>
+          <!--上门自提-->
+          <!--上门自提-->
+             <ul class="item-list">
+               <li class="par-li">
+               <span class="te-left">发货方式：</span><strong>上门自提</strong>
+               </li>
+             </ul>
+            <div class="Messagelist">
+               <h3>订单编号：12233434342342<span class="close_this_list">╳</span></h3>
+               <p>自提点:广东省汽车客运站</p>
+               <p>自提时间:2016-09-09 12:00-18:00</p>
+            </div>
+          <!--上门自提-->
+          <!--上门自提-->
+             <ul class="item-list">
+               <li class="par-li">
+               <span class="te-left">发货方式：</span><strong>上门自提</strong>
+               </li>
+             </ul>
+            <div class="Messagelist">
+               <h3>订单编号：12233434342342<span class="close_this_list">╳</span></h3>
+               <p>自提点:广东省汽车客运站</p>
+               <p>自提时间:2016-09-09 12:00-18:00</p>
+            </div>
+          <!--上门自提-->
+         </div>
+
+        <!--内容部分end-->
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-ok="modal" >确定</button>
+            <button type="button" class="btn btn-default btn-close-win Hui-black" data-dismiss="modal">取消</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+<!--批量发货弹窗end-->
+
+<script type="text/javascript">
+ $(function(){
+   //弹窗显示控制
+   //插入蒙版方法
+   var addMark = function(){
+     $('#myModal').before('<div id="MarkBG"></div>');
+     $('#MarkBG').fadeIn(100);
+   }
+   //显示弹窗方法 eg；
+   /*$(document).on('click','这里传Id或者class',function(){
+    $('#myModal').fadeIn(100);
+    addMark();//插入蒙版
+   })*/
+   $(document).on('click','#myModal .btn-close-win ,#myModal .btn-primary',function(){
+     $(this).parents('#myModal').fadeOut(100);
+     $('#MarkBG').remove();//删除蒙版
+   })
+   //下拉选择
+   $(document).on('click','.selectMessage',function(){
+    var dl = $(this).find('dl');
+    var _i =  $(this).find('.result i');
+    var changehei = dl.height();
+    dl.css({'bottom':-(changehei+15)})
+    if(dl.is(':hidden')){
+      dl.show();
+      _i.addClass('on');
+    }else{
+      dl.hide();
+      _i.removeClass('on');
+    }
+   })
+   $(document).on('click','.selectMessage dl dd',function(event){
+     event.stopPropagation();
+     var t = $(this).text();
+     $(this).siblings().removeClass('on');
+     $(this).addClass('on');
+     $(this).parents('.selectMessage').find('#result').html(t);
+     $(this).parents('.selectMessage').find('dl').hide();
+     $(this).parents('.selectMessage').find('i').removeClass('on');
+   })
+   //删除批量发货中的某个订单
+   $(document).on('click','.close_this_list',function(){
+    var msg = window.confirm('您确定删除此订单？')
+    if(msg){
+      $(this).parents('.Messagelist').remove();
+    }else{
+      return;
+    }
+    
+   })
+ })
+</script>

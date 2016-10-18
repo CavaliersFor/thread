@@ -1,0 +1,98 @@
+#loadWebResources(["form"])
+#set($screen_jsArray=["ucrealnameaudit/ucrealnameaudit-common-audit"])
+#set($module="personal")
+
+<style>
+.title{
+    font-weight: bold;
+    color: #ff6600;
+}
+</style>
+
+<input id="module" type="hidden" value="$module"/>
+<div class="formBox">
+    <h3>
+        <i></i>
+        <div class="fl">
+            <span>个人实名认证>>账户信息详情</span>
+        </div>
+        <div class="fr">
+            <a href="/ucrealnameaudit/personal">&lt;&lt;  返回列表</a>
+        </div>
+    </h3>
+    <h4 style="background: none;">
+        <div class="fl">
+            <span class="title">基本信息</span>
+        </div>
+    </h4>
+    <div class="content">
+        <table class="c2">
+            <tr>
+                <th width="13%">账号：</th>
+                <td width="37%">$!{audit.registerName}</td>
+                <th width="13%">账户来源：</th>
+                <td width="37%">$fieldTextTool.ucUser_userForm("$!{audit.userFrom}")</td>
+            </tr>
+            <tr style="height: 50px;">
+                <th>手机：</th>
+                <td>$!{audit.mobile}</td>
+                <th>邮箱：</th>
+                <td>$!{audit.email}</td>
+            </tr>
+        </table>
+    </div>
+
+    <h4 style="background: none;">
+        <div class="fl">
+            <span class="title">实名信息</span>
+##            <span style="font-size: 12px;color: #999999;">已于 $!date.format('yyyy-MM-dd HH:mm:ss ',${audit.gmtModify}) 申请请实名认证，请客服核实主体信息的正确性和真实性。</span>
+        </div>
+    </h4>
+
+#if($!{audit.auditType}==1)## 身份证认证
+    <div class="content">
+        <table class="c2">
+            <tr style="height: 50px;">
+                <th  width="13%">姓名：</th>
+                <td  width="37%">$!{audit.userName}</td>
+                <th  width="13%">身份证号：</th>
+                <td  width="37%">$!{audit.idCard}</td>
+            </tr>
+            <tr>
+                <th>手持证件照：</th>
+                <td>
+                ##                    <a id="originPhotoUrl1" title="正面照" href='$!{originPhotoUrl1}'>
+                    <a id="originPhotoUrl1" title="正面照" >
+                        <img id="headsPhotoUrl" alt="" src="$fieldTextTool.convertPictureUrl($!audit.headsPhotoUrl,'/images/personal-front.png')" align="middle" style="top: 0px;width:170px;height:108px;">
+                    </a>
+                ##                    <a id="originPhotoUrl2" title="反面照" href="$!{originPhotoUrl2}">
+                    <a id="originPhotoUrl2" title="反面照">
+                        <img id="tailsPhotoUrl" alt="" src="$fieldTextTool.convertPictureUrl($!audit.tailsPhotoUrl,'/images/personal-back.png')" align="middle" style="top: 0px;width:170px;height:108px;">
+                    </a>
+                ##                    <span>(点击查看大图)</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+#elseif($!{audit.auditType}==2)##银行卡认证
+    <div class="content">
+        <table class="c2">
+            <tr style="height: 50px;">
+                <th  width="13%">姓名：</th>
+                <td  width="37%">$!{audit.userName}</td>
+                <th  width="13%">银行卡号：</th>
+                <td  width="37%">$!{audit.bankCard}</td>
+            </tr>
+            <tr style="height: 50px;">
+                <th  width="13%">身份证号：</th>
+                <td  width="37%">$!{audit.idCard}</td>
+                <th  width="13%">绑定手机号：</th>
+                <td  width="37%">$!{audit.bdMobile}</td>
+            </tr>
+        </table>
+    </div>
+#elseif($!{audit.auditType}==0)##无认证
+    <div class="content" ><h2>还未提交实名信息</h2></div>
+#end
+   #parse("ucrealnameaudit/ucrealnameaudit-common-detail-audit.vm")
+</div>

@@ -1,0 +1,219 @@
+#parse("pages/commons/header.vm")
+<style>
+.kd-seting-table ._right .tooltip-footer a.btn-primary{
+ color:#fff;
+}
+</style>
+<div class="content">
+	<!--内容部分-->
+	<div class="breadcrumb">
+		<a class="breadcrumb-item active">物流管理/快递运费模块</a>
+	</div>
+	#if($!es && $!es.data.size()>0) #foreach($e in $!es.data)
+	#if($!e.valuation==1)
+	<div class="express-setting">
+		<div class="kd-seting-table showthis">
+			<h3 class="ta-bg">
+				快递运费模块 <span class="_right">最后编辑时间:$!date.format('yyyy-MM-dd HH:mm:ss ',$!e.gmtModify) <a
+					href="/express/add?id=$!e.id" class="left">编辑</a> <a href="javascript:;" class="closeExpress" data-tradeId="$!e.id">删除</a>
+				</span>
+			</h3>
+			<table>
+				<tbody>
+					<tr>
+						<th>运送方式</th>
+						<th>运送到</th>
+						<th>首件(个)</th>
+						<th>邮费(元)</th>
+						<th>续件(个)</th>
+						<th>邮费(元)</th>
+					</tr>
+				</tbody>
+				<tbody class="info-content">
+					#if($!e.listInfo && $!e.listInfo.size()>0)
+						#foreach($info in $!e.listInfo)
+							<tr>
+								<td>快递</td>
+								<td>$!info.addresss</td>
+								<td>$!info.firstNum</td>
+								<td>$!info.firstPrice</td>
+								<td>$!info.addNum</td>
+								<td>$!info.addPrice</td>
+							</tr>
+						#end
+					#end
+				</tbody>
+			</table>
+		</div>
+	</div>
+	#end #if($!e.valuation==2)
+	<div class="express-setting">
+		<div class="kd-seting-table showthis">
+			<h3 class="ta-bg">
+				快递运费模块 <span class="_right">最后编辑时间:$!date.format('yyyy-MM-dd HH:mm:ss ',$!e.gmtModify) <a
+					href="/express/add?id=$!e.id" class="left">编辑</a> <a href="javascript:;" class="closeExpress" data-tradeId="$!e.id">删除</a> ##直接物理删除 2016-10-09 陆苑yi
+				</span>
+			</h3>
+			<table>
+				<tbody>
+					<tr>
+						<th>运送方式</th>
+						<th>运送到</th>
+						<th>首重(kg)</th>
+						<th>邮费(元)</th>
+						<th>续重(kg)</th>
+						<th>邮费(元)</th>
+					</tr>
+				</tbody>
+				<tbody class="info-content">
+					#if($!e.listInfo && $!e.listInfo.size()>0)
+						#foreach($info in $!e.listInfo)
+							<tr>
+								<td>快递</td>
+								<td>$!info.addresss</td>
+								<td>$!info.firstNum</td>
+								<td>$!info.firstPrice</td>
+								<td>$!info.addNum</td>
+								<td>$!info.addPrice</td>
+							</tr>
+						#end
+					#end
+				</tbody>
+			</table>
+		</div>
+	</div>
+	#end #if($!e.valuation==3)
+	<div class="express-setting">
+		<div class="kd-seting-table showthis">
+			<h3 class="ta-bg">
+				快递运费模块 <span class="_right">最后编辑时间:$!date.format('yyyy-MM-dd HH:mm:ss ',$!e.gmtModify) <a
+					href="/express/add?id=$!e.id" class="left">编辑</a> <a href="javascript:;" class="closeExpress" data-tradeId="$!e.id">删除</a>
+				</span>
+			</h3>
+			<table>
+				<tbody>
+					<tr>
+						<th>运送方式</th>
+						<th>运送到</th>
+						<th>首体积(m³)</th>
+						<th>邮费(元)</th>
+						<th>续体积(m³)</th>
+						<th>邮费(元)</th>
+					</tr>
+				</tbody>
+				<tbody class="info-content">
+					#if($!e.listInfo && $!e.listInfo.size()>0)
+						#foreach($info in $!e.listInfo)
+							<tr>
+								<td>快递</td>
+								<td>$!info.addresss</td>
+								<td>$!info.firstNum</td>
+								<td>$!info.firstPrice</td>
+								<td>$!info.addNum</td>
+								<td>$!info.addPrice</td>
+							</tr>
+						#end
+					#end
+				</tbody>
+			</table>
+		</div>
+	</div>
+	#end #end 
+	#else
+		<div class="collectPlacelist-setting">
+            <div class="topbutton">
+            <a href="/express/add" class="btn btn-large btn-primary"id="addNewZTD">+创建运费模块</a>
+            </div>
+          </div>
+	#end
+
+	<!--内容部分-->
+</div>
+<!--end content-->
+</div>
+<!--end container-->
+<script type="text/javascript">
+
+//删除运费模板
+$('.closeExpress').click(function(){
+	var id= $(this).attr('data-tradeId');
+	$(this).tooltip({
+		text: '您确定删除运费模板吗？',
+		icon: 'icon-warnfill',
+		style: 'z-danger',
+		placement: 'left',
+		align: 'center',
+		okHide: function() {
+			deleteExpress(id);
+		},
+		cancelHide: function() {
+			
+		}
+	});
+	return false;	// 记得要 return false;
+});
+
+	//删除运费模版
+	function deleteExpress(id){
+		jQuery.ajax({
+			url:"/express/delete",
+			data:"id="+id,
+			type:"POST",
+			dataType:"json",
+			success:function(data){
+				if(data!=null && data.success){
+					jQuery.alert({
+						type: 'success',
+						text: '删除成功',
+						time: 3000
+					});
+					location.reload();
+				}else{
+					jQuery.alert({
+						type: 'error',
+						text: data.msg,
+						time: 3000
+					});
+				}
+			},
+			error:function(){
+				jQuery.alert({
+					type: 'error',
+					text: '操作失败,请稍后重试!',
+					time: 3000
+				});
+			}
+		});
+	}
+	
+	function Pause(obj, iMinSecond) {
+	    if (window.eventList == null)
+	        window.eventList = new Array();
+	    var ind = -1;
+	    for ( var i = 0; i < window.eventList.length; i++) {
+	        if (window.eventList[i] == null) {
+	            window.eventList[i] = obj;
+	            ind = i;
+	            break;
+	        }
+	    }
+	    if (ind == -1) {
+	        ind = window.eventList.length;
+	        window.eventList[ind] = obj;
+	    }
+	    setTimeout("GoOn(" + ind + ")", iMinSecond);
+	}
+	/*
+	 * 该函数把要暂停的函数放到数组window.eventList里，同时通过setTimeout来调用继续函数。 继续函数如下：
+	 */
+	function GoOn(ind) {
+	    var obj = window.eventList[ind];
+	    window.eventList[ind] = null;
+	    if (obj.NextStep)
+	        obj.NextStep();
+	    else
+	        obj();
+	}
+</script>
+</body>
+</html>

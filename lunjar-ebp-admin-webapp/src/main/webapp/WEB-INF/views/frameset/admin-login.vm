@@ -1,0 +1,160 @@
+##set($layout="") #set($screen_title="")
+#set($screen_noDefaultTitle="1")
+#set($screen_jsArray=["frameset/admin-login"]) ##加载js 文件
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<title>首页-登陆</title>
+<link href="../../lib/tdz_component/tdz_components.css" rel="stylesheet">
+<link href="../../lib/tdz_component/main.css" rel="stylesheet">
+<link href="../../lib/tdz_component/reset.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+	href="#getAppServer()/scripts/login/index.css">
+
+##
+<script src="http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js"></script>
+##
+<script src="../../lib/tdz_component/template.js"></script>
+##
+<script src="#getAppServer()/lib/tdz_component/main.js"></script>
+##
+<script src="../../lib/tdz_component/tdz_components.js"></script>
+##
+<script src="../../lib/tdz_component/public.js"></script>
+<script type="text/javascript"
+	src="#getAppServer()/scripts/_component/jquery/jquery-1.11.0.min.js"></script>
+##
+<script type="text/javascript"
+	src="#getAppServer()/scripts/login/index.js"></script>
+<script type="text/javascript"
+	src="#getAppServer()/scripts/_component/jquery/jquery.form.js"></script>
+<script type="text/javascript"
+	src="#getAppServer()/scripts/_component/jquery/jquery.boxy.js"></script>
+<script type="text/javascript"
+	src="#getAppServer()/scripts/_component/jquery/jquery.validate.js"></script>
+<script type="text/javascript"
+	src="#getAppServer()/scripts/_component/jquery/jquery.metadata.js"></script>
+<script type="text/javascript"
+	src="#getAppServer()/scripts/_component/jquery/messages_cn.js"></script>
+<script type="text/javascript"
+	src="#getAppServer()/scripts/_component/ancun/core.js"></script>
+<script type="text/javascript"
+	src="#getAppServer()/scripts/_component/ancun/core.validate.js"></script>
+<link href="#getAppServer()/css/global.css" rel="stylesheet"
+	type="text/css">
+<script type="text/javascript" src="#getAppServer()/scripts/admin.js"></script>
+<script src="#getAppServer()/scripts/frameset/admin-login.js"
+	type="text/javascript"></script>
+<link rel="stylesheet" type="text/css"
+	href="#getAppServer()/css/admin.debug.css">
+</head>
+<form id="formLogin" method="post" action="login">
+	#csrfToken()
+	<body class="example">
+		<div class="pc-adimn-main">
+			<div class="new-header">
+				<div class="con-w">
+					<div class="left">
+						<img class="logo" src="../../lib/img/logo.png" /><span
+							class="text">| 供货商后台管理平台</span>
+					</div>
+					#*
+					<div class="right">
+						<img src="123.jpg" class="userImg" /> <span class="name"
+							title="ADVBC12345">ADVBC12345<span class="line">|</span></span> <i
+							class="edit">
+							<ul class="setting">
+								<li><a href="#">基本信息</a></li>
+								<li><a href="#">修改密码</a></li>
+								<li><a href="#">退出</a></li>
+							</ul>
+						</i>
+					</div>
+					*#
+				</div>
+			</div>
+			<div class="section">
+				<div class="con-main">
+					<div class="logoimg m-t"></div>
+					<ul class="message-input">
+						<li>
+							<div class="left-icon ic-0"></div>
+							<div class="right-input">
+								<input type="text" id="txtAccount" class="input ts-input"
+									name="account" placeholder="请输入用户名" />
+							</div>
+						</li>
+						<li>
+							<div class="left-icon ic-2"></div>
+							<div class="right-input">
+								<input type="password" id="txtPwd"
+									class="input ts-input password" placeholder="请输入密码"/>
+							</div>
+						</li>
+						
+						<li #if($!logerrNum>=3) #else class="hide" #end>
+							<div class="left-input">
+								<input type="text" name="validateCode" class="input ts-input"
+									placeholder="请输入验证码" />
+							</div>
+							<div class="right-button" style="background:none;border:1px solid #d9d9d9;"><img src="" id="codeSrc" width="98" height="48"/></div>
+						</li>
+
+						<li class="last">记住我
+							<div class="checkbox select-chexkbox" id="rememberMe">
+								<span class="checkbox-icon"> <i class="icon-checked"></i>
+									<input type="checkbox" 
+									class="AllSelectClass checkboxForEach"  value="1"/>
+								</span>
+							</div>
+							<a href="/register/forgetPassword" class="orange">忘记密码?</a>
+						</li>
+					</ul>
+					<button id="btnSubmit" class="button submit-form">立即登录</button>
+					<p class="tips">
+						没有账号，<a href="/register/registerPage" class="orange">立即注册</a>
+					</p>
+				</div>
+			</div>
+			<div class="footer"></div>
+		</div>
+	</body>
+</form>
+<script type="text/javascript">
+	$(function() {
+		//单选多选
+		$(document).on('click', '.select-chexkbox', function() {
+			if ($(this).hasClass('checked')) {
+				$(this).removeClass('checked');
+				$(this).find('input').prop("checked", false);
+			} else {
+				$(this).addClass('checked');
+				$(this).find('input').prop("checked", true);
+			}
+		});
+		//提交验证
+		$(document).on('click', '.submit-form', function(ev) {
+			var Notnull = true;
+			$('.message-input li .ts-input').each(function() {
+				var li = $(this).parents('li');
+				if(!li.hasClass('hide')){
+					if ($(this).val() == '') {
+						Notnull = false;
+					}
+				}
+				
+			})
+			if (!Notnull) {
+				$.message({
+					type : 'error',
+					text : '信息不能为空!',
+					time : 3000
+				});
+				return false;
+			}
+			//提交
+		})
+	})
+</script>
+</html>

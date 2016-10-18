@@ -1,0 +1,81 @@
+#loadWebResources(["form"])
+#set($screen_jsArray=["ucrealnameaudit/ucrealnameaudit-common-audit"])
+#set($module="enterprise")
+<input id="module" type="hidden" value="$module"/>
+
+<style>
+    .title{
+        font-weight: bold;
+        color: #ff6600;
+    }
+</style>
+
+<div class="formBox">
+    <h3>
+        <i></i>
+        <div class="fl">
+            <span>企业实名认证>>账户信息详情</span>
+        </div>
+        <div class="fr">
+            <a href="/ucrealnameaudit/enterprise">&lt;&lt;  返回列表</a>
+        </div>
+    </h3>
+    <h4 style="background: none;">
+        <div class="fl">
+            <span class="title">基本信息</span>
+        </div>
+    </h4>
+    <div class="content">
+        <table class="c2">
+            <tr>
+                <th width="13%">账号：</th>
+                <td width="37%">$!{audit.registerName}</td>
+                <th width="13%">账户来源：</th>
+                <td width="37%">$fieldTextTool.ucUser_userForm("$!{audit.userFrom}")</td>
+            </tr>
+            <tr style="height: 50px;">
+                <th>手机：</th>
+                <td>$!{audit.mobile}</td>
+                <th>邮箱：</th>
+                <td>$!{audit.email}</td>
+            </tr>
+            <tr style="height: 50px;">
+                <th>联系人：</th>
+                <td>$!{audit.linkMan}</td>
+                <th>联系电话：</th>
+                <td>$!{audit.contactPhone}</td>
+            </tr>
+        </table>
+    </div>
+
+    <h4 style="background: none;">
+        <div class="fl">
+            <span class="title">实名信息</span>
+##            <span style="font-size: 12px;color: #999999;">已于 $!date.format('yyyy-MM-dd HH:mm:ss ',${audit.gmtModify}) 申请请实名认证，请客服核实主体信息的正确性和真实性。</span>
+        </div>
+    </h4>
+    <div class="content">
+        <table class="c2">
+            <tr style="height: 50px;">
+                <th  width="13%">名称：</th>
+                <td  width="37%">$!{audit.userName}</td>
+                <th  width="13%">地址：</th> 
+                <td  width="37%">$!{audit.enterpriseAddress}</td>
+            </tr>
+            <tr>
+                <th  width="13%">机构代码号：</th>
+                <td  width="37%">$!{audit.orgNo}</td>
+                <th>证件照：</th>
+                <td>
+                ##                    <a id="originPhotoUrl1" title="正面照" href='$!{originPhotoUrl1}'>
+                    <a id="originPhotoUrl1" title="正面照" >
+                        <img id="photoUrl1" alt="" src="$fieldTextTool.convertPictureUrl($!audit.photoUrl1,'/images/enterprise1.png')" align="middle" style="top: 0px;width:100px;height:100px;">
+                    </a>
+                ##                    <span>(点击查看大图)</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    #parse("ucrealnameaudit/ucrealnameaudit-common-detail-audit.vm")
+</div>

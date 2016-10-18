@@ -1,0 +1,108 @@
+#loadWebResources(["form"]) 
+#set($screen_jsArray=["system/adminuser/adminuser-function"])
+<script>
+	_backUrl='listb';
+	_userFunctions=[#foreach($f in ${userFunctions})#if($velocityCount>1),#end'$f'#end];
+</script>
+<style>
+    .formBox .content{text-align:left;}		
+    .item{clear:both;}
+    .item input{float: left;vertical-align: middle;margin: 3px 0; }
+    .item label {float: left;vertical-align: middle; }
+    ##.item .itemicon {background-repeat:no-repeat;background-position: left center;display: block;float: left;width: 15px;height: 18px;}
+    .mainBox{overflow:hidden;border-top:solid 1px #ccc;padding:8px 15px 10px;}	
+    .mainBoxLabel{color:#ff6600;font-weight:bold;font-size:14px;}
+    .children {padding-left:18px;padding-bottom:8px;}
+    .checked {color:#ff3300;}	
+</style>
+##<div class="r_title">系统管理  > 管理员管理  > 权限分配</div>
+<div class="formBox">
+    <h3>
+        <i></i>
+        <div class="fl">
+            <span>权限分配</span>
+        </div>
+        <div class="fr">
+            <a href="javascript:history.back(-1);">&lt;&lt;  返回列表</a>
+		</div>
+    </h3>
+    <form id="form" method="post" >
+        <div class="content3">
+            <input name="userId" id="userId" type="hidden" value="$!userId"/>
+            <div class="p5 pl10">
+				角色  <span class="orange bold">[$request.getParameter('userName')]</span> 分配权限，
+				请选择权限项，
+				<input type="checkbox"  id="chk_all" />
+                <label for="chk_all" >全选</label>
+            </div>
+            ##<div>#direct($!functionsHtml)</div>
+            <table class="tablenest" width="100%">
+                <tr>
+					<th class="w100 pl10 noborderleft">一级功能</th>
+					<th class="w130 pl10">二级功能</th>
+					<th class="w140 pl10">三级功能</th>
+					<th class="pl10">权限</th>
+                </tr>
+            </table>
+		    <table id="allitembox" class="tablenest" width="100%">
+				#foreach($menu in $functions)
+                    <tr #if($math.mod($velocityCount,2)==0)  class="bg" #end>
+                        <td class="w100 pl10 noborderleft" >
+							<input id="chkitem_$menu.id" type="checkbox" name="items"  value="$menu.id"/>
+							<label for="chkitem_$menu.id">$menu.text</label>
+						</td>
+                        <td >
+                            <table class="tablenest" width="100%">
+                                #foreach($subMenu in $menu.children)
+                                    <tr>
+                                        <td class="w130 pl10 noborderleft #if($velocityCount==1)nobordertop #end">					   
+                                           <input  id="chkitem_$subMenu.id" type="checkbox" name="items" value="$subMenu.id"/>
+										   <label for="chkitem_$subMenu.id">$subMenu.text</label>
+										</td>
+										 #if(!$subMenu.leaf)
+                                            <td colspan="2" class="#if($velocityCount==1)nobordertop #end">                                          
+                                                <table class="tablenest" width="100%">
+                                                    #foreach($subMenu2 in $subMenu.children)
+                                                        <tr>
+                                                            <td class="w140 pl10 noborderleft #if($velocityCount==1) nobordertop #end">		
+                                                                <input  id="chkitem_$subMenu2.id" type="checkbox" name="items" value="$subMenu2.id"/>																
+																<label for="chkitem_$subMenu2.id">$subMenu2.text</label>
+                                                            </td>
+        													<td class="pl10 #if($velocityCount==1)nobordertop #end">
+        														 #foreach($action in $subMenu2.actions)
+																	<div class="fl w140">
+    																	<input  id="chkitem_$action.id" class="action" type="checkbox" name="items" value="$action.id"/>																
+    																	<label for="chkitem_$action.id">$action.text</label>
+                                                                    </div>
+        														 #end
+        													</td>
+                                                        </tr>
+                                                    #end
+                                                </table>                                            
+                                            </td>
+										#else
+											<td class="w140 pl10 #if($velocityCount==1)nobordertop #end">												
+											</td>
+											<td class="pl10 #if($velocityCount==1)nobordertop #end">												 
+												 #foreach($action in $subMenu.actions)
+													<div class="fl w140">
+														<input  id="chkitem_$action.id" class="action" type="checkbox" name="items" value="$action.id"/>																
+														<label for="chkitem_$action.id">$action.text</label>
+													</div>
+												 #end
+											</td>
+										#end
+                                    </tr>
+                                #end                           
+                            </table>
+                        </td >
+                    </tr>
+                #end
+            </table>
+        </div>
+        <div class="form-but">
+            <button type="button" id="btnSubmit" class="button-s4">提交</button>
+            <button type="button" class="button-s4" onclick="javascript:history.back(-1);">取消</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,3 @@
+<div id="welcome" class="m15 f18">
+	您好，<span class="orange  f18">$!loginUser.userName</span>，欢迎登录安存基础平台-运营管理支撑系统！
+</div>

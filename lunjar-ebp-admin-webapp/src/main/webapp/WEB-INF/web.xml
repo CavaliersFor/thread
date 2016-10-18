@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
+	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+	<display-name>lunjar-ebp-admin-webapp</display-name>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>			
+			classpath*:spring/core-bean.xml
+			classpath*:spring/cache-bean.xml
+			classpath*:spring/web-bean.xml			
+			classpath*:spring/bps-service-core-bean.xml
+			classpath*:bizsupport-client.xml
+			classpath*:spring/admin-bean.xml
+			classpath:spring/jms-bean.xml
+			classpath*:usercenter-client-bean.xml
+			classpath*:preserve-client-bean.xml
+		</param-value>
+	</context-param>
+
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>encodingFilterBean</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+		
+	<!-- -->
+	<filter>
+		<filter-name>performanceMonitorFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>performanceMonitorFilterBean</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>performanceMonitorFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- -->
+	<filter>
+		<filter-name>responseOutputBufferFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>responseOutputBufferFilterBean</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>responseOutputBufferFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- -->
+	<filter>
+		<filter-name>adminLoginUserFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>adminLoginUserFilter</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>adminLoginUserFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<filter>
+		<filter-name>httpStatusFilter</filter-name>
+		<filter-class>com.lunjar.products.core.web.filter.HttpStatusFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>httpStatusFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>/scripts/*</url-pattern>	
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>/images/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>/crossdomain.xml</url-pattern>
+	</servlet-mapping>
+
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+	
+	<servlet>
+		<servlet-name>lunjar-ebp-admin-webapp</servlet-name>
+		<servlet-class>com.lunjar.products.core.web.servlet.AncunDispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:mvc/admin-mvc.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>lunjar-ebp-admin-webapp</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/pagenotfind</location>
+	</error-page>
+</web-app>

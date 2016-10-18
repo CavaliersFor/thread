@@ -1,0 +1,49 @@
+#if($!{audit.auditStatus}==4)##除了成功以外的其他情况
+<h4 style="background: none;">
+    <div class="fl">
+        <span class="title">审核信息</span>
+    </div>
+</h4>
+<form id="form">
+<div class="content">
+    <table class="c2">
+        <tr align="center">
+            <td>
+                <input type="hidden" name="auditId" value="$!{audit.auditId}"/>
+                <input type="hidden" name="userId" value="$!{audit.userId}"/>
+                <table class="tabledata" style="margin: 0 auto;">
+                    <tr style="height: 50px;text-align: center">
+                        <td style="text-align: center;">审核结果：
+                            <label style="cursor: pointer;">审核通过<input id="auditStatus_pass" type="radio" name="auditStatus" value="2"/></label>
+                            <label style="cursor: pointer;">审核不通过<input id="auditStatus_unpass" type="radio" name="auditStatus" value="3" checked="checked"/></label>
+                        </td>
+                    </tr>
+                    <tr id="tr_auditReason">
+                        <td>
+                            <textarea id="auditReason" name="auditReason" cols="54" rows="6" placeholder="填写不通过理由"></textarea>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="form-but">
+    <button type="submit" class="button-s4">立即审核</button>
+    <button type="button" class="button-s4" onclick="window.location.href='/ucrealnameaudit/${module}'">返回</button>
+</div>
+</form>
+#elseif($!{audit.auditStatus}==3)
+<div class="form-but">
+    <div><label>审核结果:<span>不通过</span></label></div>
+    <div style="margin: 10px 0px;"><span>$!{audit.auditReason}</span></div>
+    <button type="button" class="button-s4" onclick="window.location.href='/ucrealnameaudit/${module}'">返回</button>
+</div>
+#else
+<div class="form-but">
+    <div style="margin: 10px 0px;"><label>审核结果:<span>通过</span></label></div>
+##    <div style="margin: 10px 0px;"><span>$!{audit.auditReason}</span></div>
+    <button type="button" class="button-s4" onclick="window.location.href='/ucrealnameaudit/${module}'">返回</button>
+</div>
+#end
+

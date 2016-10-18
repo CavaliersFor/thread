@@ -1,0 +1,43 @@
+.example {
+  margin-bottom: 100px; }
+  .example h3 {
+    margin: 20px 0 10px 0;
+    color: #545860; }
+  .example .wrap {
+    padding: 20px;
+    border: 1px solid #d9d9d9; }
+  .example .wrap-col2 {
+    display: inline-block;
+    width: 49%;
+    vertical-align: top; }
+  .example .wrap-col3 {
+    display: inline-block;
+    width: 33%;
+    vertical-align: top; }
+  .example .btn-group {
+    margin-bottom: 20px; }
+  .example .btn-vertical-group {
+    margin-right: 20px; }
+  .example .dropdown {
+    margin-right: 150px; }
+  .example .margin-bottom .input {
+    margin-bottom: 10px; }
+  .example .input-group {
+    margin-bottom: 10px; }
+  .example .checkbox, .example .radio {
+    margin-right: 20px; }
+
+.tooltip-relative .tooltip {
+  position: relative;
+  margin-right: 40px; }
+
+.button-small-list,
+.button-default-list,
+.button-large-list,
+.button-xlarge-list {
+  margin-bottom: 15px; }
+  .button-small-list .btn,
+  .button-default-list .btn,
+  .button-large-list .btn,
+  .button-xlarge-list .btn {
+    margin-right: 10px; }

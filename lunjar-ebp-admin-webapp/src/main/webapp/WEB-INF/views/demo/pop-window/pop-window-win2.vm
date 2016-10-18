@@ -1,0 +1,71 @@
+<script>
+	var PopWin2 = {
+		data : [
+    		{id:1,name:'张三',sex:'男',birthday:'1981-01'},
+    		{id:2,name:'李四',sex:'女',birthday:'1983-08'},
+    		{id:3,name:'王五',sex:'男',birthday:'1982-01'},
+    		{id:4,name:'赵六',sex:'男',birthday:'1981-07'}
+    	],
+		isLoaded : false,
+   		createWin : function(contentBoxId,winBoxId,afterHide){    	
+    		var win = new Core.Window(contentBoxId,{
+    			id: winBoxId,
+    			title : '弹出窗口示例',
+    			afterShow: function(){
+    				var boxy = this.boxy;
+    				if(!PopWin2.isLoaded){
+        				var tbody = boxy.find('tbody');
+        				tbody.html('');
+        				jQuery.each(PopWin2.data,function(){
+tbody.append(String.format('<tr><td>{0}</td><td>{1}</td><td>{2}</td><td><form>##
+<input type="hidden"  name="id" value="{3}" />##
+<input type="hidden"  name="name" value="{0}" />##		
+<input type="hidden"  name="sex" value="{1}" />##
+<input type="hidden"  name="birthday" value="{2}" />##
+</form>##
+<input type="button" class="select" value="select" /></td></tr>',this.name,this.sex,this.birthday,this.id));
+        				});
+        				
+        				tbody.find('input.select').click(function(){
+        					PopWin2.selectItem(this,win,afterHide);
+        				});
+    					PopWin2.isLoaded = true;
+    				}
+    			}			
+    		});
+    		return win;
+        },
+		selectItem:function(e,win,afterHide){	
+    		var td = $(e).parent();
+    		var form = td.find('form');
+    		var data = Core.FormUtils.getFormValues(form);	
+    		//console.log(data);
+    	 	
+    	 	win.hide(function(){
+    		 	if(afterHide){
+    				afterHide(data);
+    			}
+    		});	
+    	}
+	}
+</script>	
+<div id="list" class="list">
+    <form class="form pb10" >
+		姓名：<input name="name" type="text"/>
+		<input type="button" class="btnQuery" value="查询" onclick="alert('该功能尚未实现')">
+		<input type="button" class="btnReset" value="重置"  onclick="alert('该功能尚未实现')">
+	</form>
+    <table class="list-table">
+		<thead >      
+        	<tr>
+        		<th style="text-align:left;">姓名</th>
+    			<th style="text-align:left;">性别</th>
+    			<th style="text-align:left;">出生年月</th>
+        		<th>
+        		</th>
+        	</tr>
+		</thead>
+		<tbody >			
+        </tbody>    	
+    </table>
+</div>

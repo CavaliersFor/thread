@@ -1,0 +1,56 @@
+#loadWebResources(["list","form","extJs"])
+#set($screen_jsArray=["realnamecertification/realnamecertification-list"])
+#set($thisActionUrl="list")
+#parse("realnamecertification/realname-certification-search-tool.vm")
+<div id="list" class="listBox mt10">
+    <table>
+        <tr>          
+            <th width="5%">序号</th>
+            <th width="10%">账号</th>
+			<th width="10%">姓名</th>
+            <th width="10%">证件号</th>
+            <th width="15%">证件正面照</th>
+            <th width="15%">证件反面照</th>
+            <th width="20%">备注</th>
+			<th width="15%">操作</th>
+        </tr>
+		
+        #set($data=$page.data)
+        #if($data and $data.size() > 0)
+            #foreach($o in $data)
+                #set($no = ($velocityCount + ($!page.pageNo - 1) * $!page.pageSize))
+                <tr #if($math.mod($velocityCount,2)==0)  class="bg" #end>
+                    <td >
+                        <label for="chk_$o.id">&nbsp;$velocityCount</label>
+                    </td>
+                    <td>$!o.account</td>
+                    <td>$!o.partnerName</td>
+                    <td>$!o.idCard</td>
+##                    <td><img id="photoUrl1" alt="" src="$fieldTextTool.getStoreUrl()$!o.headsPhotoUrl" align="middle" style="top: 0px;width:128px;height:80px;"></td>
+##                    <td><img id="photoUrl2" alt="" src="$fieldTextTool.getStoreUrl()$!o.tailsPhotoUrl" align="middle" style="top: 0px;width:128px;height:80px;"></td>
+
+                    <td><img id="photoUrl1" alt="" src="$fieldTextTool.convertPictureUrl($!o.headsPhotoUrl,'/images/personal-front.png')" align="middle" style="top: 0px;width:128px;height:80px;"></td>
+                    <td><img id="photoUrl2" alt="" src="$fieldTextTool.convertPictureUrl($!o.tailsPhotoUrl,'/images/personal-back.png')" align="middle" style="top: 0px;width:128px;height:80px;"></td>
+                    <td>$!o.auditReason</td>
+
+                    <td >
+                        #if("$!o.status"=="2") ##状态是审核通过
+                            <a partnerId="$!{o.partnerId}" status="$!{o.status}" class="act_not_pass" href="javascript:;">不通过</a>
+                        #elseif("$!o.status"=="3") ##状态是审核不通过
+                            <a partnerId="$!{o.partnerId}" status="$!{o.status}" class="act_pass" href="javascript:;">通过</a>
+                        #elseif("$!o.status"=="4") ##状态是审核中
+                            <a partnerId="$!{o.partnerId}" status="$!{o.status}" class="act_pass" href="javascript:;">通过</a>
+                            <a partnerId="$!{o.partnerId}" status="$!{o.status}" class="act_not_pass" href="javascript:;">不通过</a>
+                        #end
+                    </td>
+                </tr>
+            #end
+        #else
+            <tr>
+                <td colspan="10">非常抱歉，没有符合条件的数据！</td>
+            </tr>
+        #end 
+    </table>
+    #pageTabFoot({"queryFormId":"form_search","page":$page,"submitUrl":"${thisActionUrl}","canSetPagesize":true})
+</div>
+#parse("realnamecertification/realname-certification-dialog.vm")

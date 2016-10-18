@@ -1,0 +1,46 @@
+#set($screen_jsArray=["system/systemparams"])
+##<div class="r_title">系统管理  > 系统参数管理</div>
+<div class="listBox">
+	<table>
+        <tr>
+            <th width="5%">序号</th>
+            <th width="20%">名称</th>
+            <th width="15%">Key</th>
+            <th >值</th>          
+			<th width="5%">只读</th>
+            <th width="15%"></th>
+        </tr>
+        #if($data.size()>0)
+            #foreach($o in $data)            
+                <tr #if($math.mod($velocityCount,2)==0)  class="bg" #end>
+                    <td >
+                        $velocityCount
+                    </td>
+                    <td >$o.paramName</td>
+                    <td >
+                        $o.paramKey                       
+                    </td>
+                    <td style="text-align:left;padding-left:10px;"  >
+                        <span class="spanText">$o.paramValue</span>
+                        <input style="width:95%"  class="inputValue hide" type="text"  name="paramValue" value="$o.paramValue"/>
+                    </td>
+                 	<td >
+						#if($o.readOnly ) 是 #else 否 #end                    
+                    </td>
+                    <td>
+						#if(!$o.readOnly )
+                            <input type="hidden"  name="paramKey" value="$o.paramKey"/>
+    						<a href="javascript:void(0);" class="linkEdit">修改</a>
+    						<input type="button" value="保存" class="btn btnSave hide" />
+    						<input type="button" value="取消" class="btn btnCancel hide" />	
+						#end
+                    </td>
+                </tr>
+            #end
+        #else
+                <tr>
+                    <td colspan="10">非常抱歉，没有符合条件的数据！</td>
+                </tr>
+        #end 
+    </table>
+</div>

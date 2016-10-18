@@ -1,0 +1,48 @@
+<div class="modal-dialog" role="document">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close btn-close-win"
+				data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title" id="myModalLabel">选择地区</h4>
+		</div>
+		<div class="modal-body">
+			<div id="resultTxt">
+				已选:<span id="selectResult">$!address</span>
+			</div>
+			<div class="box-add">
+				<select size="10" class="select-add">
+					#foreach($r in $regions)
+						<option value="$!r.code" #if($velocityCount==1) selected="selected" #end>$!r.regionName</option>
+					#end
+				</select>
+			</div>
+			<div class="box-add">
+				<ul class="right-res" id="city">
+					<li>
+						<div class="checkbox selectAll">
+							<span class="checkbox-icon"> <i class="icon-checked"></i>
+								<input type="checkbox" />
+							</span>
+						</div>全选
+					</li>
+					<li>
+						<div class="checkbox select-chexkbox">
+							<span class="checkbox-icon"> <i class="icon-checked"></i>
+								<input type="checkbox" class="AllSelectClass checkboxForEach" />
+							</span>
+						</div>北京市
+					</li>
+				</ul>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-primary" data-ok="modal"
+				id="sureAddress">确定</button>
+			<button type="button" class="btn btn-default btn-close-win Hui-black"
+				data-dismiss="modal">取消</button>
+		</div>
+	</div>
+</div>

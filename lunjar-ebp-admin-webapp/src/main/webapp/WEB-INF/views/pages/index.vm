@@ -1,0 +1,890 @@
+#parse("pages/commons/header.vm")
+<div class="content" id="content">
+	<div class="breadcrumb">
+		<a class="breadcrumb-item">首页</a><span class="split">/</span> <a
+			class="breadcrumb-item active">子页面</a>
+	</div>
+
+	<h3>按钮</h3>
+	<div class="wrap">
+		<div class="button-small-list">
+			<a class="btn btn-small btn-primary">主按钮</a> <a
+				class="btn btn-small btn-gray">次按钮</a> <a
+				class="btn btn-small btn-default">幽灵按钮</a> <a
+				class="btn btn-small btn-danger">危险</a> <a
+				class="btn btn-small btn-success">成功</a> <a
+				class="btn btn-small disabled">禁用</a>
+		</div>
+		<div class="button-default-list">
+			<a class="btn btn-primary">主按钮</a> <a class="btn btn-gray">次按钮</a> <a
+				class="btn btn-default">幽灵按钮</a> <a class="btn btn-danger">危险</a> <a
+				class="btn btn-success">成功</a> <a class="btn disabled">禁用</a>
+		</div>
+		<div class="button-large-list">
+			<a class="btn btn-large btn-primary">主按钮</a> <a
+				class="btn btn-large btn-gray">次按钮</a> <a
+				class="btn btn-large btn-default">幽灵按钮</a> <a
+				class="btn btn-large btn-danger">危险</a> <a
+				class="btn btn-large btn-success">成功</a> <a
+				class="btn btn-large disabled"> <i
+				class="u-icon u-icon-loading_gray"></i>禁用
+			</a>
+		</div>
+		<div class="button-xlarge-list">
+			<a class="btn btn-xlarge btn-primary">主按钮</a> <a
+				class="btn btn-xlarge btn-gray">次按钮</a> <a
+				class="btn btn-xlarge btn-default">幽灵按钮</a> <a
+				class="btn btn-xlarge btn-danger">危险</a> <a
+				class="btn btn-xlarge btn-success">成功</a> <a
+				class="btn btn-xlarge disabled">禁用</a>
+		</div>
+	</div>
+
+	<h3>下拉列表</h3>
+	<div class="wrap">
+		<div class="dropdown" data-trigger="hover">
+			<span class="dropdown-text" data-value="">hover下拉</span> <span
+				class="icon-downfill"></span> <input type="hidden" />
+			<ul class="dropdown-menu">
+				<li><a class="dropdown-item" data-value="1" href="/dd"
+					target="_blank">第一个菜单项</a></li>
+				<li><a class="dropdown-item" data-value="2">第二个菜单项</a></li>
+				<li><a class="dropdown-item disabled" data-value="3">第一个菜单项(不可用)</a></li>
+			</ul>
+		</div>
+
+		<div class="dropdown dropdown-top">
+			<span class="dropdown-text">点我下拉</span> <span class="icon-downfill"></span>
+			<input type="hidden" />
+			<ul class="dropdown-menu">
+				<li><a class="dropdown-item">第一个菜单项</a></li>
+				<li><a class="dropdown-item">第二个菜单项</a></li>
+				<li><a class="dropdown-item disabled">第一个菜单项(不可用)</a></li>
+			</ul>
+		</div>
+
+		<div class="dropdown dropdown-large">
+			<span class="dropdown-text">点我下拉</span> <span class="icon-downfill"></span>
+			<input type="hidden" />
+			<ul class="dropdown-menu">
+				<li><a class="dropdown-item">第一个菜单项</a></li>
+				<li><a class="dropdown-item">第二个菜单项</a></li>
+				<li><a class="dropdown-item disabled">第一个菜单项(不可用)</a></li>
+			</ul>
+		</div>
+
+		<div class="dropdown dropdown-xlarge">
+			<span class="dropdown-text">点我下拉</span> <span class="icon-downfill"></span>
+			<input type="hidden" />
+			<ul class="dropdown-menu">
+				<li><a class="dropdown-item">第一个菜单项</a></li>
+				<li><a class="dropdown-item">第二个菜单项</a></li>
+				<li><a class="dropdown-item disabled">第一个菜单项(不可用)</a></li>
+			</ul>
+		</div>
+
+		<div class="dropdown dropdown-simple">
+			<span class="dropdown-text">点我下拉</span> <span class="icon-downfill"></span>
+			<input type="hidden" />
+			<ul class="dropdown-menu">
+				<li><a class="dropdown-item">第一个菜单项</a></li>
+				<li><a class="dropdown-item">第二个菜单项</a></li>
+				<li><a class="dropdown-item disabled">第一个菜单项(不可用)</a></li>
+			</ul>
+		</div>
+
+		<div class="dropdown disabled" data-trigger="hover">
+			<span class="dropdown-text" data-value="">hover下拉</span> <span
+				class="icon-downfill"></span> <input type="hidden" />
+			<ul class="dropdown-menu">
+				<li><a class="dropdown-item" data-value="1" href="/dd"
+					target="_blank">第一个菜单项</a></li>
+				<li><a class="dropdown-item" data-value="2">第二个菜单项</a></li>
+				<li><a class="dropdown-item disabled" data-value="3">第一个菜单项(不可用)</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<h3>按钮工具栏</h3>
+	<div class="wrap">
+		<div class="wrap-col3">
+			<div class="btn-group">
+				<a class="btn btn-primary">左边</a> <a class="btn btn-primary">中间</a>
+				<a class="btn btn-primary">右边</a>
+			</div>
+			<br />
+			<div class="btn-group">
+				<a class="btn btn-primary btn-large">左边</a> <a
+					class="btn btn-primary btn-large">中间</a> <a
+					class="btn btn-primary btn-large">右边</a>
+			</div>
+			<br />
+			<div class="btn-group">
+				<a class="btn btn-primary btn-xlarge">左边</a> <a
+					class="btn btn-primary btn-xlarge">中间</a> <a
+					class="btn btn-primary btn-xlarge">右边</a>
+			</div>
+		</div>
+		<div class="wrap-col3">
+			<div class="btn-group">
+				<a class="btn">左边</a> <a class="btn">中间</a> <a class="btn">右边</a>
+			</div>
+			<br />
+			<div class="btn-group">
+				<a class="btn btn-large">左边</a> <a class="btn btn-large">中间</a> <a
+					class="btn btn-large">右边</a>
+			</div>
+			<br />
+			<div class="btn-group">
+				<a class="btn btn-xlarge">左边</a> <a class="btn btn-xlarge">中间</a> <a
+					class="btn btn-xlarge">右边</a>
+			</div>
+		</div>
+		<div class="wrap-col3">
+			<div class="btn-vertical-group">
+				<a class="btn">左边</a> <a class="btn">中间</a> <a class="btn">右边</a>
+			</div>
+			<div class="btn-vertical-group">
+				<a class="btn btn-primary btn-large">左边</a> <a
+					class="btn btn-primary btn-large">中间</a> <a
+					class="btn btn-primary btn-large">右边</a>
+			</div>
+			<div class="btn-vertical-group">
+				<a class="btn btn-primary btn-xlarge">左边</a> <a
+					class="btn btn-primary btn-xlarge">中间</a> <a
+					class="btn btn-primary btn-xlarge">右边</a>
+			</div>
+		</div>
+	</div>
+
+	<h3>输入框</h3>
+	<div class="wrap">
+		<div class="wrap-col2 margin-bottom">
+			<input class="input input-number" type="text" placeholder="默认尺寸" /> <br />
+			<input class="input input-large input-error" type="text"
+				placeholder="大尺寸" /> <br /> <input
+				class="input input-xlarge input-warn" type="text" placeholder="较大尺寸" />
+			<br /> <input class="input disabled" type="text" disabled
+				placeholder="不可用" />
+		</div>
+
+		<div class="wrap-col2">
+			<div class="input-group">
+				<span class="input-group-label no-border-right">标签</span> <input
+					class="input" type="text" placeholder="默认尺寸" /> <span
+					class="input-group-label no-border-left">标签</span>
+			</div>
+			<div class="input-group">
+				<span class="input-group-label no-border-right">标签</span> <input
+					class="input" type="text" placeholder="默认尺寸" />
+			</div>
+			<div class="input-group">
+				<span class="input-group-label no-border-right">标签</span> <input
+					class="input" type="text" placeholder="默认尺寸" />
+				<div class="dropdown">
+					<span class="dropdown-text">点我下拉</span> <span class="icon-downfill"></span>
+					<ul class="dropdown-menu">
+						<li><a class="dropdown-item">第一个菜单项</a></li>
+						<li><a class="dropdown-item">第二个菜单项</a></li>
+						<li><a class="dropdown-item disabled">第一个菜单项(不可用)</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<h3>警告提示</h3>
+	<div class="wrap">
+		<div class="wrap-col2">
+			<div
+				class="input-controll show-msg input-controll-success input-controll-block">
+				<input class="input" type="text" placeholder="我是正文" /> <i
+					class="icon-successfill"></i> <span class="input-msg">信息审核中...</span>
+			</div>
+			<br />
+			<div
+				class="input-controll show-icon input-controll-success input-controll-block">
+				<input class="input" type="text" placeholder="我是正文" /> <i
+					class="icon-successfill"></i> <span class="input-msg"></span>
+			</div>
+			<br />
+			<div class="input-controll input-controll-error input-controll-block">
+				<div class="input-inner">
+					<input class="input" type="text" value="失败校验" /> <i
+						class="icon-warnfill"></i>
+				</div>
+				<span class="input-msg">请输入数字和字母组合</span>
+			</div>
+			<br />
+			<div class="input-controll input-controll-warn input-controll-block">
+				<div class="input-inner">
+					<input class="input" type="text" placeholder="默认尺寸" /> <i
+						class="icon-successfill"></i>
+				</div>
+				<span class="input-msg">信息审核中</span>
+			</div>
+		</div>
+	</div>
+
+	<h3>日期选择器(用法参考 sui-ui 的 时间控件)</h3>
+	<div class="wrap">
+		<div class="input-group">
+			<span class="input-group-label no-border-right">标签</span> <input
+				id="firstDatepicker" class="input" type="text" placeholder="默认尺寸" />
+		</div>
+
+		<div class="input-controll show-icon input-date">
+			<input id="normalDatepicker" class="input" type="text"
+				placeholder="我是正文" /> <i class="icon-date"></i>
+		</div>
+
+		<br> <br>
+
+		<div class="input-daterange input-date">
+			<div class="input-controll show-icon">
+				<input class="input" type="text" placeholder="我是正文" /> <i
+					class="icon-date"></i>
+			</div>
+			<span>-</span>
+			<div class="input-controll show-icon">
+				<input class="input" type="text" placeholder="我是正文" /> <i
+					class="icon-date"></i>
+			</div>
+		</div>
+
+		<br> <br>
+
+		<div class="input-controll input-controll-error">
+			<div class="input-inner">
+				<input id="errorDatepicker" class="input" type="text" value="" /> <i
+					class="icon-date"></i>
+			</div>
+			<span class="input-msg">请输入正确的日期</span>
+		</div>
+
+		<script type="text/javascript">
+			// $(function() {
+			// 	console.log($.fn.datepicker);
+			// 	$('#firstDatepicker').datepicker();
+
+			// 	$('#normalDatepicker').datepicker();
+
+			// 	$('.input-daterange').datepicker();
+
+			// 	$('#errorDatepicker').datepicker();
+
+			// });
+		</script>
+	</div>
+
+	<h3>选择器</h3>
+	<div class="wrap">
+		<!-- 添加 open  作为最外层的 class 即可展开 -->
+		<div class="selector">
+			<a class="selector-text">小尺寸</a> <i class="icon-down"></i> <input
+				type="hidden" />
+			<ul class="selector-menu">
+				<li><a class="selector-item selector-input"> <input
+						class="input input-large" type="text" placeholder="输入" />
+				</a></li>
+				<li><a class="selector-item selector-level" data-value="1">
+						标签1<i class="icon-checked"></i>
+				</a></li>
+				<li><a class="selector-item" data-value="2"> 标签2<i
+						class="icon-checked"></i>
+				</a></li>
+			</ul>
+		</div>
+		<div class="selector selector-large">
+			<a class="selector-text">大尺寸</a> <i class="icon-down"></i> <input
+				type="hidden" />
+			<ul class="selector-menu">
+				<li><a class="selector-item selector-input"> <input
+						class="input input-large" type="text" placeholder="输入" />
+				</a></li>
+				<li><a class="selector-item" data-value="1"> 标签1<i
+						class="icon-checked"></i>
+				</a></li>
+				<li><a class="selector-item" data-value="2"> 标签2<i
+						class="icon-checked"></i>
+				</a></li>
+			</ul>
+		</div>
+		<div class="selector selector-xlarge">
+			<a class="selector-text">较大尺寸</a> <i class="icon-down"></i> <input
+				type="hidden" />
+			<ul class="selector-menu">
+				<li><a class="selector-item selector-input"> <input
+						class="input input-large" type="text" placeholder="输入" />
+				</a></li>
+				<li><a class="selector-item" data-value="1"> 标签1<i
+						class="icon-checked"></i>
+				</a></li>
+				<li><a class="selector-item" data-value="2"> 标签2<i
+						class="icon-checked"></i>
+				</a></li>
+			</ul>
+		</div>
+
+		<div class="selector selector-xlarge disabled">
+			<a class="selector-text">较大尺寸</a> <i class="icon-down"></i> <input
+				type="hidden" />
+			<ul class="selector-menu">
+				<li><a class="selector-item selector-input"> <input
+						class="input input-large" type="text" placeholder="输入" />
+				</a></li>
+				<li><a class="selector-item" data-value="1"> 标签1<i
+						class="icon-checked"></i>
+				</a></li>
+				<li><a class="selector-item" data-value="2"> 标签2<i
+						class="icon-checked"></i>
+				</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<h3>开关</h3>
+	<div class="wrap">
+		<div class="wrap-col3">
+			<div class="switch">
+				<span class="switch-open"></span> <span class="switch-close"></span>
+				<span class="switch-overlay"></span>
+			</div>
+			<div class="switch open">
+				<span class="switch-open"></span> <span class="switch-close"></span>
+				<span class="switch-overlay"></span>
+			</div>
+		</div>
+		<div class="wrap-col3">
+			<div class="switch">
+				<span class="switch-open">开</span> <span class="switch-close">关</span>
+				<span class="switch-overlay"></span>
+			</div>
+			<div class="switch open">
+				<span class="switch-open">开</span> <span class="switch-close">关</span>
+				<span class="switch-overlay"></span>
+			</div>
+		</div>
+		<div class="wrap-col3">
+			<div class="switch">
+				<span class="switch-open"><i class="icon-checked"></i></span> <span
+					class="switch-close"><i class="icon-cancel"></i></span> <span
+					class="switch-overlay"></span>
+			</div>
+			<div class="switch open">
+				<span class="switch-open"><i class="icon-checked"></i></span> <span
+					class="switch-close"><i class="icon-cancel"></i></span> <span
+					class="switch-overlay"></span>
+			</div>
+		</div>
+	</div>
+
+	<h3>多选框 & 单选框</h3>
+	<div class="wrap">
+		<div>
+			<div class="checkbox checked">
+				<span class="checkbox-icon"> <i class="icon-checked"></i> <input
+					type="checkbox" />
+				</span> <span class="checkbox-text">选中－－可用</span>
+			</div>
+			<div class="checkbox">
+				<span class="checkbox-icon"> <i class="icon-checked"></i> <input
+					type="checkbox" />
+				</span> <span class="checkbox-text">取消－－可用</span>
+			</div>
+			<div class="checkbox half-checkbox checked">
+				<span class="checkbox-icon"> <i class="icon-halfcheck"></i> <input
+					type="checkbox" />
+				</span> <span class="checkbox-text">半选－－可用</span>
+			</div>
+			<div class="checkbox half-checkbox checked disabled">
+				<span class="checkbox-icon"> <i class="icon-halfcheck"></i> <input
+					type="checkbox" />
+				</span> <span class="checkbox-text">半选－－不可用</span>
+			</div>
+
+			<div class="checkbox checked disabled">
+				<span class="checkbox-icon"> <i class="icon-checked"></i> <input
+					type="checkbox" />
+				</span> <span class="checkbox-text">取消－－可用</span>
+			</div>
+			<div class="checkbox disabled">
+				<span class="checkbox-icon"> <i class="icon-checked"></i> <input
+					type="checkbox" />
+				</span> <span class="checkbox-text">取消－－可用</span>
+			</div>
+		</div>
+		<br> <br>
+		<div>
+			<div class="radio checked">
+				<span class="radio-icon icon-checked-radio"> <span
+					class="path1"></span> <span class="path2"></span> <input
+					type="radio" name="component" />
+				</span> <span class="radio-text">选中－－可用</span>
+			</div>
+			<div class="radio">
+				<span class="radio-icon icon-checked-radio"> <span
+					class="path1"></span> <span class="path2"></span> <input
+					type="radio" name="component" />
+				</span> <span class="radio-text">取消－－可用</span>
+			</div>
+			<div class="radio checked disabled">
+				<span class="radio-icon icon-unchecked-radio"> <input
+					type="radio" />
+				</span> <span class="radio-text">选中－－不可用</span>
+			</div>
+			<div class="radio disabled">
+				<span class="radio-icon icon-checked-radio"> <span
+					class="path1"></span> <span class="path2"></span> <input
+					type="radio" />
+				</span> <span class="radio-text">取消－－不可用</span>
+			</div>
+		</div>
+	</div>
+
+	<h3>标签</h3>
+	<div class="wrap">
+		<span class="tag">默认</span> <span class="tag tag-success">成功</span> <span
+			class="tag tag-info">提示</span> <span class="tag tag-danger">警告</span>
+		<span class="tag tag-primary">公告</span>
+	</div>
+
+	<h3>警告提示</h3>
+	<div class="wrap">
+		<div class="wrap-col2">
+			<div class="message message-success">
+				<i class="icon-successfill"></i> <span class="message-text">成功提示文案</span>
+			</div>
+			<br />
+			<br />
+			<div class="message message-warn">
+				<i class="icon-questionfill"></i> <span class="message-text">警告提示文案</span>
+			</div>
+			<br />
+			<br />
+			<div class="message message-warn">
+				<i class="icon-noticefill"></i> <span class="message-text">公告提示文案</span>
+			</div>
+			<br />
+			<br />
+			<div class="message message-error">
+				<i class="icon-anoucefill"></i> <span class="message-text">错误提示文案</span>
+			</div>
+			<br />
+			<br />
+			<div class="message message-error">
+				<i class="icon-warnfill"></i> <span class="message-text">错误提示文案</span>
+			</div>
+			<br />
+			<br />
+			<div class="message message-primary">
+				<i class="icon-infomsg"></i> <span class="message-text">消息提示文案</span>
+			</div>
+		</div>
+		<div class="wrap-col2">
+			<div class="message message-success message-large message-block">
+				<i class="icon-successfill"></i> <span class="message-text">成功提示文案（块级
+					message）</span> <span class="message-close">不再提醒</span>
+			</div>
+			<br />
+			<div class="message message-warn message-large message-block">
+				<i class="icon-questionfill"></i> <span class="message-text">警告提示文案</span>
+			</div>
+			<br />
+			<div class="message message-warn message-large">
+				<i class="icon-noticefill"></i> <span class="message-text">公告提示文案</span>
+			</div>
+			<br />
+			<br />
+			<div class="message message-error message-large">
+				<i class="icon-anoucefill"></i> <span class="message-text">错误提示文案</span>
+			</div>
+			<br />
+			<br />
+			<div class="message message-error message-large">
+				<i class="icon-warnfill"></i> <span class="message-text">错误提示文案</span>
+			</div>
+			<br />
+			<br />
+			<div class="message message-primary message-large">
+				<i class="icon-infomsg align-top"></i> <span class="message-text">消息提示文案<br>消息提示文案
+				</span>
+			</div>
+		</div>
+		<br />
+		<br />
+		<div>
+			<div class="message message-success message-xlarge message-block">
+				<i class="icon-successfill"></i> <span class="message-text">
+					<span class="message-title">成功提示文案（块级 message）</span> <br>
+					成功提示文案（块级 message）成功提示文案（块级 message）成功提示文案（块级 message）成功提示文案（块级
+					message）成功提示文案（块级 message）成功提示文案（块级 message）成功提示文案（块级 message）
+				</span>
+			</div>
+		</div>
+	</div>
+
+	<h3>全局提示（出现在屏幕顶部）</h3>
+	<div class="wrap" style="height: 200px;">
+		<a class="btn btn-success js-alert-success">成功</a> <a
+			class="btn btn-danger js-alert-error">失败</a> <a
+			class="btn btn-primary js-alert-info">信息</a>
+
+		<script type="text/javascript">
+			$(function() {
+				$('.js-alert-success').on('click', function() {
+					$.alert({
+						text : $(this).text(),
+						time : 1500
+					});
+				});
+
+				$('.js-alert-error').on('click', function() {
+					$.alert({
+						type : 'error',
+						text : $(this).text(),
+						time : 3000
+					});
+				});
+
+				$('.js-alert-info').on('click', function() {
+					$.alert({
+						type : 'info',
+						text : $(this).text(),
+						time : 2000
+					});
+				});
+			})
+		</script>
+	</div>
+
+	<h3>气泡确认窗&文字提示</h3>
+	<div class="wrap">
+		<a class="btn" data-toggle="tooltip" data-trigger="hover"
+			data-placement="top" data-align="center"
+			data-text="我是提示信息我是提示信息<br>我是提示信息我是提示信息<br>我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息我是提示信息">上边</a>
+		<a class="btn" data-toggle="tooltip" data-trigger="click"
+			data-placement="top" data-align="left" data-text="我是提示信息"
+			data-icon="icon-successfill" data-style="z-success">上左（点击）</a> <a
+			class="btn" data-toggle="tooltip" data-trigger="click"
+			data-placement="top" data-align="right" data-text="我是提示信息"
+			data-icon="icon-successfill" data-style="z-success">上右（点击）</a> <br />
+		<br /> <a class="btn" data-toggle="tooltip" data-trigger="hover"
+			data-placement="right" data-align="center" data-text="我是提示信息"
+			data-icon="icon-successfill" data-style="z-success">右边</a> <a
+			class="btn" data-toggle="tooltip" data-trigger="click"
+			data-placement="right" data-align="top" data-text="我是提示信息"
+			data-icon="icon-successfill" data-style="z-success">右上（点击）</a> <a
+			class="btn" data-toggle="tooltip" data-trigger="click"
+			data-placement="right" data-align="bottom" data-text="我是提示信息"
+			data-icon="icon-successfill" data-style="z-success">右下（点击）</a> <br />
+		<br /> <a class="btn" data-toggle="tooltip" data-trigger="hover"
+			data-placement="bottom" data-align="center" data-text="我是提示信息"
+			data-icon="icon-successfill" data-style="z-success">下边</a> <br /> <br />
+		<a class="btn" data-toggle="tooltip" data-trigger="hover"
+			data-placement="left" data-align="center" data-text="我是提示信息"
+			data-icon="icon-successfill" data-style="z-success">左边</a> <br /> <br />
+		<a class="btn" data-toggle="tooltip" data-trigger="hover"
+			data-type="simple" data-placement="left" data-align="center"
+			data-text="我是提示信息">黑色提示</a> <br /> <br /> <a
+			class="btn comfirmTooltip">点击我弹出确定取消</a>
+		<script type="text/javascript">
+			$(function() {
+				$('.comfirmTooltip').on('click', function() {
+					console.log(1);
+					$(this).tooltip({
+						text : '确定删除吗？',
+						icon : 'icon-warnfill',
+						style : 'z-danger',
+						placement : 'top',
+						align : 'center',
+						okHide : function() {
+							$.alert({
+								text : '点了 ok'
+							});
+						},
+						cancelHide : function() {
+							$.alert({
+								type : 'error',
+								text : '点了 取消'
+							});
+						}
+					});
+
+					return false; // 记得要 return false;
+				})
+			});
+		</script>
+		<br /> <br />
+
+
+
+		<div class="tooltip-relative">
+			<div class="tooltip in tooltip-comfirm tooltip-top left">
+				<div class="tooltip-arrow"></div>
+				<div class="tooltip-inner">
+					<i class="icon-warnfill z-success"></i> <span> 确定要删除这个任务吗？ </span>
+				</div>
+				<div class="tooltip-footer">
+					<a class="btn btn-small btn-primary">确定</a> <a
+						class="btn btn-small">取消</a>
+				</div>
+			</div>
+			<div class="tooltip in tooltip-comfirm tooltip-top center">
+				<div class="tooltip-arrow"></div>
+				<div class="tooltip-inner">
+					<i class="icon-warnfill z-success"></i> <span> 确定要删除这个任务吗？ </span>
+				</div>
+				<div class="tooltip-footer">
+					<a class="btn btn-small btn-primary">确定</a> <a
+						class="btn btn-small">取消</a>
+				</div>
+			</div>
+			<div class="tooltip in tooltip-comfirm tooltip-top right">
+				<div class="tooltip-arrow"></div>
+				<div class="tooltip-inner">
+					<i class="icon-warnfill z-success"></i> <span> 确定要删除这个任务吗？ </span>
+				</div>
+				<div class="tooltip-footer">
+					<a class="btn btn-small btn-primary">确定</a> <a
+						class="btn btn-small">取消</a>
+				</div>
+			</div>
+
+			<br />
+			<br />
+			<br />
+
+			<div class="tooltip in tooltip-comfirm tooltip-right top">
+				<div class="tooltip-arrow"></div>
+				<div class="tooltip-inner">
+					<i class="icon-warnfill z-success"></i> <span> 确定要删除这个任务吗？ </span>
+				</div>
+				<div class="tooltip-footer">
+					<a class="btn btn-small btn-primary">确定</a> <a
+						class="btn btn-small">取消</a>
+				</div>
+			</div>
+			<div class="tooltip in tooltip-comfirm tooltip-right center">
+				<div class="tooltip-arrow"></div>
+				<div class="tooltip-inner">
+					<i class="icon-warnfill z-success"></i> <span> 确定要删除这个任务吗？ </span>
+				</div>
+				<div class="tooltip-footer">
+					<a class="btn btn-small btn-primary">确定</a> <a
+						class="btn btn-small">取消</a>
+				</div>
+			</div>
+			<div class="tooltip in tooltip-comfirm tooltip-right bottom">
+				<div class="tooltip-arrow"></div>
+				<div class="tooltip-inner">
+					<i class="icon-warnfill z-success"></i> <span> 确定要删除这个任务吗？ </span>
+				</div>
+				<div class="tooltip-footer">
+					<a class="btn btn-small btn-primary">确定</a> <a
+						class="btn btn-small">取消</a>
+				</div>
+			</div>
+
+			<br />
+			<br />
+			<br />
+
+			<div class="tooltip in tooltip-comfirm tooltip-bottom left">
+				<div class="tooltip-arrow"></div>
+				<div class="tooltip-inner">
+					<i class="icon-warnfill z-success"></i> <span> 确定要删除这个任务吗？ </span>
+				</div>
+				<div class="tooltip-footer">
+					<a class="btn btn-small btn-primary">确定</a> <a
+						class="btn btn-small">取消</a>
+				</div>
+			</div>
+			<div class="tooltip in tooltip-comfirm tooltip-bottom center">
+				<div class="tooltip-arrow"></div>
+				<div class="tooltip-inner">
+					<i class="icon-warnfill z-success"></i> <span> 确定要删除这个任务吗？ </span>
+				</div>
+				<div class="tooltip-footer">
+					<a class="btn btn-small btn-primary">确定</a> <a
+						class="btn btn-small">取消</a>
+				</div>
+			</div>
+			<div class="tooltip in tooltip-comfirm tooltip-bottom right">
+				<div class="tooltip-arrow"></div>
+				<div class="tooltip-inner">
+					<i class="icon-warnfill z-success"></i> <span> 确定要删除这个任务吗？ </span>
+				</div>
+				<div class="tooltip-footer">
+					<a class="btn btn-small btn-primary">确定</a> <a
+						class="btn btn-small">取消</a>
+				</div>
+			</div>
+
+			<br />
+			<br />
+			<br />
+
+			<div class="tooltip in tooltip-comfirm tooltip-left top">
+				<div class="tooltip-arrow"></div>
+				<div class="tooltip-inner">
+					<i class="icon-warnfill z-success"></i> <span> 确定要删除这个任务吗？ </span>
+				</div>
+				<div class="tooltip-footer">
+					<a class="btn btn-small btn-primary">确定</a> <a
+						class="btn btn-small">取消</a>
+				</div>
+			</div>
+			<div class="tooltip in tooltip-comfirm tooltip-left center">
+				<div class="tooltip-arrow"></div>
+				<div class="tooltip-inner">
+					<i class="icon-warnfill z-success"></i> <span> 确定要删除这个任务吗？ </span>
+				</div>
+				<div class="tooltip-footer">
+					<a class="btn btn-small btn-primary">确定</a> <a
+						class="btn btn-small">取消</a>
+				</div>
+			</div>
+			<div class="tooltip in tooltip-comfirm tooltip-left bottom">
+				<div class="tooltip-arrow"></div>
+				<div class="tooltip-inner">
+					<i class="icon-warnfill z-success"></i> <span> 确定要删除这个任务吗？ </span>
+				</div>
+				<div class="tooltip-footer">
+					<a class="btn btn-small btn-primary">确定</a> <a
+						class="btn btn-small">取消</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<h3>树形组件</h3>
+	<div class="wrap">
+		<!-- 静态的树形组件 -->
+		<div class="static-tree-wrap">
+			<table class="u-tree" cellspacing="0" cellpadding="0" border="0">
+				<tbody>
+					<tr>
+						<td><span class="tree-el tree-img-el tree-line23-el"></span></td>
+						<td><a class="tree-el tree-img-el tree-unfold-el"
+							href="javascript:void(0);"></a></td>
+						<td><span class="tree-el tree-img-el tree-sub-checked-el"></span></td>
+						<td><span class="tree-text-el">品牌【女鞋】</span></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><span class="tree-el tree-img-el tree-line13-el"></span></td>
+						<td></td>
+						<td><span class="tree-el tree-img-el tree-line13-el"></span></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><span class="tree-el tree-img-el tree-line13-el"></span></td>
+						<td></td>
+						<td><span class="tree-el tree-img-el tree-line123-el"></span></td>
+						<td><span class="tree-el tree-img-el tree-chk-el"></span></td>
+						<td><span class="tree-text-el">子类女鞋1</span></td>
+					</tr>
+					<tr>
+						<td><span class="tree-el tree-img-el tree-line13-el"></span></td>
+						<td></td>
+						<td><span class="tree-el tree-img-el tree-line13-el"></span></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><span class="tree-el tree-img-el tree-line13-el"></span></td>
+						<td></td>
+						<td><span class="tree-el tree-img-el tree-line12-el"></span></td>
+						<td><span class="tree-el tree-img-el tree-checked-el"></span></td>
+						<td><span class="tree-text-el">子类女鞋2</span></td>
+					</tr>
+					<tr>
+						<td><span class="tree-el tree-img-el tree-line13-el"></span></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><span class="tree-el tree-img-el tree-line123-el"></span></td>
+						<td><a class="tree-el tree-img-el tree-fold-el"
+							href="javascript:void(0);"></a></td>
+						<td><span class="tree-el tree-img-el tree-chk-el"></span></td>
+						<td><span class="tree-text-el">热卖【内衣】</span></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><span class="tree-el tree-img-el tree-line13-el"></span></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><span class="tree-el tree-img-el tree-line12-el"></span></td>
+						<td><a class="tree-el tree-img-el tree-fold-el"
+							href="javascript:void(0);"></a></td>
+						<td><span class="tree-el tree-img-el tree-chk-el"></span></td>
+						<td><span class="tree-text-el">淘店长推广统计</span></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<br /> <br />
+		<!-- /静态树形组件 -->
+
+		<div id="tree-container" class="create-tree-wrap"></div>
+		<br /> <a id="getTreeStatusBtn" class="btn">查看状态</a> <input
+			id="cidIpt" type="text" class="input" style="width: 80px;"
+			placeholder="cid"> <a id="checkBtn" class="btn">选中</a> <a
+			id="uncheckBtn" class="btn">不选中</a>
+
+		<script type="text/javascript">
+			// $(function() {
+			// 	var cates = {
+			// 		params: {},
+			// 		data: [ { 
+			// 			cate: { cid: 1, name: '品牌【女鞋】' },
+			// 			subcate: [{ cid: 12, name: '女鞋类目1', checked: true }, { cid: 13, name: '女鞋类目2' }, { cid: 14, name: '女鞋类目3' } ]
+			// 		}, {
+			// 			cate: { cid: 2, name: '热卖【内衣】', checked: true },
+			// 			subcate: []
+			// 		}, {
+			// 			cate: { cid: 3, name: '淘店长推广统计' },
+			// 			subcate: [{ cid: 32, name: '统计类目1' }, { cid: 33, name: '统计类目2' }]
+			// 		}, {
+			// 			cate: { cid: 4, name: '关联统计' },
+			// 			subcate: [ { cid: 45, name: '二级类目1', checked: true } ]
+			// 		} ]
+			// 	};
+			// 	var myTree = new $.ui.Tree({
+			// 		'data': cates.data,
+			// 		'container': '#tree-container' 
+			// 	}).show();
+
+			// 	// 获取当前点击的树节点 tid
+			// 	myTree.on('click', function() {
+			// 		console.log($(this).attr('tid'));
+			// 	});
+
+			// 	$('#getTreeStatusBtn').click(function() {
+			// 		$.alert({text: JSON.stringify(myTree.getStatus())});
+			// 	});
+			// 	$('#checkBtn').click(function() {
+			// 		myTree.check($('#cidIpt').val());
+			// 	});
+			// 	$('#uncheckBtn').click(function() {
+			// 		myTree.uncheck($('#cidIpt').val());
+			// 	});
+			// });
+		</script>
+	</div>
+
+
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 后台菜单 -->
+<root>
+	<menu id="user" text="用户管理">
+		<menu id="usercenter_list" text="用户列表" url="usercenter/list"></menu>
+		<menu id="uc-realname-certification-personal" text="个人实名验证" url="ucrealnameaudit/personal"></menu>
+		<menu id="uc-realname-certification-enterprise" text="企业实名验证" url="ucrealnameaudit/enterprise"></menu>
+		<!--<menu id="realname-certification-personal" text="个人实名验证" url="realnamecertification/list?type=1"></menu>-->
+		<!--<menu id="realname-certification-enterprise" text="企业实名验证" url="realnamecertification/list?type=2"></menu>-->
+	</menu>
+	
+	<menu id="partner" text="接入管理">
+		<menu id="partner-list" text="接入者列表" url="partner/list"></menu>
+		<menu id="product-list" text="产品管理" url="product/list"></menu>
+		<menu id="seal-list" text="签章管理" url="seal/list"></menu>
+	</menu>
+	
+	<!--
+	<menu id="product" text="产品管理">
+		<menu id="product-list-1" text="金融" url="product/list-100"></menu>
+		<menu id="product-list-2" text="知识产权" url="product/list-200"></menu>
+		<menu id="product-list-3" text="网上签约" url="product/list-300"></menu>
+		<menu id="product-list-4" text="政法" url="product/list-400"></menu>
+		<menu id="product-list-5" text="其他" url="product/list-500"></menu>
+	</menu>
+	-->
+	
+	<menu id="template" text="模板管理">
+		<menu id="template_list" text="模版管理" url="template/list">
+			<action id="template_detail" text="查看模版" />
+			<action id="template_enableAndDisable" text="启用或停止模版" />
+			<action id="template_delete" text="删除模版" />
+			<action id="template_upload" text="上传模版" />
+		</menu>
+		<menu id="templatesource_list" text="模板库管理" url="templatesource/list">
+			<action id="templatesource_enableAndDisable" text="启用或停止模版" />
+			<action id="templatesource_upload" text="上传模版" />
+		</menu>
+	</menu>
+	
+<!-- 	<menu id="bizSystem" text="业务系统管理">
+		<menu id="bizSystem_list" text="业务系统列表" url="bizSystem/list"></menu>		
+	</menu> -->
+	
+	<!--
+	<menu id="api" text="接口管理">
+		<menu id="api-list"  text="接口管理" url="api/index"></menu>
+	</menu>
+	-->
+	<!--
+	<menu id="message" text="消息管理">
+		<menu id="message" text="消息管理" url="message/index"></menu>		
+	</menu>
+	
+	<menu id="notary" text="公证管理">
+		<menu id="notary" text="公证管理" url="notary/index"></menu>		
+	</menu>
+	-->
+	<menu id="log" text="日志管理">
+		<menu id="log_api_list" text="接口日志" url="log/api/list"></menu>
+		<menu id="log_login_list" text="登录日志" url="log/login/list"></menu>
+		<!--<menu id="log_operate_list" text="操作日志" url="log/operate/list"></menu>-->
+	</menu>
+
+	<menu id="basedata" text="基础数据">
+		<menu id="bd_region_list" text="地区管理" url="region/list">
+			<action id="bd_region_add" text="添加省市区" />
+			<action id="bd_region_edit" text="修改省市区" />
+			<action id="bd_region_enableAndDisable" text="停用或启用省市区" />
+		</menu>
+		<menu id="bd_normalBaseData_list" text="数据字典" url="basedata/list">
+			<action id="bd_normalBaseData_add" text="添加数据字典" />
+			<action id="bd_normalBaseData_edit" text="修改数据字典" />
+			<action id="bd_normalBaseData_enableAndDisable" text="启用或停用数据字典" />
+		</menu>
+	</menu>
+	
+	<menu id="system" text="系统管理">
+		<menu id="sys_userManage" text="操作员管理 " url="adminuser/index">
+			<action id="sys_userManage_addAndModify" text="添加修改用户" />
+			<action id="sys_userManage_remove" text="删除用户" />
+			<action id="sys_userManage_modifyStatus" text="变更用户状态" />
+			<action id="sys_userManage_roles" text="用户权限分配" />
+		</menu>
+		<menu id="sys_parameter" text="系统参数设置" url="sysparams/index"></menu>	
+	</menu>
+<!--  
+	<menu id="demo" text="示例">
+		<menu id="demo_crud" text="增删改查示例" url="demo/crud/index"></menu>
+		<menu id="demo_msg" text="提示示例" url="demo/msgstyle"></menu>
+		<menu id="demo_window" text="弹窗示例" url="demo/pop-window"></menu>
+	</menu>
+  -->	
+</root>

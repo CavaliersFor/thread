@@ -1,0 +1,150 @@
+#parse("pages/commons/header.vm")
+<script type="text/javascript" src="#getAppServer()/scripts/sha1.js"></script>
+<script type="text/javascript" src="#getAppServer()/scripts/md5.js"></script>
+ <div class="content">
+		 <!--内容部分-->
+         <div class="breadcrumb">
+			<a class="breadcrumb-item active">修改密码</a>
+	     </div>
+	     <form action="" method="Post" id="pass">
+         <div class="ms-setting-content">
+         	  <ul id="ms-ul" class="ms-password-ul">
+         	  	 <li>
+         	  	 	<div class="left"><span class="red">*</span>原始密码</div>
+         	  	 	<div class="right">
+         	  	 	   <input type="password" class="input" name="oldPass" id="oldPass">
+         	  	 	</div>
+         	  	 </li>
+         	  	 <li>
+         	  	 	<div class="left"><span class="red">*</span>新密码</div>
+         	  	 	<div class="right">
+         	  	 	   <input type="password" class="input" name="newPassOne" id="newPassOne">
+         	  	 	</div>
+         	  	 </li>
+         	  	 <li>
+         	  	 	<div class="left"><span class="red">*</span>确认新密码</div>
+         	  	 	<div class="right">
+         	  	 	   <input type="password" class="input" name="newPassTwo" id="newPassTwo">
+         	  	 	</div>
+         	  	 </li>
+         	  	 <div class="clear"></div>
+         	  </ul>
+         </div>
+         <input type="hidden" name="random" id="random">
+         <input type="hidden" name="passSign" id="passSign">
+		  </form>
+          <div class="ms-seting-buttom" style="text-align:left;">
+           <a href="javascript:;" class="btn btn-primary" style="margin-left:300px;" id="save">保存</a>
+           <a href="javascript:;" class="btn btn-default broder-green">取消</a>
+          </div>
+		 <!--内容部分-->
+	</div><!--end content-->
+</div><!--end container-->
+   <script type="text/javascript">
+
+ $(function(){
+       //输入为空验证
+       $('input').blur(function(){
+         var t = $(this).val();
+         if(t==''){
+            $.alert({
+                  type: 'error',
+                  text: '密码不能为空!',
+                  time: 3000
+                });
+            $(this).addClass('error');
+            return false;
+         }else{
+            $(this).removeClass('error')
+         }
+       })
+       //保存前后密码是否相等与非空验证
+       var NullVal = false;
+       $('#save').click(function(){
+         $('#ms-ul input').each(function(){
+            if( $(this).val() == '' ){
+                NullVal = false;
+            }else{
+                NullVal = true;
+            }
+            console.info(NullVal);
+         })
+         if(!NullVal){
+           $.alert({
+                  type: 'error',
+                  text: '密码不能为空!',
+                  time: 3000
+              });
+           return false;
+         }
+         var t1 = $('input:eq(1)').val();
+         var t2 = $('input:eq(2)').val();
+         if( t1 !== t2 ){
+            $.alert({
+                  type: 'error',
+                  text: '两次输入密码不一致!',
+                  time: 3000
+              });
+            return false;
+         }
+         if( t1.length < 6 ){
+            $.alert({
+                  type: 'error',
+                  text: '密码至少为6位数!',
+                  time: 3000
+              });
+            return false;
+         }
+
+         updatePass();
+       })
+
+ })
+
+function updatePass(){
+	var oldPass = jQuery("#oldPass").val();
+	var newPassOne = jQuery("#newPassOne").val();
+	var newPassTwo = jQuery("#newPassTwo").val();
+	
+	jQuery("#oldPass").val(hex_sha1(oldPass));
+	jQuery("#newPassOne").val(hex_sha1(newPassOne));
+	jQuery("#newPassTwo").val(hex_sha1(newPassTwo));
+	var random = new Date().getTime();
+	jQuery("#random").val(random);
+	
+	var passSign = hex_md5(hex_md5(hex_sha1(newPassOne)+random));
+	jQuery("#passSign").val(passSign);
+	
+	 jQuery.ajax({
+		 url:"/enterprise/updatePass",
+		 data:jQuery("#pass").serialize(),
+		 type:"post",
+		 success:function(data){
+			 if(data!=null && data.success){
+					jQuery.alert({
+						type: 'success',
+						text: '修改成功',
+						time: 3000
+					});
+					location.href="/";
+				}else{
+					jQuery.alert({
+						type: 'error',
+						text: data.msg,
+						time: 3000
+					});
+				}
+		 },
+		 error:function(){
+			 jQuery.alert({
+					type: 'error',
+					text: '修改失败,请稍后重试!',
+					time: 3000
+				});
+		 }
+	 });
+ 	} 
+ 
+   </script>
+</body>
+</html>

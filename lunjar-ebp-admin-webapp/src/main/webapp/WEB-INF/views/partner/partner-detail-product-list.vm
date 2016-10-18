@@ -1,0 +1,38 @@
+#set($thisActionUrl="detail-product-list?partnerId=$!{request.getParameter('partnerId')}")
+
+<div id="list" class="listBox">
+
+    <table>
+        <tr>
+            <th>序号</th>
+            <th>产品名称</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        #set($data=$page.data)
+        #if($data && $data.size()>0)
+            #foreach($o in $data)
+                #set($no = ($velocityCount + ($!page.pageNo - 1) * $!page.pageSize))
+                <tr #if($math.mod($velocityCount,2)==0)  class="bg" #end>
+                    <td >
+                        <label for="chk_$o.id">&nbsp;$no</label>
+                    </td>
+                    <td class="productName">
+                    	$!o.productName
+                    </td>
+                    <td >
+                        #getDictionaryName("productStatus" ${o.status})
+                    </td>
+                    <td >
+                        <a href="javascript:;" onclick="window.parent.location='/product/detail?id=${o.id}'">查看</a>
+                    </td>
+                </tr>
+            #end
+        #else
+            <tr>
+                <td colspan="10">非常抱歉，没有符合条件的数据！</td>
+            </tr>
+        #end
+    </table>
+	#pageTabFoot({"page":$page,"queryFormId":"form_search","submitUrl":"${thisActionUrl}","canSetPagesize":true})
+</div>

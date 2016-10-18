@@ -1,0 +1,17 @@
+<ehcache>
+	<cache name="AdminAgentCache" 
+		maxElementsInMemory="1024" 
+		timeToIdleSeconds="5"
+		timeToLiveSeconds="5">
+	</cache>
+	<cache name="BizSystemCacheForId"
+		   maxElementsInMemory="100"
+		   timeToIdleSeconds="300"
+		   timeToLiveSeconds="1800">
+	</cache>
+	<cache name="EnterpriseAgentCache" 
+		maxElementsInMemory="1024" 
+		timeToIdleSeconds="5"
+		timeToLiveSeconds="5">
+	</cache>
+</ehcache>

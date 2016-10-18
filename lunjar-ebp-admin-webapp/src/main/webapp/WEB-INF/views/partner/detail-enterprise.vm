@@ -1,0 +1,62 @@
+<div class="formBox">
+    <h3>
+        <div class="fl">
+            <span>接入者管理>>详细信息</span>
+		</div>
+        <div class="fr">
+			<a href="list">&lt;&lt;  返回列表</a>
+		</div>
+	</h3>
+    <form id="myform" method="post" action="audit">
+        <input type="hidden" name="targetTableId" value="${audit.targetTableId}">
+        <input type="hidden" name="partnerId" value="$!partner.id">
+        <input type="hidden" name="uid" value="$!uid">
+        <input type="hidden" name="id" value="${audit.id}">
+        <input type="hidden" name="type" value="${type}">
+        <div class="content">
+            <table class="c2">
+                <tr>
+                    <th width="13%">接入者名称：</th>
+                    <td width="37%">$!{partner.partnerName}</td>
+                    <th width="13%">接入者类型：</th>
+                    <td width="37%">企业</td>
+                </tr>
+##                <tr>
+##                    <th>企业电话：</th>
+##                    <td>$!{enterprise.phone}</td>
+##                    <th>企业传真：</th>
+##                    <td>$!{enterprise.fax}</td>
+##                </tr>
+                <tr>
+                    <th>联系人：</th>
+                    <td>$!{enterprise.linkMan}</td>
+                    <th>联系电话：</th>
+                    <td>$!{enterprise.contactPhone}</td>
+                </tr>
+                <tr>
+                    <th>联系邮箱：</th>
+                    <td>$!{user.email}</td>
+                    <th>组织机构代码：</th>
+                    <td>$!{enterprise.orgNo}</td>
+                </tr>
+                <tr>
+                    <th>组织机构代码证：</th>
+                    <td class="thumbnails" style="padding:5px;">
+##                        <a id="originPhotoUrl1" title="机构代码证" href='$!{originPhotoUrl1}'>
+                        <a id="originPhotoUrl1" title="机构代码证" href='javascript:;'>
+                            <img id="photoUrl1" alt="" src="$!{photoUrl1}" align="middle" style="top: 0px;width:100px;height:100px;">
+                        </a>
+
+##                        <a id="originPhotoUrl1" title="机构代码证" href='$!{originPhotoUrl1}'>
+                        <a id="originPhotoUrl2" title="机构代码证" href="javascript:;">
+                            <img id="photoUrl2" alt="" src="$!{photoUrl2}" align="middle" style="top: 0px;width:100px;height:100px;">
+                        </a>
+##                        <span>(点击查看大图)</span>
+                    </td>
+                    <th>实名审核状态：</th>
+                    <td>#direct($!fieldTextTool.convertPartnerStatus("$!{partner.status}"))</td>
+                </tr>
+            </table>
+        </div>
+    </form>
+</div>

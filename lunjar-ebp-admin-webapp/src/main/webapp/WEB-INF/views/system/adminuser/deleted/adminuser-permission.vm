@@ -1,0 +1,62 @@
+#set($screen_jsArray=["system/adminuser/adminuser-permission"])
+<div class="formBox">
+    <h3>
+        <i></i>
+        <div class="fl">
+            <span>权限分配</span>
+        </div>
+        <div class="fr">
+            <a href="javascript:void(0);" onclick="history.back(-1);">&lt;&lt; 返回列表</a>
+        </div>
+    </h3>
+    <form method="post" id="form">
+        <input type="hidden" value="$userId" id="userId" name="userId"/>
+		<div class="content">
+			<div class="p10" align="center">
+                <table>
+                    <tr>
+						<td colspan="3" class="pb5">
+							用户 <strong class="orange">[$request.getParameter("userName")]</strong>分配权限
+                        </td>
+                    </tr>
+					<tr>
+                        <td class="tr">
+                            <div class="tl">可分配权限：</div>
+                            <select id="select_rolesNotOfUser" multiple class="w350" size="25">
+								#foreach($role in $rolesNotOfUser)
+									<option   value="$role.id">$role.roleName</option>
+								#end
+                            </select>
+                        </td>
+                        <td  class="p10">
+                            <div class="p5">
+                                <button type="button"  id="btnAdd" title="分配" class="btn w40 pointer">&gt;</button>
+                            </div>
+                            ##<div  class="p5">
+                                ##<button type="button"  id="btnAddAll" title="全部分配" class="btn w40 pointer">&gt;&gt;</button>
+                            ##</div>
+                            <div  class="p5">
+                                <button type="button"  id="btnRemove" title="取消分配" class="btn w40 pointer">&lt;</button>
+                            </div>
+                            ##<div  class="p5">
+                                ##<button type="button"  id="btnRemoveAll" title="全部取消分配" class="btn w40 pointer">&lt;&lt;</button>
+                            ## </div>
+                        </td>
+                        <td  class="tl">
+                            <div>已分配权限 ：</div>
+                            <select id="select_rolesOfUser" name="rolesOfUser"  multiple class="w350" size="25">
+								#foreach($role in $rolesOfUser)
+									<option value="$role.id">$role.roleName</option>
+								#end
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="form-but">
+            <button type="button" class="button-s4" id="btn_submit">提交</button>
+            <button type="button" class="button-s4" onclick="history.back(-1);">取消</button>
+        </div>
+    </form>
+</div>

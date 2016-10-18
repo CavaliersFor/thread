@@ -1,0 +1,102 @@
+##前端资源：列表,日历
+#loadWebResources(["list","datePicker"]) 
+#set($thisActionUrl="index.htm")
+#set($screen_title="")
+<div class="searchBox">
+	#set($query=$page.query)
+    <form method="get" id="form_search" action="$thisActionUrl">
+        <h5>
+            <span>搜索</span>
+        </h5>
+        <table>
+            <tr>
+                <th>操作对象：</th>
+                <td>
+                    #formSelect({"name":"operateObjectType","dictGroup":"sysLogOpertateObject","selectedValue":$!query.operateObjectType} "class='w100'")
+                </td>
+				<th>操作对象名称：</th>
+                <td>
+                    <input name="operateObjectName" type="text" value='$!query.operateObjectName' class="inp-w100"/>
+                </td>
+				
+				<th>操作内容：</th>
+                <td><input name="operateContent" type="text" value='$!query.operateContent' class="inp-w150"/></td>
+               			
+			 </tr>
+			 <tr>
+                <th>操作人类型：</th>
+                <td>
+                   #formSelect({"name":"operatorType","dictGroup":"userType","selectedValue":$!query.operatorType} "class='w100'")
+					##<input name="operatorType" type="text" value='$!query.operatorId' class="inp-w100"/>
+                </td>
+				<th>操作人账号：</th>
+                <td>
+                    <input name="operatorAccount" type="text" value='$!query.operatorAccount' class="inp-w100"/>
+                </td>
+                 <th>操作时间：</th>
+                <td>
+                    <input name="operateTimeFrom" class="inp-w70" type="text" value='$!query.operateTimeFrom'  dateISO="true" onclick="WdatePicker()"/>
+                    - <input name="operateTimeTo" class="inp-w70" type="text" value='$!query.operateTimeTo'  dateISO="true"  onClick="WdatePicker()"/>
+                </td>
+                <td >
+                    <input type="submit" id="btn_search" value="搜索" class="btn ml10" />
+                    <input type="button" id="btn_reset" value="清空" onclick="location.href='$thisActionUrl';" class="btn"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="list" class="listBox mt10">
+    <h5>
+        <span>列表</span>
+    </h5>
+    <table>
+        <tr >
+            <th width="5%">序号</th>
+            <th class="align-left">操作对象</th>
+			<th width="9%" >操作对象Id</th> 
+			<th width="9%">操作人类型</th>
+            <th width="11%">操作人账号</th>
+			##<th width="8%" >操作人Id</th>
+            <th class="align-left">操作内容</th>
+            <th width="13%">操作时间</th>
+        </tr>
+        #set($data=$page.data)
+        #if($data.size()>0)
+            #foreach($o in $data)
+                #set($no = ($velocityCount + ($!page.pageNo - 1) * $!page.pageSize))
+                <tr  >
+                    <td >
+                       &nbsp;$no
+                    </td>
+                    <td class="align-left">
+                        [#getDictionaryName('sysLogOpertateObject' ${o.operateObjectType})] $!o.operateObjectName
+                    </td>
+					<td >
+                        $!o.operateObjectId
+                    </td>
+				    <td >
+                        $!o.operatorTypeEnum.text
+                    </td>
+				    <td >
+                        $!o.operatorAccount
+                    </td>
+                    ##<td> 
+                        ##$!o.operatorId
+                    ##</td>                   
+                    <td class="align-left">
+                        $!o.operateContent
+                    </td>
+                    <td >
+                        $!date.format("yyyy-MM-dd HH:mm",${o.operateTime})
+                    </td>
+                </tr>
+            #end
+            #else
+                <tr>
+                    <td colspan="10">非常抱歉，没有符合条件的数据！</td>
+                </tr>
+        #end 
+    </table>
+    #pageTabFoot({"queryFormId":"form_search","page":$page,"submitUrl":"${thisActionUrl}#tool","canSetPagesize":true})      
+</div>

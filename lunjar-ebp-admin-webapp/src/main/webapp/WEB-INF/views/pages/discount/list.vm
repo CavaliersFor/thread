@@ -1,0 +1,251 @@
+#parse("pages/commons/header.vm")
+  <script type="text/javascript" src="#getAppServer()/scripts/page/page.js"></script>
+<div class="content">
+	
+	<!--内容部分-->
+	<div class="breadcrumb">
+		<a class="breadcrumb-item active">优惠设置</a>
+	</div>
+	<div class="collectPlacelist-setting">
+		<div class="topbutton">
+			<a href="/discount/add" class="btn btn-large btn-primary"
+				id="addNewZTD">+创建满减活动</a>
+		</div>
+		<form action="/discount/list" id="discountForm" method="post">
+		<input type="hidden" name="pageNo" id="pageNo" value="1" />
+		<table class="collectPlacelist-table mlj">
+			<tr>
+			    <th width="120">活动名称</th>
+				<th>活动内容</th>
+				<th>创建时间</th>
+				<th>是否使用</th>
+				<th>操作</th>
+			</tr>
+			<tbody class="con-tr">
+				#if($ds && $!ds.data.size()>0)
+				#foreach($d in $!ds.data)
+					<tr>
+						<td class="newAdd t-l">
+						  <span class="maxHeight"><span class="name" title="活动名称活动动名称">$!d.name</span><i></i>
+						  <!--修改商品标题框-->
+						  </span>
+						  <div class="changeTitlePopu"style="top:-10px;">
+		                  <div class="_ptitle">还能输入<span class="red">50</span>个字</div>
+		                  <textarea class="productTitle" id="dName"></textarea>
+		                  <div class="buttom">
+		                   <a class="btn btn-small btn-primary right-btn saveDName" dataVal="$!d.id">保 存</a>
+		                 </div>
+		                </div>
+                       <!--修改商品标题框-->
+						</td>		
+						<td><div>订单满<span class="red">$!d.conditions</span>元减<span class="red">$!d.discountFee</span>元 </div>
+                      #if($!d.isPost==1)
+                      <div><span class="red">包邮</span></div>
+                      #end
+                      </td>
+                      <td>$!date.format('yyyy-MM-dd HH:mm:ss ',$!d.gmtCreate)</td>
+                      <td>
+                      	<div class="switch #if($!d.status==1) open #end"  dataVal="$!d.id" onchange="changStatus(this);">
+                        <span class="switch-open"><i class="icon-checked"></i></span>
+                        <span class="switch-close">╳</span>
+                        <span class="switch-overlay"></span>
+                        <input type="checkbox" class="coverPar" #if($!d.status==1) checked="checked" #end >
+                        </div>
+                      </td>
+                      <td><a href="/discount/add?id=$!d.id" class="blue cz">编辑</a>
+                      <a href="javascript:;" dataVal="$!d.id" class="cz blue deleteDiscount">删除</a></td>
+                    </tr>
+				#end
+				#else
+					
+				#end
+			</tbody>
+		</table>
+		</form>
+		<!--分页开始-->
+		<div class="newTabTop">
+				<div class="right" style="height: 80px;">
+					<!--分页-->
+					<div class="page-list" id="FenYe"></div>
+					<!--分页-->
+				</div>
+				<div class="clear"></div>
+			</div>
+		<!--分页结束-->
+	</div>
+
+	<!--内容部分-->
+</div>
+<!--end content-->
+</div>
+<!--end container-->
+<script type="text/javascript">
+$(function(){
+	
+	PAGE.createPage($!ds.pageCount,$!ds.pageNo,"discountForm");
+	
+	//document click even 
+    $(document).on('click','body',function(ev){
+      var el = $(ev.target);
+      //console.log(el)
+      if(el.is('.maxHeight') ||el.parents().is('.newAdd')){
+      }else{
+        $('.changeTitlePopu').hide();
+      }
+    })
+	//新增编辑组合名称
+	$(document).on('click','.newAdd i',function(){
+    var t = $(this).parents('.maxHeight').find('.name').text();
+    var showNum = $(this).parents('td').find('.changeTitlePopu ._ptitle .red');
+    $(this).parents('td').find('.productTitle').maxLength(50,showNum);
+    $(this).parents('td').find('.productTitle').val(t).focus();
+    $(this).parents('td').find('.changeTitlePopu').fadeIn(100);
+   })
+	//保存
+	$(document).on('click','.savePName',function(){
+	 var _val = $(this).parents('.changeTitlePopu').find('textarea').val();
+	 if(_val == ''){
+	 	$.alert({
+          type: 'error',
+          text: '请输入内容!',
+          time: 3000
+        });
+        return false;
+	 }
+	 $(this).parents('td').find('span.name').text(_val);
+	 $(this).parents('td').find('span.name').attr('title',_val);
+	 $(this).parents('.changeTitlePopu').fadeOut(100);
+	 //后台存值操作
+	 
+	})
+})
+
+jQuery('.saveDName').click(function(){
+	var id = jQuery(this).attr("dataVal");
+	var data = jQuery("#dName").val();
+	jQuery.ajax({
+		url:"/discount/update",
+		data:"id="+id+"&name="+data,
+		type:"POST",
+		dataType:"json",
+		success:function(data){
+			if(data!=null && data.success){
+				jQuery.alert({
+					type: 'success',
+					text: '更新成功',
+					time: 3000
+				});
+				location.reload();
+			}else{
+				jQuery.alert({
+					type: 'error',
+					text: data.msg,
+					time: 3000
+				});
+			}
+		},
+		error:function(){
+			jQuery.alert({
+				type: 'error',
+				text: '操作失败,请稍后重试!',
+				time: 3000
+			});
+		}
+	});
+});
+
+function changStatus(self){
+	var id = jQuery(self).attr("dataVal");
+	var data="";
+	if(jQuery(self).hasClass('open')){
+		//有样式 1
+		data = 1;
+	}else{
+		//没有样式 2
+		data = 2;
+	}
+	
+	jQuery.ajax({
+		url:"/discount/update",
+		data:"id="+id+"&status="+data,
+		type:"POST",
+		dataType:"json",
+		success:function(data){
+			if(data!=null && data.success){
+				jQuery.alert({
+					type: 'success',
+					text: '更新成功',
+					time: 3000
+				});
+				location.reload();
+			}else{
+				jQuery.alert({
+					type: 'error',
+					text: data.msg,
+					time: 3000
+				});
+			}
+		},
+		error:function(){
+			jQuery.alert({
+				type: 'error',
+				text: '操作失败,请稍后重试!',
+				time: 3000
+			});
+		}
+	});
+}
+
+//删除优惠信息
+$('.deleteDiscount').click(function(){
+	var id= $(this).attr('dataVal');
+	$(this).tooltip({
+		text: '您确定删除该优惠信息吗？',
+		icon: 'icon-warnfill',
+		style: 'z-danger',
+		placement: 'left',
+		align: 'center',
+		okHide: function() {
+			deletDiscount(id);
+		},
+		cancelHide: function() {
+			
+		}
+	});
+	return false;	// 记得要 return false;
+});
+//删除优惠信息
+function deletDiscount(id){
+	  jQuery.ajax({
+			url:"/discount/delete",
+			data:"id="+id,
+			type:"POST",
+			dataType:"json",
+			success:function(data){
+				if(data!=null && data.success){
+					jQuery.alert({
+						type: 'success',
+						text: '删除成功',
+						time: 3000
+					});
+					location.reload();
+				}else{
+					jQuery.alert({
+						type: 'error',
+						text: data.msg,
+						time: 3000
+					});
+				}
+			},
+			error:function(){
+				jQuery.alert({
+					type: 'error',
+					text: '操作失败,请稍后重试!',
+					time: 3000
+				});
+			}
+		});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>首页-登陆</title>
+<link  href="../../lib/tdz_component/tdz_components.css" rel="stylesheet">
+<link href="../../lib/tdz_component/main.css"rel="stylesheet">
+<link href="../../lib/tdz_component/reset.css"rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="#getAppServer()/scripts/login/index.css">
+<script src="http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="../../lib/tdz_component/template.js"></script>
+<script src="../../lib/tdz_component/main.js"></script>
+<script src="../../lib/tdz_component/tdz_components.js"></script>
+<script src="../../lib/tdz_component/public.js"></script>
+<script type="text/javascript" src="#getAppServer()/scripts/login/index.js"></script>
+</head>
+<body class="example">
+<div class="pc-adimn-main">
+		<div class="new-header">
+		  <div class="con-w">
+			<div class="left">
+				<img class="logo" src="../../lib/img/logo.png" /><span class="text">|  供货商后台管理平台</span>
+			</div>
+			#*
+			<div class="right">
+				<img src="123.jpg" class="userImg"/>
+				<span class="name" title="ADVBC12345">ADVBC12345<span class="line">|</span></span>
+				 <i class="edit">
+				 	<ul class="setting">
+				 		<li><a href="#">基本信息</a></li>
+				 		<li><a href="#">修改密码</a></li>
+				 		<li><a href="#">退出</a></li>
+				 	</ul>
+				 </i>
+			</div>
+			*#
+			</div>
+		</div>
+	<form id="formLogin" method="post" action="login">
+		<div class="section">
+		   <div class="con-main">
+			<div class="logoimg m-t"></div>
+			<ul class="message-input">
+				<li>
+					<div class="left-icon ic-0"></div>
+					<div class="right-input"><input type="text" id="txtAccount" class="input ts-input" name="account" placeholder="请输入用户名"/></div>
+				</li>
+				<li>
+					<div class="left-icon ic-2"></div>
+					<div class="right-input"><input type="password" id="txtPwd" class="input ts-input password"  placeholder="请输入密码"/></div>
+				</li>
+			</ul>
+			<button class="button submit-form">立即登录</button>
+			<p class="tips">没有账号，<a href="#" class="orange">立即注册</a></p>
+			</div>
+		</div>
+		</form>
+		<div class="footer"></div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(function(){
+		//提交验证
+	  $(document).on('click','.submit-form',function(ev){
+         var Notnull = true;
+         $('.message-input li .ts-input').each(function(){
+         	if($(this).val() == ''){
+         		Notnull = false;
+         	}
+         })
+         if(!Notnull){
+           $.alert({
+	          type: 'error',
+	          text: '信息不能为空!',
+	          time: 3000
+          });
+         return false;
+         }
+         //提交
+	  })
+	})
+
+</script>
+</html>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.admin.biz.mappers.AdminRoleMapper">
+	<resultMap id="adminRoleMap" type="adminRole">
+		<id column="ID" property="id" /><!-- -->
+		<result column="STATUS" property="status" /><!-- 1、正常 -1、已删除 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- -->
+		<result column="ROLE_NAME" property="roleName" /><!-- 角色名称 -->
+		<result column="DESCRIPTION" property="description" /><!-- 角色描述 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="adminRole" useGeneratedKeys="true" keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE" resultType="int">
+			select
+			SEQ_ADMIN_ROLE.nextval from dual
+		</selectKey>
+		insert into
+		ADMIN_ROLE(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="status != null">,STATUS</if>
+			,GMT_CREATE,GMT_MODIFY
+			<if test="roleName != null">,ROLE_NAME</if>
+			<if test="description != null">,DESCRIPTION</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="roleName != null">,#{roleName,jdbcType=VARCHAR}</if>
+			<if test="description != null">,#{description,jdbcType=VARCHAR}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="adminRole">
+		update ADMIN_ROLE
+		<set>		
+			<if test="status != null">STATUS=#{status,jdbcType=INTEGER},</if>
+			<if test="roleName != null">ROLE_NAME=#{roleName,jdbcType=VARCHAR},</if>
+			<if test="description != null">DESCRIPTION=#{description,jdbcType=VARCHAR},</if>
+			GMT_MODIFY=<include refid="common.now" />
+		</set>
+		where ID=#{id}
+	</update>
+
+	<select id="load" parameterType="int" resultMap="adminRoleMap">
+		select * from ADMIN_ROLE where ID=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM ADMIN_ROLE ar
+		<where>
+			<if test="idArray != null">
+				ar.ID in
+				<foreach collection="idArray" index="index" item="item" open="(" separator="," close=")">#{item}
+				</foreach>
+			</if>
+			<choose>
+				<when test="status != null">and ar.STATUS = #{status}</when>
+				<when test="statusArray != null">
+					and ar.STATUS in
+					<foreach collection="statusArray" index="index" item="item" open="(" separator=","
+						close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					<if test="!i">
+						and ar.STATUS > 0
+					</if>
+				</otherwise>
+			</choose>
+			<if test="gmtCreateFrom != null">and ar.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and ar.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and ar.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and ar.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and ar.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and ar.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="roleName != null and roleName.trim() !=''">
+				and ar.ROLE_NAME like 
+				<choose>
+					<when test="_databaseId=='oracle'">
+						'%' || #{roleName} || '%'
+					</when>
+					<when test="_databaseId=='mysql'">
+						CONCAT('%',#{roleName},'%')
+					</when>
+				</choose>				
+			</if>			
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by ar.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="adminRoleQuery" resultMap="adminRoleMap">
+		<include refid="common.pageBegin" />
+		select ar.ID
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}</foreach>
+			</when>
+			<otherwise>
+				,ar.STATUS
+				,ar.GMT_CREATE
+				,ar.GMT_MODIFY
+				,ar.ROLE_NAME
+				,ar.DESCRIPTION
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="adminRoleQuery" resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="adminRole">
+		update ADMIN_ROLE set status=#{status} where
+		ID=#{id}
+	</update>
+
+	<delete id="delete" parameterType="int">
+		delete from ADMIN_ROLE where ID=#{id}
+	</delete>
+	
+	<select id="getOfRoles" parameterType="long" resultMap="adminRoleMap">
+		select ar.ID,ar.ROLE_NAME FROM ADMIN_ROLE ar 
+		where ID in (select ROLE_ID from ADMIN_USER_ROLE ur where ur.USER_ID=#{userId})
+	</select>
+	
+	<select id="getNotOfRoles" parameterType="long" resultMap="adminRoleMap">
+		select ar.ID,ar.ROLE_NAME FROM ADMIN_ROLE ar 
+		where not exists (select 1 from ADMIN_USER_ROLE ur where ar.ID=ur.ROLE_ID and ur.USER_ID=#{userId})
+	</select>
+</mapper>

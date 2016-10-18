@@ -1,0 +1,1298 @@
+#parse("pages/commons/header.vm")
+<script type="text/javascript" src="../../../scripts/process/process.js"></script>
+<div class="content">
+	<!--内容部分start-->
+	<div class="breadcrumb">
+		<a class="breadcrumb-item active">商品管理/发布商品</a> <a
+			href="/product/list" class="breadcrumb-item retuenWin">返回上一级</a>
+	</div>
+	<form action="/product/save" id="savePro" method="post">
+		<input type="hidden" name="id" value="$!p.id">
+		<div class="productAdd-toptable">
+			<table>
+				<tr>
+					<td class="left">商品标题</td>
+					<td><input class="input input-number new_input_wi max"
+						type="text" name="name" value="$!p.name" placeholder="" /></td>
+				</tr>
+				<tr>
+					<td class="left">商品价格</td>
+					<td><input class="input input-number new_input_wi" type="text"
+						name="salePrice" value="$!p.salePrice" placeholder="" />&nbsp;元</td>
+				</tr>
+				<tr>
+					<td class="left">商品编码</td>
+					<td><input class="input input-number new_input_wi" type="text"
+						name="enterpriseProductNo" value="$!p.enterpriseProductNo" placeholder="" /></td>
+				</tr>
+			</table>
+		</div>
+		<div class="productAdd-gg">
+			<p class="title-top">商品规格</p>
+			<div class="js-add-product">
+				<div class="title">编辑商品规格</div>
+				<div class="pd-20">
+					<div class="producr-group" id="Refresh-dom">
+						<div class="btn-add">
+							<a class="btn btn-xlarge btn-gray h-min js-add-input-vue">添加</a>
+						</div>
+						#if ($pNames && $pNames.size() > 0)
+							#foreach ($item in $pNames)
+							<div class="item-Specifications">
+								<div class="toptab">
+									<div class="left">规格名称</div>
+									<input class="input input-number new_input_wi productSpecificationsName" type="text" value="$!item.name" data="$!item.value" dataname="$!item.name" data-pv-val="$!item.value:$!item.name;">
+									<a class="btn btn-large btn-danger remove-vue">删除</a>
+									<div class="clear"></div>
+								</div>
+
+								<div class="item-vue">
+								#foreach ($sku in $item.list)
+									<div class="js-append-list">
+										<div class="checkbox select-chexkbox item-vue-checkbox checked">
+											<span class="checkbox-icon">
+												<i class="icon-checked"></i><input type="checkbox" value="">
+											</span>
+										</div>
+										<input class="input input-number new_input_wi min-120 js-Refresh" type="text" value="$!sku.vName" data="$!item.value:$!sku.vValue:$!sku.vName;" data-pv="$!item.value:$!sku.vValue;" data-val="$!item.name:$!sku.vName;">
+									</div>
+								#end
+									<div class="js-append-list">
+										<div class="checkbox select-chexkbox item-vue-checkbox">
+											<span class="checkbox-icon">
+												<i class="icon-checked"></i><input type="checkbox" value="">
+											</span>
+										</div>
+										<input class="input input-number new_input_wi min-120 js-Refresh disabled" type="text" value="" placeholder="" disabled="">
+									</div>
+								</div>
+							</div>
+							#end
+						#end
+						
+						<div class="resultList" id="resultList">
+							<table>
+								<tr>
+									#foreach ($item in $pNames)
+									<th>$!item.name</th>
+									#end
+									<th>价格</th>
+									<th>数量</th>
+									<th>商品编码</th>
+								</tr>
+								#foreach ($sku in $listSkus)
+								<tr class="optionTd" data-pv="$!sku.properties" data-val="$!sku.propertiesname">
+									#foreach ($name in $sku.proNames)
+									<td class="All-Need-this-class thisAddClass">$!name</td>
+									#end
+									<td>
+										<input class="input input-number  sameAddisNull specificationsValShow0" type="text" value="$!sku.price">
+									</td>
+									<td>
+										<input class="input input-number js-Num-add sameAddisNull specificationsValShow1" type="text" value="$!sku.quantity">
+									</td>
+									<td>
+										<input class="input input-number sameAddisNull specificationsValShow2" type="text" value="$!sku.enterpriseProductNo">
+									</td>
+								</tr>
+								#end
+							</table>
+						</div>
+					</div>
+					<!--end group-->
+				</div>
+			</div>
+			<!--end js-add-product-->
+
+			<div class="line-write-input" style="position:relative;">
+				<div class="left" style="font-weight: bold;">商品总数</div>
+				<input class="input input-number new_input_wi min-100 number" type="text"
+					value="$!p.productNum" name="productNum" placeholder="" id="publiceNum-ALL" />
+				<div class="markThisInput"></div>
+			</div>
+
+			<!--商品封面图-->
+			<div class="upload">
+				<p class="tip">商品封面图 &nbsp;图片不能超过1M</p>
+				<div class="picture noLeftAndRight" id="preview0">
+					+ <img id="imghead0" class="imghead" src="$!p.pathUrl"/><input type="file" name="file"
+						onchange="ajaxFileUpload(this,0,'1','1')" class="upload"
+						id="upload0" /> <input type="hidden" class="hide" id="hidd0" value="$!p.relativePath"/>
+				</div>
+			</div>
+			<!--主图视频-->
+			<p class="tip">主图视频 &nbsp;图片不能超过2M</p>
+			<div class="upload" id="newChange">
+				<div class="picture" id="preview1" data-addressId="0">
+					+ <img id="imghead1" class="imghead" #if($!listPPi && $!listPPi.size()>0) src="$!listPPi.get(0).picPath" #end/><input type="file" name="file"
+						onchange="ajaxFileUpload(this,1,'2','1')" class="upload"
+						id="upload1" /> <input type="hidden" class="hide" id="hidd1" #if($!listPPi && $!listPPi.size()>0) value="$!listPPi.get(0).relativePath" #end/>
+				</div>
+				<div class="picture" id="preview2" data-addressId="1">
+					+ <img id="imghead2" class="imghead" #if($!listPPi && $!listPPi.size()>1) src="$!listPPi.get(1).picPath" #end/><input type="file" name="file"
+						onchange="ajaxFileUpload(this,2,'2','2')" class="upload"
+						id="upload2" /> <input type="hidden" class="hide" id="hidd2" #if($!listPPi && $!listPPi.size()>1) value="$!listPPi.get(1).relativePath" #end />
+				</div>
+				<div class="picture" id="preview3" data-addressId="2">
+					+ <img id="imghead3" class="imghead" #if($!listPPi && $!listPPi.size()>2) src="$!listPPi.get(2).picPath" #end/><input type="file" name="file"
+						onchange="ajaxFileUpload(this,3,'2','3')" class="upload"
+						id="upload3" /> <input type="hidden" class="hide" id="hidd3" #if($!listPPi && $!listPPi.size()>2) value="$!listPPi.get(2).relativePath" #end />
+				</div>
+				<div class="picture" id="preview4" data-addressId="3">
+					+ <img id="imghead4" class="imghead" #if($!listPPi && $!listPPi.size()>3) src="$!listPPi.get(3).picPath" #end/><input type="file" name="file"
+						onchange="ajaxFileUpload(this,4,'2','4')" class="upload"
+						id="upload4" /> <input type="hidden" class="hide" id="hidd4" #if($!listPPi && $!listPPi.size()>3) value="$!listPPi.get(3).relativePath" #end/>
+				</div>
+				<div class="picture" id="preview5" data-addressId="4">
+					+ <img id="imghead5" class="imghead" #if($!listPPi && $!listPPi.size()>4) src="$!listPPi.get(4).picPath" #end /><input type="file" name="file"
+						onchange="ajaxFileUpload(this,5,'2','5')" class="upload"
+						id="upload5" /> <input type="hidden" class="hide" id="hidd5" #if($!listPPi && $!listPPi.size()>4) value="$!listPPi.get(4).relativePath" #end/>
+				</div>
+			</div>
+
+			<!--商品描述-->
+			<p class="tip">商品描述</p>
+
+
+
+			<div class="productDescribe">
+				<h3>
+					手机端产品描述<span class="right">图片还可以上传<span id="imgspace">2560K</span>
+						还可以输入<span id="textNum">5000</span>字
+					</span>
+				</h3>
+				<div class="centerMobileView">
+						<input  type="hidden" id="updateHtml" value='$!p.productDesc'/>
+					<div id="MobileView">
+						<div class="pd-10">
+							<!--摘要s-->
+							<div class="J_EditSummaryArea">&nbsp;</div>
+							<div class="_module m-shortDesc" id="SummaryAddressTop">
+								<ul class="tools">
+									<li></li>
+									<li></li>
+									<li><a href="javascript:;" class="edit">编辑</a></li>
+									<li><a href="javascript:;" class="delete">删除</a></li>
+								</ul>
+								<div class="cover"></div>
+								<div class="_content">
+									<div class="text-div">
+										<i class="icon iconfont icon-listbullet shortDesc-icon J_icon"></i>
+										<div class="text-html J_Html" id="SummaryTxt"></div>
+									</div>
+								</div>
+							</div>
+							<!--摘要e-->
+
+							<div id="dynamicnput"></div>
+
+						</div>
+					</div>
+
+					<div class="operation">
+						<div class="showButton">
+							<div class="add-ts">+</div>
+							<div class="ts">添加</div>
+						</div>
+						<ul id="hoverShow">
+							<li><span class="icon icon-0"></span> 摘要
+								<div class="tisp">
+									一个宝贝只能添加<b>1</b>段摘要
+								</div></li>
+							<li class="add showImgPopu"><span class="icon icon-1"></span>
+								图片</li>
+							<li><span class="icon icon-2"></span> 文字</li>
+						</ul>
+					</div>
+
+				</div>
+				<!--end centerMobileView-->
+			</div>
+			<!--添加图片弹框-->
+			<div class="modal fade new-css biger MarkBGAll-zIndex"
+				id="AddPictureMobile" tabindex="10" role="dialog"
+				aria-labelledby="myModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close btn-close-win"
+								data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">添加图片</h4>
+						</div>
+						<div class="modal-body">
+							<!--tab-->
+							<div class="tab">
+								<ul>
+									<li class="active"><a href="javascript:;" onclick="">本地图片</a></li>
+									<li><a href="javascript:;" onclick="">网络图片</a></li>
+								</ul>
+							</div>
+							<div class="showContentType">
+								<ul>
+									<li style="display: block;">
+										<div class="addPicture">
+											<div class="block">
+												添加本地图片:&nbsp;<input type="file"
+													onchange="ajaxFileUpload2(this,'0')" data-id="0" id="phoneFileid-0" name="file"/>
+													<input type="hidden" class="hide" id="hiddImg-0">
+											</div>
+											<div class="imgSrc">
+												<img src="" alt="" width="200" height="200" id="img-0">
+												<span class="add" title="增加图片">+</span>
+											</div>
+										</div>
+									</li>
+									<li style="line-height: 28px;">
+										<div class="addPicture2">
+											图片地址:<input type="text" class="input" placeholder="http://"
+												style="width: 350px;"><span class="add2">+</span>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary this-close-bz"
+								data-ok="modal">确定</button>
+							<button type="button"
+								class="btn btn-default btn-close-win Hui-black"
+								data-dismiss="modal">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--添加图片弹框-->
+			<p class="tip">
+				商品销量<span class="font">已销售<span class="red">$!p.saleNum</span>件
+				</span>
+			</p>
+			<div class="tip" style="padding-top: 10px;">
+				<div class="left-splm">商品类目</div>
+				<!--新增开始-->
+				<input type="hidden" name="cid" id="cid" value="$!p.cid">
+				<div class="type-resultSelect">您当前的选择的类目是: <span class="text-this" id="catName">$!p.catName</span></div> 
+		        <div class="clear"></div>
+		        <div class="productTypeSelect">
+		          <div class="like-box left">
+		            <div class="search"><input type="text" class="input" placeholder="输入搜索类目的名称/拼音首字母" onkeyup="searchCatName(this);"></div>
+		            <ul class="resultList" id="catUl">
+		            #foreach ($i in $firstItems)
+		               <li>
+		               <a href="javascript:;" class="blue">$i.name<i class="down"></i></a>
+		               <dl class="child">
+		               	#foreach($c in $i.items)
+		                 <dd class="hoverBg" dataVal="$!c.id">$!c.name<i></i></dd>
+		                #end
+		               </dl>
+		               </li>
+		              #end
+		            </ul>
+		          </div>
+		          <div class="like-box right">
+		            <div class="search right-search" >
+		            	##<input type="text" class="input" placeholder="输入搜索类目的名称/拼音首字母">
+		            </div>
+		            <div id="threeCat">
+		            
+		            </div>
+		          </div>
+		          <div class="clear"></div>
+		        </div>
+               <!--新增结束-->
+			</div>
+			<div class="tip" style="padding-top: 10px;">
+				<div class="left-splm">体积</div>
+				<input class="input input-number input-wi-min" name="volume"
+					type="text" value="$!p.volume" /> <span class="dw">㎡</span>
+			</div>
+			<div class="tip" style="padding-top: 10px;">
+				<div class="left-splm">重量</div>
+				<input class="input input-number input-wi-min" name="weight"
+					type="text" value="$!p.weight" /> <span class="dw">kg</span>
+			</div>
+
+			<div class="radio-select">
+				<span class="left">商品状态</span>
+				<div class="radio #if(!$!p.status) checked #end #if($!p.status==1) checked #end">
+					<span class="radio-icon icon-checked-radio"> <span
+						class="path1"></span> <span class="path2"></span> <input
+						type="radio" name="status" value="1" #if(!$!p.status) checked="checked" #end #if($!p.status==1) checked="checked" #end/>
+					</span> <span class="radio-text">出售中</span>
+				</div>
+				<div class="radio #if($!p.status==2) checked #end">
+					<span class="radio-icon icon-checked-radio"> <span
+						class="path1"></span> <span class="path2"></span> <input
+						type="radio" name="status" value="2" #if($!p.status==2) checked="checked" #end/>
+					</span> <span class="radio-text">仓库中</span>
+				</div>
+			</div>
+			<div class="radio-select min-mar-right">
+				<span class="left">商品类型</span>
+				<div class="radio #if(!$!p.type) checked #end #if($!p.type==1) checked #end first-radio">
+					<span class="radio-icon icon-checked-radio" >
+						<span class="path1"></span> <span class="path2"></span> <input
+						type="radio" name="type" value="1" #if(!$!p.type) checked="checked" #end #if($!p.type==1) checked="checked" #end/>
+					</span> <span class="radio-text">普通</span>
+				</div>
+				<div class="radio #if($!p.type==2) checked #end">
+					<span class="radio-icon icon-checked-radio" name="type" value="2">
+						<span class="path1"></span> <span class="path2"></span> <input
+						type="radio" name="type" value="2" #if($!p.type==2) checked="checked" #end/>
+					</span> <span class="radio-text">推荐</span>
+				</div>
+				<div class="radio #if($!p.type==3) checked #end">
+					<span class="radio-icon icon-checked-radio" name="type" value="2">
+						<span class="path1"></span> <span class="path2"></span> <input
+						type="radio" name="type" value="3" #if($!p.type==3) checked="checked" #end/>
+					</span> <span class="radio-text">新品</span>
+				</div>
+				<div class="radio #if($!p.type==4) checked #end">
+					<span class="radio-icon icon-checked-radio" name="type" value="2">
+						<span class="path1"></span> <span class="path2"></span> <input
+						type="radio" name="type" value="4" #if($!p.type==4) checked="checked" #end/>
+					</span> <span class="radio-text">热销</span>
+				</div>
+			</div>
+			<div class="radio-select min-mar-right">
+				<span class="left">是否包邮</span>
+				<div class="radio #if(!$!p.isPost) checked #end #if($!p.isPost==1) checked #end first-radio">
+					<span class="radio-icon icon-checked-radio"> <span
+						class="path1"></span> <span class="path2"></span> <input
+						type="radio" name="isPost" value="1" #if(!$!p.isPost) checked="checked" #end #if($!p.isPost==1) checked="checked" #end/>
+					</span> <span class="radio-text">是</span>
+				</div>
+				<div class="radio #if($!p.isPost==2) checked #end">
+					<span class="radio-icon icon-checked-radio"> <span
+						class="path1"></span> <span class="path2"></span> <input
+						type="radio" name="isPost" value="2" #if($!p.isPost==2) checked="checked" #end/>
+					</span> <span class="radio-text">否</span>
+				</div>
+			</div>
+			<div class="radio-select min-mar-right">
+				<span class="left">配送方式</span>
+				<div class="radio first-radio #if(!$!p.distributionMode) checked #end #if($!p.distributionMode==1)  checked #end" >
+					<span class="radio-icon icon-checked-radio"> <span
+						class="path1"></span> <span class="path2"></span> <input
+						type="radio" name="distributionMode" value="1" #if(!$!p.distributionMode) checked="checked" #end #if($!p.distributionMode==1) checked="checked" #end/>
+					</span> <span class="radio-text">快递</span>
+				</div>
+				<div class="radio #if($!p.distributionMode==2)  checked #end">
+					<span class="radio-icon icon-checked-radio"> <span
+						class="path1"></span> <span class="path2"></span> <input
+						type="radio" name="distributionMode" #if($!p.distributionMode==2) checked="checked" #end value="2"/>
+					</span> <span class="radio-text">自提</span>
+				</div>
+			</div>
+			<input type="hidden" value="" name="picUrls" id="picUrls">
+			<input type="hidden" value="" name="propsName" id="propsName">
+			<input type="hidden" value="" name="propsAlias" id="propsAlias">
+			<input type="hidden" value="" name="skuValue" id="skuValue">
+			
+			<input type="hidden" value='' name="productDesc" id="productDesc">
+	</form>
+	<div class="Release">
+		<a href="javascript:;" class="btn btn-large btn-primary"
+			id="saveAllVal" data-specifications="" data-specificationsVal='$!listPs' data-pv-total-0='$!p.propsName' data-pv-total-1='$!p.propsAlias'>发布</a>
+		<a href="javascript:history.back(-1);" class="btn btn-large btn-gray">取消</a>
+	</div>
+
+</div>
+<!--endproductAdd-gg-->
+<!--内容部分end-->
+</div>
+<!--end content-->
+</div>
+<!--end container-->
+<script type="text/javascript">
+	$(function(){
+	  //商品类目
+	  $(document).on('click','.productTypeSelect .resultList li a',function(){
+	    var i = $(this).find('i');
+	    var dl = $(this).next('dl.child');
+	    if(i.hasClass('down')){
+	      i.addClass('up').removeClass('down');
+	      dl.slideDown(100);
+	    }else{
+	      i.addClass('down').removeClass('up');
+	      dl.slideUp(100);
+	    }
+	  })
+	  //点击父类显示右侧子集
+	   $(document).on('click','.productTypeSelect .resultList dl dd',function(){
+		 var id = jQuery(this).attr("dataVal");
+	    $('.productTypeSelect .right').show();
+	    
+	    
+	    jQuery.ajax({
+			url:"/product/getChildItem",
+			data:"id="+id,
+			type:"post",
+			dataType:"JSON",
+			success:function(data){
+				if(data!=null && data.success){
+					var html="";
+					if(data.list!=null && data.list.length>0){
+						html=html+'<div class="rightRes"><div class="eachResult"><ul>';
+						for(var i=0;i<data.list.length;i++){
+							html = html+'<li class="hoverBg show-list-else" onclick="choiceCatName('+data.list[i].id+');">'+data.list[i].name+'</li>';
+						}
+							html=html+'</ul></div></div>';
+							jQuery("#threeCat").html(html);
+					}
+				}else{
+					jQuery.alert({
+						type: 'error',
+						text: data.msg,
+						time: 3000
+					});
+				}
+			},
+			error:function(data){
+				
+			}
+		}); 
+	   })
+	})
+    //获取手机详情描述html
+	var getMobileHtml = function(){
+	      $('#MobileView').find('._module').removeClass('current');
+	      var  content = $('.centerMobileView').html();
+	      content = content.replace(/&nbsp;/ig, ' ');
+	      content = content.replace(/&lt;/ig, '<');
+	      content = content.replace(/&gt;/ig, '>');
+	      return content;
+	    }
+    var valHtml = $('#updateHtml').val();
+    if(valHtml !==""){
+    	$('.centerMobileView').html(valHtml);
+    	var J_EditSummaryAreaLen = $('.centerMobileView .pd-10 .J_EditSummaryArea').length;
+    	if( J_EditSummaryAreaLen==0 ){
+    		$('.centerMobileView .pd-10').prepend('<div class="J_EditSummaryArea"></div>');
+    	}
+    }
+	//上传图片
+	function ajaxFileUpload(self,id, type, sort) {
+		var uname = "shadow";
+		$.ajaxFileUpload({
+			//处理文件上传操作的服务器端地址(可以传参数,已亲测可用)
+			url : '/product/fileUpload?uname=' + uname,
+			secureuri : false, //是否启用安全提交,默认为false
+			fileElementId : 'upload' + id, //文件选择框的id属性
+			dataType : 'json', //服务器返回的格式,可以是json或xml等
+			success : function(data) { //服务器响应成功时的处理函数
+				if (data.success) {
+					combinationUrl(id, data.data.path, type, sort);
+					previewImage(self, id, type, sort,data.data.fulPpath);
+					console.log(data.data.path)
+					//return {"fullPath":data.data.fulPpath,"path":data.data.path};
+				} else {
+					jQuery.alert({
+						type: 'error',
+						text: data.msg,
+						time: 3000
+					});
+				}
+			},
+			error : function(data) { //服务器响应失败时的处理函数
+				alert("上传文件失败,请重试");
+			}
+		});
+	}
+	//组合图片url
+	function combinationUrl(id, url, type, sort) {
+
+		var newUrl = url + "," + type + "," + sort;
+
+		jQuery("#hidd" + id).val(newUrl)
+	}
+	
+	//上传图片
+	function ajaxFileUpload2(_self,id) {
+		var _fileId = $(_self).attr('id');
+		var uname = "shadow";
+		$.ajaxFileUpload({
+			//处理文件上传操作的服务器端地址(可以传参数,已亲测可用)
+			url : '/product/fileUpload?uname=' + uname,
+			secureuri : false, //是否启用安全提交,默认为false
+			fileElementId : _fileId, //文件选择框的id属性
+			dataType : 'json', //服务器返回的格式,可以是json或xml等
+			success : function(data) { //服务器响应成功时的处理函数
+				if (data.success) {
+					previewImage2(id,data['data']['path']);
+					//console.log(data['data']['path'])
+					//return {"fullPath":data.data.fulPpath,"path":data.data.path};
+					
+				} else {
+					jQuery.alert({
+						type: 'error',
+						text: data.msg,
+						time: 3000
+					});
+				}
+			},
+			error : function(data) { //服务器响应失败时的处理函数
+				alert("上传文件失败,请重试");
+			}
+		});
+	}
+	
+	/*
+	 *
+	 图片上传预览
+	 *
+	 */
+	//手机端产品描述图片预览
+	function previewImage2(id,path) {
+		var img = $('#img-'+id);
+		img.attr('src',path);
+		$('.addPicture').find('img').show();
+	}
+	function previewImage(file, id, type, sort,path) {
+        var imgsrc  = $('#imghead' + id).attr('src');
+		var div = $('#preview' + id);//file.parentNode;
+		if (id == 0  ) {
+				div.append('<div class="Mark"></div>'
+						+ '<div class="downSetting">'
+						+ '<span class="close"></span>' + '</div>');
+			} else {
+				div.append('<div class="Mark"></div>'
+						+ '<div class="downSetting">'
+						+ '<span class="left"></span>'
+						+ '<span class="right"></span>'
+						+ '<span class="close"></span>' + '</div>');
+			}
+		 
+		$('.picture').removeClass('blue-boder');
+		$('#imghead' + id).attr('src',path);
+		$('#imghead' + id).show();
+	}
+	$(function() {
+		//图片鼠标移上效果
+		$(document).on('mouseover', '.picture', function() {
+			var le = $(this).find('img').length;
+			if (le > 0) {
+				$(this).find('.downSetting').fadeIn(150);
+			} else {
+				$(this).addClass('blue-boder');
+			}
+		}).on('mouseleave', '.picture', function() {
+			$(this).find('.downSetting').fadeOut(150);
+			$(this).removeClass('blue-boder');
+		})
+		//关闭图片
+		$(document).on('click', '.downSetting span.close', function() {
+		    var img = $(this).parents('.picture').find('img');
+			var Mark = $(this).parents('.picture').find('.Mark');
+			img.attr('src','').hide();
+			$(this).parent('.downSetting').remove();
+			Mark.remove();
+		})
+		//照片左右切换
+		var imgDomArr = [];//储存需要切换位置的div节点
+		var imgNum = 0;//照片数量
+		$(document).on('click', '.downSetting span.left', function() {
+			imgNum = $('#newChange img').length;
+			var id = $(this).parents('.picture').index();
+			if (imgNum > 1) {
+				imgDomArr = $('#newChange').find('div.picture').toArray();// 把三个div放进数组里面
+				$.changeLeftArr(imgDomArr, id);
+				$('#newChange').html(imgDomArr);
+			}
+		})
+		$(document).on('click', '.downSetting span.right', function() {
+			imgNum = $('#newChange img').length;
+			var id = $(this).parents('.picture').index();
+			if (imgNum > 1) {
+				imgDomArr = $('#newChange').find('div.picture').toArray();// 把三个div放进数组里面
+				$.changeRightArr(imgDomArr, id);
+				$('#newChange').html(imgDomArr);
+			}
+		})
+
+		//下拉选择
+		$(document).on('click', '.selectMessage', function() {
+			var resultTxt = $(this).find('.result span').text();
+			var dl = $(this).find('dl');
+			var dd = dl.find('dd');
+			var _i = $(this).find('.result i');
+			var changehei = dl.height();
+			dl.css({
+				'bottom' : -(changehei + 15)
+			})
+			if (dl.is(':hidden')) {
+				dl.show();
+				_i.addClass('on');
+			} else {
+				dl.hide();
+				_i.removeClass('on');
+			}
+			for (var i = 0; i < dd.length; i++) {
+				if (dd.eq(i).text() == resultTxt) {
+					dd.eq(i).addClass('on');
+				}
+			}
+		})
+		$(document).on('click', '.selectMessage dl dd', function(event) {
+			event.stopPropagation();
+			var t = $(this).text();
+			$(this).siblings().removeClass('on');
+			$(this).addClass('on');
+			$(this).parents('.selectMessage').find('.result span').html(t);
+			$(this).parents('.selectMessage').find('dl').hide();
+			$(this).parents('.selectMessage').find('i').removeClass('on');
+		})
+		//radio
+		var CHECKED_CLASS = 'checked';
+		var clearCheckedRadio = function(name) {
+			var $input = $('.radio.checked').find('input[name="' + name + '"]');
+			var $radio = $input.parents('.radio');
+			$radio.removeClass('checked');
+			$input.prop('checked', false).trigger('change');
+			$radio.trigger('checkbox.change', false);
+		};
+		var check = function(checked) {
+			var $checkbox = $(this);
+			var $input = $checkbox.find('input');
+			if ($checkbox.is('.disabled, :disabled')) {
+				return;
+			}
+			if ($checkbox.is('.half-checkbox')) {
+				checked = true;
+				$checkbox.removeClass('half-checkbox');
+				$checkbox.find('.icon-halfcheck').removeClass('icon-halfcheck')
+						.addClass('icon-checked');
+			}
+			if ($checkbox.is('.radio')) {
+				clearCheckedRadio($input.attr('name'));
+			}
+			checked ? $checkbox.addClass(CHECKED_CLASS) : $checkbox
+					.removeClass(CHECKED_CLASS);
+			$input.prop('checked', checked).trigger('change');
+			$checkbox.trigger('checkbox.change', checked);
+		};
+		$(document).on('click', '.radio', function() {
+			var checked = $(this).is('.checked');
+			if (checked) {
+				return false;
+			}
+			check.call(this, true);
+			return false
+		})
+
+		/*
+		 *
+		 *手机端产品描述 @-Enjurokcc
+		 *
+		 */
+		$('.productDescribe .operation').hover(function() {
+			$(this).find('.showButton').fadeOut(150);
+			$(this).find('#hoverShow').fadeIn(150);
+		}, function() {
+			$(this).find('.showButton').fadeIn(150);
+			$(this).find('#hoverShow').fadeOut(150);
+		})
+		//蒙版
+		var addMark = function() {
+			$('.MarkBGAll-zIndex').before('<div id="MarkBG"></div>');
+			$('#MarkBG').fadeIn(100);
+			$('body').addClass('overflow-hidden-scroll');
+		}
+		//增加图片节点
+		var addImgLoding = function(srcArr, nameArr) {
+			var dom = '';
+			if (srcArr) {
+				for ( var i in srcArr) {
+					dom += '<div class="module m-image">'
+							+ '<ul class="tools">'
+							+ '<li><a href="javascript:;" class="up">上移</a></li>'
+							+ '<li><a href="javascript:;" class="down">下移</a></li>'
+							+ '<li><a href="javascript:;" class="replace showImgPopu">替换</a></li>'
+							+ '<li><a href="javascript:;" class="delete">删除</a></li>'
+							+ '</ul>'
+							+ '<div class="cover"></div>'
+							+ '<div class="_content">'
+							+ '<div class="image-div"><img src="'+srcArr[i]+'" img-name="'+nameArr[i]+'">'
+							+ '</div>' + '</div>' + '</div>';
+				}
+			}
+			return dom;
+
+		}
+		//摘要输入框
+		var Summary = '<div class="edit-text text-shortDesc">'
+				+ '<p class="text-tip">摘要只能输入不超过<b class="showNum1">140</b>字</p>'
+				+ '<div class="text-textarea"><textarea id="maxl1"></textarea></div>'
+				+ '<div class="button">'
+				+ '<input type="button" value="确认" class="text-submit">'
+				+ '<input type="button" value="取消" class="text-cancel">'
+				+ '</div>' + '</div>';
+
+		//文本输入框        
+		var TextDom = '<div class="edit-area J_EditArea">'
+				+ '<div class="edit-text text-content">'
+				+ '<p class="text-tip">单个文本框字数不得超过<b class="showNum2">1000</b></p>'
+				+ '<div class="text-textarea"><textarea id="maxl2"></textarea></div>'
+				+ '<div class="button">'
+				+ '<input type="button" value="确认" class="text-submit">'
+				+ '<input type="button" value="取消" class="text-cancel">'
+				+ '</div>' + '</div>' + '</div>';
+		//已经输入后更改文本输入dom           
+		var TextDom2 = '<div class="edit-area newTextContent">'
+				+ '<div class="edit-text text-content">'
+				+ '<p class="text-tip">单个文本框字数不得超过<b class="showNum2">1000</b></p>'
+				+ '<div class="text-textarea"><textarea id="maxl2"></textarea></div>'
+				+ '<div class="button">'
+				+ '<input type="button" value="确认" class="text-submit">'
+				+ '<input type="button" value="取消" class="text-cancel">'
+				+ '</div>' + '</div>' + '</div>';
+		//文本动态显示dom
+		var appendModleText = function(val) {
+			var TextShowDom = '<div class="module m-text">'
+					+ '<ul class="tools">'
+					+ '<li><a href="javascript:;" class="up">上移</a></li>'
+					+ '<li><a href="javascript:;" class="down">下移</a></li>'
+					+ '<li><a href="javascript:;" class="edit">编辑</a></li>'
+					+ '<li><a href="javascript:;" class="delete">删除</a></li>'
+					+ '</ul>' + '<div class="cover"></div>'
+					+ '<div class="_content">' + '<div class="text-div">'
+					+ '<div class="text-html J_Html">' + val + '</div>'
+					+ '</div>' + '</div>' + '</div>';
+			return TextShowDom;
+		}
+		//计算字数
+		var allTextareaStr = '';
+		//点击阴影操作部分--current --统一
+		$(document).on(
+				'click',
+				'#MobileView .module',
+				function() {
+					var id = $('#MobileView .module').index(this);//这里需要增加第一位置判断
+					if (id !== 0 && (!$(this).hasClass('editing'))) {
+						if ($(this).hasClass('current')) {
+							$('.module').removeClass('current');
+						} else {
+							$(this).addClass('current').siblings().removeClass(
+									'current');
+						}
+					} else {
+						$('.module').removeClass('current');
+					}
+				})
+		//点击向上移动 -- 统一
+		$(document).on('click', '.module .tools .up', function(event) {
+			event.stopPropagation;
+			var arr = $('.module').toArray();
+			var id = $('.module .tools .up').index(this);
+			$.changeLeftArr(arr, id);
+			$('#dynamicnput').html(arr);
+		})
+		//点击向下移动 -- 统一
+		$(document).on('click', '.module .tools .down', function(event) {
+			event.stopPropagation;
+			var arr = $('.module').toArray();
+			var id = $('.module .tools .down').index(this);
+			$.changeRightArr(arr, id);
+			$('#dynamicnput').html(arr);
+		})
+
+		//单独对摘要添加
+		$(document).on('click', '#MobileView ._module', function() {
+			if ($(this).hasClass('current')) {
+				$('._module').removeClass('current');
+			} else {
+				$(this).addClass('current').siblings().removeClass('current');
+			}
+		})
+		//点击摘要
+		$(document).on('click', '#hoverShow li:eq(0)', function() {
+			var et = $('#SummaryAddressTop #SummaryTxt').html();//判断是否已经有摘要
+			var SummaryAreaHtml = $('.J_EditSummaryArea').html();
+			//if (et === '') {
+				$('.J_EditSummaryArea').html(Summary);
+				$('#maxl1').maxLength(140, '.showNum1');//字数限制
+				$('#MobileView .pd-10').scrollTop(0);
+			//}
+		})
+		$(document).on('mouseover', '#hoverShow li:eq(0)', function(event) {
+			event.stopPropagation;
+			var et = $('#SummaryAddressTop #SummaryTxt').html();//判断是否已经有摘要
+			if (et === '') {
+				$(this).find('.tisp').hide();
+			} else {
+				$(this).find('.tisp').fadeIn(100);
+				$(this).click(function(){return false;})
+			}
+		})
+		$(document).on('mouseleave', '#hoverShow li:eq(0)', function() {
+			$(this).find('.tisp').hide();
+		})
+		//摘要取消
+		$(document).on('click', '.J_EditSummaryArea .text-cancel', function() {
+			$(this).parents('.J_EditSummaryArea').html('');
+			var et = $('#SummaryAddressTop #SummaryTxt').html();//判断是否已经有摘要
+			if (et !== '') {
+				$('#SummaryAddressTop').show();//显示摘要信息
+			} else {
+				$('#SummaryAddressTop').hide();
+			}
+
+		})
+		//确认摘要 
+		$(document).on(
+				'click',
+				'.J_EditSummaryArea .text-submit',
+				function() {
+					var _val = $(this).parents('.edit-text').find('textarea')
+							.val();
+					if (_val !== '') {
+						$(this).parents('.J_EditSummaryArea').html('');
+						$('#SummaryAddressTop').show();//显示摘要信息
+						$('#SummaryAddressTop #SummaryTxt').html(_val);
+					}
+					allTextareaStr += _val;//追加字符
+					$('#textNum').html(
+							parseInt($('#textNum').html())
+									- parseInt(allTextareaStr.length));//计算个数
+				})
+		//摘要编辑
+		$(document).on(
+				'click',
+				'#SummaryAddressTop .edit',
+				function() {
+					var t = $(this).parents('#SummaryAddressTop').find(
+							'#SummaryTxt').html();
+					$(this).parents('#SummaryAddressTop').hide();//隐藏当前显示的摘要
+					$('.J_EditSummaryArea').html(Summary);
+					$('.J_EditSummaryArea textarea').val(t);
+					$('.J_EditSummaryArea .showNum1').text((140 - t.length));
+					$('#maxl1').maxLength(140, '.showNum1');//字数限制
+				})
+		//删除摘要
+		$(document).on('click', '#SummaryAddressTop .delete', function() {
+			$(this).parents('#SummaryAddressTop').find('#SummaryTxt').html('');
+			$(this).parents('#SummaryAddressTop').hide();
+		})
+		//文字
+		$(document).on('click', '#hoverShow li:eq(2)', function() {
+			var len = $('.J_EditArea').length;
+			if (len == 0) {
+				$('#dynamicnput').append(TextDom);
+				$('#maxl2').maxLength(1000, '.showNum2');
+				$('.J_EditArea').show();//显示
+				var _scrollHeight = $('#MobileView .pd-10')[0].scrollHeight;
+				$('#MobileView .pd-10').scrollTop(_scrollHeight);
+			}
+
+		})
+		//文字 --确认
+		$(document).on(
+				'click',
+				'.J_EditArea .text-submit',
+				function() {
+					var _val = $(this).parents('.edit-text').find('textarea')
+							.val();
+					if (_val !== '') {
+						$('#dynamicnput').append(appendModleText(_val));
+						$(this).parents('.J_EditArea').remove();
+					}
+					allTextareaStr += _val;//追加字符
+					$('#textNum').html(
+							parseInt($('#textNum').html())
+									- parseInt(allTextareaStr.length));//计算个数
+				})
+		//文字 -- 取消
+		$(document).on('click', '.J_EditArea .text-cancel', function() {
+			$(this).parents('.J_EditArea').remove();
+		})
+		//文字删除
+		$(document).on('click', '.m-text .delete', function() {
+			$(this).parents('.m-text').remove();
+		})
+		//文字编辑
+		$(document)
+				.on(
+						'click',
+						'.m-text .edit',
+						function() {
+							var t = $(this).parents('.m-text').find(
+									'.text-html').html();//当前文字
+							$(this).parents('.m-text').addClass('editing')
+									.removeClass('current');//增加正在编辑标记
+							$(this).parents('.m-text').find('._content')
+									.append(TextDom2);//导进编辑框
+
+							$('#maxl2').maxLength(1000, '.showNum2');//执行字数限制方法
+							$(this).parents('.m-text').find(
+									'.newTextContent textarea').val(t);
+							$(this).parents('.m-text').find(
+									'.newTextContent .showNum2').text(
+									(1000 - t.length));
+							$(this).parents('.m-text').find('.newTextContent')
+									.show();
+
+							var _scrollHeight = $('#MobileView .pd-10')[0].scrollHeight;
+							$('#MobileView .pd-10').scrollTop(_scrollHeight);
+						})
+		//文字修改确认
+		$(document).on(
+				'click',
+				'.m-text .text-submit',
+				function(event) {
+					event.stopPropagation;
+					var t = $(this).parents('.m-text').find('textarea').val();
+					if (t !== '') {
+						$(this).parents('.m-text').find('.text-html').html(t);
+						$(this).parents('.m-text').removeClass('editing');
+						$(this).parents('._content').find('.newTextContent')
+								.remove();
+						setTimeout(function() {//防止重复点击又增加current类名
+							$('.m-text').removeClass('current');
+						}, 50);
+					}
+					allTextareaStr += t;//追加字符
+					$('#textNum').html(
+							parseInt($('#textNum').html())
+									- parseInt(allTextareaStr.length));//计算个数
+				})
+		//文字修改取消
+		$(document).on('click', '.m-text .text-cancel', function(event) {
+			$(this).parents('.m-text').removeClass('editing');
+			$(this).parents('._content').find('.newTextContent').remove();
+			setTimeout(function() {//防止重复点击又增加current类名
+				$('.m-text').removeClass('current');
+			}, 50);
+		})
+
+		//添加图片
+		$(document).on('click', '#AddPictureMobile .tab ul li a', function() {
+			var id = $('#AddPictureMobile .tab ul li a').index(this);
+			$('.showContentType li').hide();
+			$('.showContentType li').eq(id).fadeIn(100);
+		})
+		$(document)
+				.on(
+						'click',
+						'#AddPictureMobile .btn-close-win,#AddPictureMobile .Hui-black',
+						function() {
+							$('#AddPictureMobile').fadeOut(100);
+							$('#MarkBG').remove();//删除蒙版
+							$('body').removeClass('overflow-hidden-scroll');
+						})
+		//打开弹窗
+		$(document)
+				.on(
+						'click',
+						'.showImgPopu',
+						function() {
+							addMark();
+							$('#AddPictureMobile').fadeIn(100);
+							$('#AddPictureMobile').removeClass('addDoing');
+							$('#AddPictureMobile').removeClass(
+									'replaceDoing&' + _img_id_);
+							if ($(this).hasClass('add')) {//如果是增加图片
+								//增加标记并清空上次的数据
+								$('#AddPictureMobile .modal-title')
+										.html('添加图片');
+								$('.addPicture .add,.addPicture2 .add2').show();//没有增加按钮
+								$('.addPicture').find('img').hide();
+								$('#AddPictureMobile').addClass('addDoing');
+								$(
+										'#AddPictureMobile .showContentType .addPicture :not(:eq(0))')
+										.remove();
+								$(
+										'#AddPictureMobile .showContentType .addPicture input')
+										.eq(0).val('');
+								$(
+										'#AddPictureMobile .showContentType .addPicture img')
+										.eq(0).attr('src', '');
+								$(
+										'#AddPictureMobile .showContentType .addPicture2 :not(:eq(0))')
+										.remove();
+								$(
+										'#AddPictureMobile .showContentType .addPicture2 input')
+										.eq(0).val('');
+							} else if ($(this).hasClass('replace')) {//如果是替换图片
+								$('#AddPictureMobile .modal-title')
+										.html('替换图片');
+								$('.addPicture .add,.addPicture2 .add2').hide();//没有增加按钮
+								var _img_id_ = $(this).parents('.m-image')
+										.index();//当前要修改的图片id
+								$('#AddPictureMobile').attr('this-index-name',
+										'replaceDoing&' + _img_id_);
+								var imgsrc = $(this).parents('.m-image').find(
+										'img').attr('src');
+								$(
+										'#AddPictureMobile .showContentType .addPicture :not(:eq(0))')
+										.remove();
+								$(
+										'#AddPictureMobile .showContentType .addPicture2 :not(:eq(0))')
+										.remove();
+								if (imgsrc.indexOf("http://") > -1
+										|| imgsrc.indexOf("https://") > -1) {
+									$(
+											'#AddPictureMobile .showContentType .addPicture input')
+											.eq(0).val('');
+									$(
+											'#AddPictureMobile .showContentType .addPicture img')
+											.eq(0).attr('src', '');
+									$(
+											'#AddPictureMobile .showContentType .addPicture2 input')
+											.eq(0).val(imgsrc);
+								} else {//如果是本地图片替换
+									$(
+											'#AddPictureMobile .showContentType .addPicture2 input')
+											.eq(0).val('');
+									var imgname = $(this).parents('.m-image')
+											.find('img').attr('img-name');
+									//$('#AddPictureMobile .showContentType .addPicture input').eq(0).val(imgname);
+									$(
+											'#AddPictureMobile .showContentType .addPicture img')
+											.eq(0).attr('src', imgsrc);
+								}
+							}
+						})
+		//增加图片
+		var addPicture = function(id) {
+            
+			var fn = 'ajaxFileUpload2(this,'+id+')';
+			console.log(fn)
+			var dom = '<div class="addPicture">'
+					+ '<div class="block">添加本地图片:&nbsp;<input type="file" onchange="'+fn+'" id="phoneFileid-'+id+'" name="file"/>'
+					+ '<input type="hidden" class="hide" id="hiddImg-'+id+'">'
+					+ '</div>'
+					+ '<div calss="imgSrc">'
+					+ '<img src="" alt="" width="200" height="200" id="img-'+id+'">'
+					+ '<span class="add" title="增加图片">+</span>' + '</div>'
+					+ '<div class="close_this" title="删除该图片">╳</div>'
+					+ '</div>';
+			return dom;
+		}
+		var addPicture2 = '<div class="addPicture2">'
+				+ '图片地址:'
+				+ '<input type="text" class="input" placeholder="http://" style="width:350px;">'
+				+ '<span class="add2" title="增加图片">+</span>'
+				+ '<span class="_Close" title="删除该图片">╳</span>' + '</div>'
+		$(document).on(
+				'click',
+				'#AddPictureMobile .showContentType ul li .add',
+				function() {
+					var id = $('#AddPictureMobile .showContentType ul li .add')
+							.index(this);
+					var dom = addPicture((id+1));
+					$(this).parents('li').append(dom)
+				})
+		$(document).on('click',
+				'#AddPictureMobile .showContentType ul li .close_this',
+				function() {
+					$(this).parents('.addPicture').remove();
+				})
+		$(document).on('click',
+				'#AddPictureMobile .showContentType ul li .add2', function() {
+					$(this).parents('li').append(addPicture2);
+				})
+		$(document).on('click',
+				'#AddPictureMobile .showContentType ul li ._Close', function() {
+					$(this).parents('.addPicture2').remove();
+				})
+		//弹窗点击确认
+		$(document)
+				.on(
+						'click',
+						'#AddPictureMobile .this-close-bz',
+						function() {
+							$('#AddPictureMobile').fadeOut(100);
+							$('#MarkBG').remove();//删除蒙版
+							$('body').removeClass('overflow-hidden-scroll');
+							var id = $('.tab ul li.active').index();
+							if ($('#AddPictureMobile').hasClass('addDoing')) {//如果是添加图片
+								var _imgSrcArr = [];//图片路径
+								var imgNameArr = [];//图片名称
+								if (id == 0) {
+									var imgLength = $(this).parents(
+											'#AddPictureMobile').find('img').length;
+									for (var i = 0; i < imgLength; i++) {
+										if ($(this)
+												.parents('#AddPictureMobile')
+												.find('img').eq(i).attr('src') !== '') {
+											_imgSrcArr.push($(this).parents(
+													'#AddPictureMobile').find(
+													'img').eq(i).attr('src'));
+											imgNameArr.push($(this).parents(
+													'#AddPictureMobile').find(
+													'img').eq(i).attr(
+													'img-name'));
+										}
+									}
+
+								} else if (id == 1) {
+									var imgsrclength = $(this).parents(
+											'#AddPictureMobile').find(
+											'.addPicture2 input').length;
+									for (var i = 0; i < imgsrclength; i++) {
+										if ($(this)
+												.parents('#AddPictureMobile')
+												.find('.addPicture2 input').eq(
+														i).val() !== '') {
+											_imgSrcArr.push($(this).parents(
+													'#AddPictureMobile').find(
+													'.addPicture2 input').eq(i)
+													.val());
+											imgNameArr.push('');
+										}
+									}
+								}
+								$('#dynamicnput').append(
+										addImgLoding(_imgSrcArr, imgNameArr));//内容追加
+							} else {//图片替换确认
+								var imgIndex = $('#AddPictureMobile').attr(
+										'this-index-name').split('&')[1];
+								var img_src = '';
+								if (id == 0) {//本地
+									img_src = $(
+											'#AddPictureMobile .addPicture img')
+											.eq(0).attr('src');
+
+								} else {//网络
+									img_src = $(
+											'#AddPictureMobile .addPicture2 input')
+											.eq(0).val();
+								}
+								$('.m-image').eq(imgIndex).find('img').attr(
+										'src', img_src);
+
+							}
+
+							//这里添加后台数据代码
+
+						})
+		//删除图片
+		$(document).on('click', '.m-image .delete', function() {
+			$(this).parents('.m-image').remove();
+		})
+
+		//组合url
+		function associationUrl() {
+			var val = jQuery(".hide");
+			var newUrl = "";
+			val.each(function(index) {
+				if((val.length-1)==index){
+					newUrl = newUrl+this.value;
+				}else{
+					newUrl = newUrl+this.value+";";
+				}
+			});
+			jQuery("#picUrls").val(newUrl);
+		}
+		
+		function setPop(self){
+			var skuPro = jQuery(self).attr("data-specificationsval");
+			console.log(skuPro);
+			jQuery("#skuValue").val(skuPro);
+			
+			var proName = jQuery(self).attr("data-pv-total-0");
+			console.log(proName);
+			jQuery("#propsName").val(proName);
+			
+			var proValue = jQuery(self).attr("data-pv-total-1");
+			jQuery("#propsAlias").val(proValue);
+			console.log(proValue);
+		}
+		//设置商品详情页
+		function setProdInfo(){
+			jQuery("#productDesc").val(getMobileHtml());
+		}
+		
+		//发布按钮
+		$(document).on('click', '#saveAllVal', function() {
+			associationUrl();
+			setPop(this);
+			setProdInfo();
+			jQuery("#savePro").submit();
+		})
+
+	})
+	//选中类目
+	function choiceCatName(id){
+		jQuery("#cid").val(id);
+		jQuery.ajax({
+			url:"/product/getItemNameAndParentName",
+			data:"id="+id,
+			type:"post",
+			dataType:"json",
+			success:function(data){
+				if(data!=null && data.success){
+					jQuery("#catName").text(data.data.first+"/"+data.data.second+"/"+data.data.three);
+				}else{
+					jQuery.alert({
+						type: 'error',
+						text: data.msg,
+						time: 3000
+					});
+				}
+			},
+			error:function(){
+				jQuery.alert({
+					type: 'error',
+					text: '发货失败,请稍后重试!',
+					time: 3000
+				});
+			}
+		});
+	}
+	
+	//通过name查询
+	function searchCatName(self){
+		
+		var name = jQuery(self).val();
+		
+		jQuery.ajax({
+			url:"/product/getItemByName",
+			data:"name="+name,
+			type:"post",
+			dataType:"json",
+			success:function(data){
+				if(data!=null && data.success){
+					if(data.data.type==1){
+						var html = '';
+						for(var i=0;i<data.data.data.length;i++){
+							html = html+ '<dl class="child" style="display: block;"><dd class="hoverBg" dataval="'+data.data.data[i].id+'">'+data.data.data[i].name+'<i></i></dd></dl>'
+						}
+						jQuery("#catUl").html(html);
+					}
+					if(data.data.type==2){
+						var html = '';
+						for(var i=0;i<data.data.data.length;i++){
+							html = html + '<li><a href="javascript:;" class="blue">'+data.data.data[i].name+'<i class="down"></i></a>';
+							if(data.data.data[i].items!=null){
+								for(var j=0;j<data.data.data[i].items.length;j++){
+									html = html + '<dl class="child"><dd class="hoverBg" dataval="'+data.data.data[i].items[j].id+'">'+data.data.data[i].items[j].name+'<i></i></dd></dl>';
+								}
+							}
+							html = html + '</li>';
+						}
+						jQuery("#catUl").html(html);
+					}
+				}else{
+					jQuery.alert({
+						type: 'error',
+						text: data.msg,
+						time: 3000
+					});
+				}
+			},
+			error:function(){
+				jQuery.alert({
+					type: 'error',
+					text: '操作失败,请稍后重试!',
+					time: 3000
+				});
+			}
+		});
+	}
+	
+</script>
+<script src="../../lib/tdz_component/Productspecifications.js"></script>
+</body>
+</html>

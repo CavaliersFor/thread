@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.admin.biz.mappers.AdminLoginLogMapper">
+	<resultMap id="adminLoginLogMap" type="adminLoginLog">		
+		<id column="ID" property="id"/><!--  -->			
+		<result column="LOGIN_ID" property="loginId"/><!-- 登录用户的ID -->			
+		<result column="LOGIN_ACCOUNT" property="loginAccount"/><!-- 登录用户的账号 -->			
+		<result column="LOGIN_IP" property="loginIp"/><!-- 登录用户的IP -->			
+		<result column="LOGIN_TIME" property="loginTime"/><!-- 登录时间 -->			
+		<result column="ADMIN_WORK_NO" property="adminWorkNo"/><!-- 后台用户的工号 -->			
+		<result column="ADMIN_NAME" property="adminName"/><!-- 后台用户的姓名 -->			
+	</resultMap>
+
+	<insert id="insert" parameterType="adminLoginLog"  useGeneratedKeys="true" keyProperty="id" >
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE" resultType="long">
+			select SEQ_admin_login_log.nextval from dual
+		</selectKey>
+				insert into
+		admin_login_log(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="loginId != null">,LOGIN_ID</if>
+			<if test="loginAccount != null">,LOGIN_ACCOUNT</if>
+			<if test="loginIp != null">,LOGIN_IP</if>
+			<if test="loginTime != null">,LOGIN_TIME</if>
+			<if test="adminWorkNo != null">,ADMIN_WORK_NO</if>
+			<if test="adminName != null">,ADMIN_NAME</if>
+		</trim>		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="loginId != null">,#{loginId,jdbcType=BIGINT}</if>
+			<if test="loginAccount != null">,#{loginAccount,jdbcType=VARCHAR}</if>
+			<if test="loginIp != null">,#{loginIp,jdbcType=VARCHAR}</if>
+			<if test="loginTime != null">,#{loginTime,jdbcType=TIMESTAMP}</if>
+			<if test="adminWorkNo != null">,#{adminWorkNo,jdbcType=VARCHAR}</if>
+			<if test="adminName != null">,#{adminName,jdbcType=VARCHAR}</if>
+		</trim>		)
+	</insert>
+
+	<update id="update" parameterType="adminLoginLog">
+		update admin_login_log
+		<set>			
+			<if test="loginId != null">LOGIN_ID=#{loginId,jdbcType=BIGINT},</if>	
+			<if test="loginAccount != null">LOGIN_ACCOUNT=#{loginAccount,jdbcType=VARCHAR},</if>	
+			<if test="loginIp != null">LOGIN_IP=#{loginIp,jdbcType=VARCHAR},</if>	
+			<if test="loginTime != null">LOGIN_TIME=#{loginTime,jdbcType=TIMESTAMP},</if>	
+			<if test="adminWorkNo != null">ADMIN_WORK_NO=#{adminWorkNo,jdbcType=VARCHAR},</if>	
+			<if test="adminName != null">ADMIN_NAME=#{adminName,jdbcType=VARCHAR},</if>	
+		</set>		
+		where 					 ID=#{id}
+	</update>
+	
+	<select id="load" parameterType="long" resultMap="adminLoginLogMap" >
+    		select * from admin_login_log where ID=#{id}
+	</select>
+	
+	<sql id="queryCommonSql">
+		FROM admin_login_log sll
+		<where>
+			<if test="idArray != null">
+						sll.ID in
+				<foreach collection="idArray" index="index" item="item" open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="loginId != null">and sll.LOGIN_ID = #{loginId}</if>												
+			<if test="loginAccount != null and loginAccount.trim() !=''">and sll.LOGIN_ACCOUNT = #{loginAccount}</if>
+			<if test="loginIp != null and loginIp.trim() !=''">and sll.LOGIN_IP = #{loginIp}</if>
+			<if test="loginTimeFrom != null">and sll.LOGIN_TIME >= #{loginTimeFrom}</if>
+			<if test="loginTimeTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and sll.LOGIN_TIME < #{loginTimeTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and sll.LOGIN_TIME < date_add(#{loginTimeTo}, interval 1 day)]]></when>
+				</choose>							
+			</if>
+			<if test="adminWorkNo != null and adminWorkNo.trim() !=''">and sll.ADMIN_WORK_NO = #{adminWorkNo}</if>
+			<if test="adminName != null and adminName.trim() !=''">and sll.ADMIN_NAME = #{adminName}</if>
+		</where>
+	</sql>
+	
+	<sql id="sortSql">		
+		<choose>			
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="adminLoginLogQuery" resultMap="adminLoginLogMap">
+		<include refid="common.pageBegin" />
+		select sll.ID				<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}</foreach>
+			</when>
+			<otherwise>
+        		        			,sll.LOGIN_ID
+        			        		        			,sll.LOGIN_ACCOUNT
+        			        		        			,sll.LOGIN_IP
+        			        		        			,sll.LOGIN_TIME
+        			        		        			,sll.ADMIN_WORK_NO
+        			        		        			,sll.ADMIN_NAME
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="adminLoginLogQuery" resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+	
+	<update id="updateStatus" parameterType="adminLoginLog">		
+		update admin_login_log set status=#{status} where   ID=#{id} 	</update>
+	
+	<delete id="delete" parameterType="long">
+    		delete from admin_login_log where ID=#{id}
+	</delete>
+</mapper>

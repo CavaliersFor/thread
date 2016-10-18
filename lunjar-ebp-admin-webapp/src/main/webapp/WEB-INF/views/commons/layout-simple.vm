@@ -1,0 +1,24 @@
+##set($webuiUrl=$sysConfigTool.get("webui.url"))
+<!DOCTYPE html>
+<html>
+	<head>
+    	#if($appContextTool.isDebug())
+    		#set($wr_subfix="debug")
+			#htmlHeador()
+    	#else
+    		#set($wr_subfix="min")
+			<script type="text/javascript" src="#getWebresourcesUrl()/scripts/admin.${wr_subfix}.js"></script>
+    	#end
+    	<script type="text/javascript" src="#getAppServer()/scripts/admin.js"></script>
+		#loadAppRes("")
+		<link rel="stylesheet" type="text/css" href="#getWebresourcesUrl()/css/admin.${wr_subfix}.css"/>
+		##if($screen_dataDictData)
+			##<script type="text/javascript">
+				##$screen_dataDictData
+			##</script>
+		###end
+	</head>
+	<body>
+		 $screen_content
+	</body>
+</html>

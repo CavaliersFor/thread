@@ -1,0 +1,73 @@
+#loadWebResources(["form"]) 
+#set($screen_jsArray=["system/adminuser/adminuser-form"])
+#set($backUrl=$request.getParameter("back"))
+
+#if(!$backUrl)
+	#set($backUrl="listb")
+#end
+#if("$backUrl"=="listb")
+	#set($backLinkText="返回列表")
+#else
+	#set($backLinkText="返回用户信息")
+#end
+<script>_backUrl='$backUrl';</script>
+<div class="formBox">
+    <h3>
+        <div class="fl">    		
+            <span>$screen_title</span>
+		</div>
+        <div class="fr">
+			<a href="${backUrl}.htm">&lt;&lt;  $backLinkText</a>
+		</div>
+	</h3>
+    <form method="post" >
+        <div class="content">
+            <input name="id" id="userId" type="hidden" value="$!user.id"/>
+            #csrfToken()
+            <table class="c2"> 
+                <tr>
+                    <th width="13%" >用户姓名</th>
+                    <td width="37%" >
+                        #springBind("user.userName")
+						<input name="${status.expression}" size="30"  class="required {rangelength:[2,20]}" type="text" value="$!{status.value}"/>
+						<span class="red">*</span>
+					</td>
+                    <th width="13%" >登录账号</th>
+                    <td>
+                        <input name="account" id="account" size="30"  class="stringCheck" type="text" value="$!{user.account}"/>
+						<span class="red">*</span>
+						<span class="help">账号必须英文字母、数字、中文或下划线组成</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>工号</th>
+                    <td>
+                        <div><input name="workNo" id="workNo" size="30"  class="required digits" type="text" value="$!{user.workNo}"/>
+							<span class="red">*</span>
+						</div>						
+                    </td>
+               
+                    <th>移动电话</th>
+                    <td>
+                        <input name="mobile" size="30"  maxlength="50" class="mobile" type="text" value="$!{user.mobile}"/>				
+					</td>
+                </tr> 
+				<tr>
+                    <th>固定电话</th>
+                    <td><input name="phone" size="30"  maxlength="50" class="phone" type="text" value="$!{user.phone}"/></td>
+               
+                    <th>电子邮箱</th>
+                    <td><input name="email" size="30"  maxlength="64" class="email" type="text" value="$!{user.email}"/></td>
+                </tr>                
+				<tr>
+                    <th>备注</th>
+                    <td colspan="3"><textarea name="remark" maxlength="100" cols="70" class="textarea">$!{user.remark}</textarea></td>
+                </tr>                
+            </table>
+        </div>
+        <div class="form-but">
+            <button type="submit" class="button-s4">提交</button>
+            <button type="button" class="button-s4" onclick="javascript:history.back(-1);">取消</button>
+        </div>
+    </form>
+</div>

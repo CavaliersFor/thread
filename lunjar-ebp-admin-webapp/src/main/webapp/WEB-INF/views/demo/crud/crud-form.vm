@@ -1,0 +1,199 @@
+#set($screen_jsArray=["demo/crud-form"]) ##加载js 文件
+##前端资源表单,日历,swf图片上传器,Html editor
+#loadWebResources(["form","datePicker"]) 
+#if(!$backUrl)
+	#set($backUrl="listb")
+#end
+<div class="formBox">
+	<h3>
+		<i></i>
+        <div class="fl">    		
+            <span>$screen_title</span>
+		</div>
+        <div class="fr">
+			<a href="${backUrl}.htm">&lt;&lt; 返回列表</a>
+		</div>
+	</h3>
+	<form method="post" enctype="multipart/form-data">
+		<div class="content2">
+			<input name="id" id="demoId" type="hidden" value="$!demo.id"/>
+			<input type="hidden" name="oldImages" value='$!demo.oldImages'/>
+        	<table class="c6">
+        		<tr>
+        			<th width="9%">文本</th>
+        			<td width="24%">
+        				#springBind("demo.fieldText")
+        				<input name="${status.expression}" type="text" class="required inp-w150" minlength="2" value="$!{status.value}"/>			
+        				<span class="red">*</span>
+						<div class="help">不可重复</div>
+        			</td>        		
+        			<th width="9%">数字</th>
+        			<td width="24%">
+						#springBind("demo.fieldNumber")
+						<input name="${status.expression}" type="text" value="$!number.format('#,##0',$!{status.value})" class="digits inp-w150" />
+						<div class="help">1-100的整数</div>
+					</td>        	
+					<th width="9%" rowspan="4">单个图片</th>
+                    <td width="25%" rowspan="4">					
+						#imageUploador({"name":"picture","imageShow":$!demo.picture.scaleFileUploadedPath,"picBoxSize":[80,80],"fileSizeLimit":"5"})
+    					<span class="red fl">*</span>
+						<div class="error  fl" id="error_picture" style="display:none">请上传图片</div>
+    				</td>	
+				</tr>
+        		<tr>	
+					<th >下拉</th>
+        			<td >
+						#formSelect({"id":"fieldSelect","name":"fieldSelect","dictGroup":"education","selectedValue":$!demo.fieldSelect} "class='required w150'")
+						<span class="red">*</span>
+					</td>        		
+        			<th>单选</th>
+        			<td>#formRadioList({"id":"fieldRadio","name":"fieldRadio","dictGroup":"sex","selectedValue":$!demo.fieldRadio})</td>
+				</tr>
+        		<tr>	
+					<th>多选 </th>
+        			<td>#formCheckboxList({"id":"fieldCheckbox","name":"fieldCheckbox","dictGroup":"sex","selectedValues":$!demo.fieldCheckboxArray})
+        				
+						##<div class="error fl" htmlfor="fieldCheckbox" style="display:none">至少选择一个选项</div>
+    					<span class="help  fl">至少选择一个选项  </span>
+        			</td>
+					<th>弹出窗口</th>
+                    <td>
+                        <input type="text" class="inp-w150" name="fieldWindowText" id="fieldWindowText" />
+                        <input type="button" id="btnOpenWin" value="..."/>
+                        <input type="hidden" name="fieldWindow" id="fieldWindow" />
+                    </td>
+        		</tr>
+				<tr>
+        			<th>日期</th>
+        			<td>
+        				<input name="fieldDate" class="datePicker inp-w150"  value="$!date.format('yyyy-MM-dd',$!demo.fieldDatetime)" type="text" onClick="WdatePicker({readOnly:true})">
+        				##<input name="demo.fieldDate"  value="$date.format($!demo.fieldDate)" type="text" >
+        			</td>        	
+        			<th>日期+时间</th>
+        			<td>
+        				<input name="fieldDatetime" class="datePicker inp-w150"  readOnly  value="$!date.format('yyyy-MM-dd HH:mm:ss',$!demo.fieldDatetime)" type="text" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:00',readOnly:true})">
+        				##<input name="demo.fieldDate"  value="$date.format($!demo.fieldDate)" type="text" >
+        			</td> 
+                </tr>
+        		<tr>
+        			<th>省份</th>
+        			<td>
+                        <select id="province" name="fieldProvince" class="required  w150"></select>
+                        <span class="red">*</span>
+					</td>
+					<th>城市</th>
+					<td><select id="city" name="fieldCity" class="required  w150"></select>
+                        <span class="red">*</span>
+					</td>			
+					<th>地区</th>
+					<td>
+						<select id="region" name="fieldRegion"  class="w150"></select> 
+    					<script>
+                            _regionConfig = {
+                                provinceSelectId:'province'	,
+                                citySelectId:'city'	,
+                                regionSelectId:'region',
+                                provinceValue:'$!demo.fieldProvince',
+                                cityValue:'$!demo.fieldCity',
+                                regionValue:'$!demo.fieldRegion'	
+                            }						
+    						new App.regionBox(_regionConfig);
+                        </script>
+        			</td>					
+        		</tr>	
+        		#*<tr>
+        			<th>联动</th>
+        			<td>
+        				#formSelectLinked([{"id":"aa","name":"fieldProvince","aa":$!aa,"firstOption":["","请选择"]},
+        					{"id":"bb","name":"bb","selectedValue":$!bb,"firstOption":["","请选择"]}]
+        					{"id":"select11","getDataUrl":"getDictionaryByGroupAndParentValue.htm","getDataParams":"dictGroup:'ld'"})
+        				<div>数据取自表pub_data_dictionary中data_group为ld的数据</div>
+        			</td>
+        		</tr>		
+        		<tr>
+        			<th>联动2</th>
+        			<td>
+        				#formSelectLinked([{"id":"treeTest1","name":"demo.treeTest1","selectedValue":$!demo.province,"firstOption":["","请选择"]},
+        					{"id":"treeTest2","name":"demo.treeTest2","selectedValue":$!demo.city,"firstOption":["","请选择"]},
+        					{"id":"treeTest3","name":"demo.treeTest3","selectedValue":$!demo.city,"firstOption":["","请选择"]}
+        					]
+        					{"id":"treeTest","getDataUrl":"getDictionaryByGroupAndParentValue.htm","getDataParams":"dictGroup:'treeTest'"})
+        				<div>数据取自xml文件:datadictionary中,属性dataGroup为regionCode的元素的值</div>
+        			</td>
+        		</tr>*#	 
+        		#*<tr>
+             		<th>多个图片</th>
+                    <td>
+        				本功能尚未实现
+    					<br class="clear"/>
+    					#set($t=[1,2,3,4])				
+        				#set($picturesRead=$demoVo.picturesRead)
+        				#foreach($i in $t)
+        					#set($index=$!velocityCount - 1)
+        					#set($picture="")
+        					#if($picturesRead.size() >= $velocityCount)
+        						#set($picture=$picturesRead.get($index))
+        					#end				
+        					#imageUploador({"id":"pictures$i","no":$i,"name":"pictures","image":$picture,"picBoxSize":[130,130]})
+        				#end				
+        			</td>
+                </tr>*#
+        		<tr>
+             		<th>Html editor</th> 
+                    <td colspan="5">    					
+    					#kindeditor({"id":"fieldHtmleditor","name":"fieldHtmleditor","value":$!demo.fieldHtmleditor})
+    					<span class="red fl mt5">*</span>
+						<div class="error fl mt5" id="error_Htmleditor" style="display:none">内容不能为空</div>
+        				<input type="hidden" name="fieldHtmleditorCut" id="fieldHtmleditorCut" />
+    					##"style":"simple" 可换成精简模式
+        			</td>
+                </tr>
+    			#*<tr>
+             		<th>simple html editor</th> 
+                    <td>
+    					#kindeditor({"id":"fieldHtmleditor1","style":"simple","name":"demo.fieldHtmleditor1"})    				
+        			</td>
+                </tr>*#
+    			##<tr>
+             		##<th>title  editor</th>                
+                ##</tr>
+    			##<tr>         		
+                    ##<td>
+    					##kindeditor({"id":"fieldHtmleditor2","style":"title","name":"demo.fieldHtmleditor2"})
+        			##</td>
+                ##</tr>        		
+				<tr>
+					<th>附件</th>
+        			<td colspan="5" >
+        				<div><a id="addFile" href="javascript:void(0);">再添加一个附件</a></div>
+        			</td>
+				</tr>
+        		<tr>            		
+            		<td colspan="6">
+    					<input type="checkbox" name="isShow1" id="isShow1"/>
+    					<label for="isShow1">显示下面的内容</label>
+    				</td>
+            	</tr>
+        		<tr class="show1 hide">
+                  	<th >Textarea</th>
+                  	##<font class="msg msg_info">长度 5-10</font>
+             		<td colspan="5"><textarea name="fieldTextarea" class="required" rows="5" cols="100" minlength="2" maxlength="50">$!demo.fieldTextarea</textarea></td>
+             	</tr>    		         		
+        	</table>	
+		</div> 
+		<div class="form-but">
+			<input type="submit" class="button-s4" value="提 交"/>
+			<input type="button" class="button-s4" value="取 消" onclick="javascript:history.back(-1);"/>
+        </div> 	
+	</form>
+</div>	
+<div id="win" style="display:none;">  
+    <input type="button" value="选择1" onclick="selectInWin(1)"/>
+    <input type="button" value="选择2" onclick="selectInWin(2)"/>    
+</div>
+<fieldset>
+	<legend >
+		说明
+    </legend>
+	1:一张图片生成多张各个尺寸的图片(小130*130、中200*200、大600*600),大图片上打上水印	
+</fieldset>

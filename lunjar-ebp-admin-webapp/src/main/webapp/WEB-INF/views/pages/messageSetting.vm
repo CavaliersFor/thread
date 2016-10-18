@@ -1,0 +1,232 @@
+#parse("pages/commons/header.vm")
+<script type="text/javascript" src="../../../lib/tdz_component/my_select.js"></script>
+ <div class="content">
+ <!--内容部分-->
+ <div class="breadcrumb">
+	<a class="breadcrumb-item active">基本信息</a>
+ </div>
+ <div class="ms-setting-content">
+ 	  <ul id="ms-ul">
+ 	  	 <li>
+ 	  	 	<div class="left">企业名称</div>
+ 	  	 	<div class="right">
+ 	  	 	<input type="text" class="input" placeholder="请输入企业名称">
+ 	  	 	</div>
+ 	  	 	<div class="ms-t-r">（必填）</div>
+ 	  	 </li>
+ 	  	 <li>
+ 	  	 	<div class="left">注册账号</div>
+ 	  	 	<div class="right">
+ 	  	 	<input type="text" class="input disabled" disabled="disabled">
+ 	  	 	</div>
+ 	  	 </li>
+ 	  	 <li>
+ 	  	 	<div class="left">联系人</div>
+ 	  	 	<div class="right">
+ 	  	 	<input type="text" class="input">
+ 	  	 	</div>
+ 	  	 </li>
+ 	  	 <li>
+ 	  	 	<div class="left">联系电话</div>
+ 	  	 	<div class="right">
+ 	  	 	<input type="text" class="input"onkeyup="this.value=this.value.replace(/\D/g,'')">
+ 	  	 	</div>
+ 	  	 	<div class="ms-t-r">（必填）</div>
+ 	  	 </li>
+ 	  	 <li>
+ 	  	 	<div class="left">企业固话</div>
+ 	  	 	<div class="right">
+ 	  	 	<input type="text" class="input min-w-0" onkeyup="this.value=this.value.replace(/\D/g,'')">
+ 	  	 	<span class="h-line">-</span>
+ 	  	 	<input type="text" class="input min-w-1" onkeyup="this.value=this.value.replace(/\D/g,'')">
+ 	  	 	</div>
+ 	  	 </li>
+ 	  	 <li>
+ 	  	 	<div class="left">企业简称</div>
+ 	  	 	<div class="right">
+ 	  	 	<input type="text" class="input">
+ 	  	 	</div>
+ 	  	 </li>
+ 	  	 <li>
+ 	  	 	<div class="left">企业类型</div>
+ 	  	 	<div class="right">
+ 	  	 	    <div class="selectMessage"style="width:160px;float:left;">
+                    <div class="result">
+                    <span id="result">民营</span>
+                    <i class=""></i>
+                    </div>
+                    <dl>
+	                       <dd class="on">民营</dd>
+	                       <dd class="">国企</dd>
+                    </dl>
+                 </div>
+ 	  	 	</div>
+ 	  	 </li>
+ 	  	 <li>
+ 	  	 	<div class="left">经营范围</div>
+ 	  	 	<div class="right">
+ 	  	 	<input type="text" class="input">
+ 	  	 	</div>
+ 	  	 </li>
+ 	  	 <li>
+ 	  	 	<div class="left">行业</div>
+ 	  	 	<div class="right">
+ 	  	 	    <div class="selectMessage"style="width:160px;float:left;">
+                    <div class="result">
+                    <span id="result">互联网</span>
+                    <i class=""></i>
+                    </div>
+                    <dl>
+	                       <dd class="on">互联网</dd>
+	                       <dd class="">外贸</dd>
+                    </dl>
+                 </div>
+ 	  	 	</div>
+ 	  	 </li>
+ 	  	 <li>
+ 	  	 	<div class="left">公司所在地</div>
+ 	  	 	<div class="right">
+ 	  	 	    <dl class="my_select"></dl>
+				<dl class="my_select"></dl>
+				<dl class="my_select"></dl>
+				<input type="hidden" id="AddressageResult" value="广东省,广州市,市辖区">
+ 	  	 	</div>
+ 	  	 </li>
+ 	  	 <li>
+ 	  	 	<div class="left"></div>
+ 	  	 	<div class="right">
+ 	  	 	   <input type="text" class="input">
+ 	  	 	</div>
+ 	  	 </li>
+ 	  	 <li>
+ 	  	 	<div class="left">邮编</div>
+ 	  	 	<div class="right">
+ 	  	 	   <input type="text" class="input">
+ 	  	 	</div>
+ 	  	 </li>
+ 	  	 <li>
+ 	  	 	<div class="left">公司邮箱</div>
+ 	  	 	<div class="right">
+ 	  	 	   <input type="text" class="input">
+ 	  	 	</div>
+ 	  	 </li>
+ 	  	 <li>
+ 	  	 	<div class="left">组织机构代码</div>
+ 	  	 	<div class="right">
+ 	  	 	   <input type="text" class="input">
+ 	  	 	</div>
+ 	  	 </li>
+ 	  	 <li>
+ 	  	 	<div class="left">公商注册编号</div>
+ 	  	 	<div class="right">
+ 	  	 	   <input type="text" class="input">
+ 	  	 	</div>
+ 	  	 </li>
+ 	  	 <li>
+ 	  	 	<div class="left">税务登记号</div>
+ 	  	 	<div class="right">
+ 	  	 	   <input type="text" class="input">
+ 	  	 	</div>
+ 	  	 </li>
+ 	  	 <li>
+ 	  	 	<div class="left">法人名称</div>
+ 	  	 	<div class="right">
+ 	  	 	   <input type="text" class="input">
+ 	  	 	</div>
+ 	  	 </li>
+ 	  	 <li>
+ 	  	 	<div class="left">传真</div>
+ 	  	 	<div class="right">
+ 	  	 	   <input type="text" class="input">
+ 	  	 	</div>
+ 	  	 </li>
+ 	  	 <li>
+ 	  	 	<div class="left">营业执照本地址</div>
+ 	  	 	<div class="right">
+ 	  	 	   <input type="text" class="input">
+ 	  	 	</div>
+ 	  	 </li>
+
+
+
+ 	  	 <div class="clear"></div>
+ 	  </ul>
+ </div>
+  
+
+
+  <div class="ms-seting-buttom">
+   <a href="javascript:;" class="btn btn-primary">保存</a>
+   <a href="javascript:;" class="btn btn-default broder-green">取消</a>
+ </div>
+ <!--内容部分-->
+  </div><!--end content-->
+</div><!--end container-->
+<script type="text/javascript">
+
+ $(function(){
+   //下拉选择
+   $(document).on('click','.selectMessage',function(){
+      var resultTxt = $(this).find('.result span').text();
+      var dl = $(this).find('dl');
+      var dd = dl.find('dd');
+      var _i =  $(this).find('.result i');
+      var changehei = dl.height();
+      dl.css({'bottom':-(changehei+15)})
+      if(dl.is(':hidden')){
+        dl.show();
+        _i.addClass('on');
+      }else{
+        dl.hide();
+        _i.removeClass('on');
+      }
+      for(var i=0;i<dd.length;i++){
+              if(dd.eq(i).text()==resultTxt){
+                dd.eq(i).addClass('on');
+              }
+        }
+   })
+   $(document).on('click','.selectMessage dl dd',function(event){
+     event.stopPropagation();
+     var t = $(this).text();
+     $(this).siblings().removeClass('on');
+     $(this).addClass('on');
+     $(this).parents('.selectMessage').find('.result span').html(t);
+     $(this).parents('.selectMessage').find('dl').hide();
+     $(this).parents('.selectMessage').find('i').removeClass('on');
+   })
+  //地区三级联动
+   $.fn.my_select({
+		  select_class :   '.my_select',//你要操作的文档class，注意不要传ID//需要多少级下拉就写多少个<dl>
+		  select_two   :   true, //二级下拉开关，true为开=>false为关
+		  select_three :   true,//三级下拉开关，true为开=>false为关
+		  city_kiss    :   ['11','0','5']//默认值对比你的数据设定
+		},function(){
+		  //code    你要添加的回调函数
+		   getAddress();//取值
+		})
+   function getAddress(){//取值方法
+   	      var addStr= '';
+		  $('.my_select').each(function(){
+		  	addStr += $(this).find('dt').text()+',';
+		  })
+		  var resutl = addStr.substring(0,(addStr.length-1));
+		  //resutl.replace(/,县/g,'').replace(/,市辖区/,'')
+		  $('#AddressageResult').val(resutl);
+   }
+   function analysisAddress(){//若#AddressageResult有值从后台传入数据则解析到页面
+     var _val = $('#AddressageResult').val(),arr=[];
+      if(_val){
+	     arr = _val.split(',');
+	     $('.my_select').each(function(index){
+			  $(this).find('dt').text(arr[index]);
+		  })
+      }
+   }
+   analysisAddress();//解析用户默认值
+
+ })
+
+   </script>
+</body>
+</html>

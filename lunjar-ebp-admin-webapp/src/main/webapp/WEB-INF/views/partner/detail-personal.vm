@@ -1,0 +1,76 @@
+<div class="formBox">
+    <h3>
+		<i></i>
+        <div class="fl">    		
+            <span>接入者管理>>详细信息</span>
+		</div>
+        <div class="fr">
+			<a href="list">&lt;&lt;  返回列表</a>
+		</div>
+	</h3>
+    <div class="content">
+        <table class="c2">
+            <tr>
+                <th width="13%">接入者名称：</th>
+                <td width="37%">$!{partner.partnerName}</td>
+                <th width="13%">接入者类型：</th>
+                <td width="37%">个人</td>
+            </tr>
+##            <tr>
+##                <th>性别：</th>
+##                <td>#if("$!{personal.gender}"=="1")男#elseif("$!{personal.gender}"=="2") 女 #else  #end</td>
+##                <th>生日：</th>
+##                <td>$!dateUtils.formatDate('yyyy-MM-dd',$!{personal.birthday})</td>
+##            </tr>
+##            <tr>
+##                <th>地址：</th>
+##                <td>$!{personal.address}</td>
+##                <th>邮编：</th>
+##                <td>$!{personal.postCode}</td>
+##            </tr>
+            <tr style="height: 50px;">
+                <th>邮箱：</th>
+                <td>$!{user.email}</td>
+                <th>身份证号：</th>
+                <td>$!{personal.idCard}</td>
+            </tr>
+            <tr style="height: 50px;">
+                <th>身份证：</th>
+                <td>
+##                    <a id="originPhotoUrl1" title="正面照" href='$!{originPhotoUrl1}'>
+                    <a id="originPhotoUrl1" title="正面照" >
+                        <img id="photoUrl1" alt="" src="$!{photoUrl1}" align="middle" style="top: 0px;width:170px;height:108px;">
+                    </a>
+##                    <a id="originPhotoUrl2" title="反面照" href="$!{originPhotoUrl2}">
+                    <a id="originPhotoUrl2" title="反面照">
+                        <img id="photoUrl2" alt="" src="$!{photoUrl2}" align="middle" style="top: 0px;width:170px;height:108px;">
+                    </a>
+##                    <span>(点击查看大图)</span>
+                </td>
+                <th>实名审核状态：</th>
+                <td>#direct($!fieldTextTool.convertPartnerStatus("$!{partner.status}"))</td>
+            </tr>
+##            <tr>
+##                <th>实名认证审核：</th>
+##                <td colspan="3">
+##                    已于 $!date.format('yyyy-MM-dd HH:mm:ss ',${audit.gmtModify}) 申请请实名认证，请客服核实主体信息的正确性和真实性。
+##                </td>
+##            </tr>
+##
+##            <tr>
+##                <th>审核结果：</th>
+##                <td colspan="3">
+##                    <div>
+##                        <span></span><input type="radio" id="pass" name="auditStatus" value="2" />审核通过<input type="radio" id="unpass" name="auditStatus" value="3" />审核不通过
+##                    </div>
+##                    <div>
+##                        <textarea name="auditReason" id="reason" cols="40"> </textarea>
+##                    </div>
+##                </td>
+##            </tr>
+        </table>
+    </div>
+
+##	#parse("partner/partner-detail-audit.vm")
+</div>
+

@@ -1,0 +1,190 @@
+<div class="modal-dialog" role="document">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close btn-close-win"
+				data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title" id="myModalLabel">#if($!p.id)编辑自提点#else新增自提点#end</h4>
+		</div>
+		<form action="" id="saveCollect">
+			<input name="id" type="hidden" value="$!p.id">
+			<div class="modal-body">
+				<ul>
+					<li>
+						<div class="left">自提点名称</div>
+						<div class="right">
+							<input type="text" class="input m-w" name="clpName"
+								value="$!p.clpName" maxlength="30">
+						</div>
+					</li>
+					<li>
+						<div class="left">联系电话</div>
+						<div class="right">
+							<input type="text" class="input m-w" name="clpTelephone"
+								value="$!p.clpTelephone" maxlength="15">
+						</div>
+					</li>
+					<li>
+						<div class="left">所属省市</div>
+						<div class="right">
+							<select class="select-add" name="province" panelheight="auto" id="provinceDiv" onchange="ADDRESS.loadCity()">
+		                      <option value="0">请选择</option>
+		                      #foreach($!pr in $!provinces)
+		                      	 <option value="$!pr.code" #if($!pr.regionName==$!p.province) selected="selected" #end>$!pr.regionName</option>
+		                      #end
+		                    </select>
+		                    <select class="select-add" name="city" id="cityDiv" onchange="ADDRESS.loadCounty()">
+		                     <option value="0">请选择</option>
+		                      #foreach($!pr in $!citys)
+		                      	 <option value="$!pr.code" #if($!pr.regionName==$!p.city) selected="selected" #end>$!pr.regionName</option>
+		                      #end
+		                    </select>
+		                    <select class="select-add" name="region" id="countyDiv">
+		                     <option value="0">请选择</option>
+		                     #foreach($!pr in $!regions)
+		                      	 <option value="$!pr.code" #if($!pr.regionName==$!p.region) selected="selected" #end>$!pr.regionName</option>
+		                      #end
+		                    </select>
+						</div>
+					</li>
+					<li>
+						<div class="left">详细地址</div>
+						<div class="right">
+							<input type="text" class="input m-w" name="clpAddress"
+								value="$!p.clpAddress" maxlength="80">
+						</div>
+					</li>
+					<li>
+						<div class="left">取货时间</div>
+						<div class="right">
+							<input type="text" class="input m-w" name="collectTime"
+								value="$!p.collectTime" placeholder="单位小时">
+						</div>
+					</li>
+					<li>
+						<div class="left">自提费用</div>
+						<div class="right">
+							<input type="text" class="input m-w" name="fee" value="$!p.fee">
+						</div>
+					</li>
+					<li>
+						<div class="left">货物存放时间</div>
+						<div class="right">
+							<input type="text" class="input m-w" name="maxDepositDays"
+								value="$!p.maxDepositDays">
+						</div>
+					</li>
+					<li>
+						<div class="left">自提时间段</div>
+						<div class="right">
+							<input type="text" class="input time number form_time"
+								data-date-format="hh:ii" data-link-format="hh:ii"
+								name="startTime" value="$!p.startTime" readonly="readonly">
+							<span class="gang">-</span> <input type="text"
+								class="input time number form_time" data-date-format="hh:ii"
+								data-link-format="hh:ii" name="endTime" value="$!p.endTime"
+								readonly="readonly">
+						</div>
+					</li>
+				</ul>
+				<div class="clear"></div>
+			</div>
+		</form>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-primary confirm" data-ok="modal"
+				id="sureAddress">确定</button>
+			<button type="button" class="btn btn-default btn-close-win Hui-black"
+				data-dismiss="modal">取消</button>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(function() {
+		//地区三级联动
+		/*$.fn.my_select({
+			select_class : '.my_select',//你要操作的文档class，注意不要传ID//需要多少级下拉就写多少个<dl>
+			select_two : true, //二级下拉开关，true为开=>false为关
+			select_three : true,//三级下拉开关，true为开=>false为关
+			city_kiss : [ '11', '0', '5' ]
+		//默认值对比你的数据设定
+		}, function() {
+			//code    你要添加的回调函数
+			getAddress();//取值
+		})
+		function getAddress() {//取值方法
+			var addStr = '';
+			$('.my_select').each(function() {
+				addStr += $(this).find('dt').text() + ',';
+			})
+			var resutl = addStr.substring(0, (addStr.length - 1));
+			//resutl.replace(/,县/g,'').replace(/,市辖区/,'')
+			$('#AddressageResult').val(resutl);
+		}
+		function analysisAddress() {//若#AddressageResult有值从后台传入数据则解析到页面
+			var _val = $('#AddressageResult').val(), arr = [];
+			if (_val) {
+				arr = _val.split(',');
+				$('.my_select').each(function(index) {
+					$(this).find('dt').text(arr[index]);
+				})
+			}
+		}
+		analysisAddress();//解析用户默认值
+		*/
+		//时间点
+		$('.form_time').datetimepicker({
+			language : 'fr',
+			weekStart : 1,
+			todayBtn : 1,
+			autoclose : 1,
+			todayHighlight : 1,
+			startView : 1,
+			minView : 0,
+			maxView : 1,
+			forceParse : 0
+		});
+
+	});
+	//确认按钮
+	$(document).on("click",".confirm",function(){
+		
+		
+        var data = jQuery("#saveCollect").serialize();
+        var _self = $(this);
+        jQuery.ajax({
+			url:"/collectPlace/save",
+			data:data,
+			type:"POST",
+			dataType:"json",
+			success:function(data){
+				if(data!=null && data.success){
+					
+					_self.parents('.MarkBGAll-zIndex').hide();
+			        removeMark();
+			        jQuery.alert({
+						type: 'success',
+						text: '保存成功',
+						time: 3000
+					});
+			        location.reload();
+				}else{
+					jQuery.alert({
+						type: 'error',
+						text: data.msg,
+						time: 3000
+					});
+				}
+			},
+			error:function(){
+				jQuery.alert({
+					type: 'error',
+					text: '操作失败,请稍后重试!',
+					time: 3000
+				});
+			}
+		});
+        
+	});
+	
+</script>

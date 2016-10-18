@@ -1,0 +1,389 @@
+#parse("pages/commons/header.vm")
+<!--内容部分-->
+  <div class="content">
+ <!--内容部分-->
+ <div class="breadcrumb">
+  <a class="breadcrumb-item active">商铺管理/商铺自定义分类添加</a>
+  <a href="javascript:history.back(-1);" class="breadcrumb-item retuenWin">返回上一级</a>
+ </div>
+ <div class="Category-top-right-button">
+  <a href="#nogo" class="btn btn-large btn-primary" id="addParTbody">添加自定义分类</a>
+  <a href="#nogo" class="btn btn-large btn-primary">保存更改</a>
+ </div>
+
+ <div class="CategoryManagement table-wrap">
+    <div class="newTabTop">
+      <div class="checkbox selectAll">
+        <span class="checkbox-icon">
+          <i class="icon-checked"></i>
+          <input type="checkbox" />
+        </span>
+       </div>全选本页面
+      <span class="paDing paDing-l" onclick="">批量删除</span>
+      <div class="clear"></div>
+    </div>
+
+  <table class="NewTable" id="ClassProduct">
+    <tbody class="THtbody">
+      <tr>
+      <th class="first-tl">分类名称</th>
+      <th>移动</th>
+      <th>创建时间</th>
+      <th>操作</th>
+    </tr>
+    </tbody>
+    <tbody class="childClass">
+    <tr class="parTr">
+      <td class="first-tl">
+       <div class="checkbox select-chexkbox">
+                <span class="checkbox-icon">
+                  <i class="icon-checked"></i>
+                  <input type="checkbox" class="AllSelectClass checkboxForEach"/>
+                </span>
+              </div>
+              <i class="icon_zwf icon_parentClick _icon-down"></i>
+              <input type="text" class="input calssInput" value="品牌【女鞋】">
+            </td>
+            <td class="td-move">
+              <a href="javascript:;" class="move-icon topDong icon-0" title="置顶">置顶</a>
+              <a href="javascript:;" class="move-icon moveUp icon-1" title="上移">上移</a>
+              <a href="javascript:;" class="move-icon moveDown icon-2" title="下移">下移</a>
+              <a href="javascript:;" class="move-icon downDong icon-3" title="置底">置底</a>
+            </td>
+            <td class="time">
+              2016-09-26
+            </td>
+            <td>
+              <a href="javascript:;" class="blue edit-this remove" title="删除">删除</a>
+              <a href="javascript:;" class="blue edit-this view" title="查看">查看</a>
+            </td>
+    </tr>
+    <tr class="child">
+      <td class="first-tl">
+       <div class="checkbox select-chexkbox">
+                <span class="checkbox-icon">
+                  <i class="icon-checked"></i>
+                  <input type="checkbox" class="AllSelectClass checkboxForEach" />
+                </span>
+              </div>
+              <i class="icon_zwf"></i>
+              <i class="link-par"></i>
+              <input type="text" class="input calssInput" value="单鞋">
+            </td>
+            <td class="td-move">
+                <a href="javascript:;" class="move-icon moveUp icon-1" title="上移">上移</a>
+              <a href="javascript:;" class="move-icon moveDown icon-2" title="下移">下移</a>
+              <a href="javascript:;" class="move-icon">补位</a>
+              <a href="javascript:;" class="move-icon">补位</a>
+            </td>
+            <td class="time">
+              2016-09-26
+            </td>
+            <td>
+              <a href="javascript:;" class="blue edit-this remove" title="删除">删除</a>
+              <a href="javascript:;" class="blue edit-this view" title="查看">查看</a>
+            </td>
+    </tr>
+    <tr class="child-child">
+      <td class="first-tl">
+       <div class="checkbox select-chexkbox"style="opacity:0;filter:alpha(opacity=0);visibility: hidden;">
+                <span class="checkbox-icon">
+                  <i class="icon-checked"></i>
+                  <input type="checkbox"/>
+                </span>
+              </div>
+              <i class="icon_zwf"></i>
+              <i class="link-par"></i>
+              <div class="input calssInput disabled addClassChildTR">添加子分类</div>
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+    </tr>
+     </tbody>
+    
+  </table>
+
+  <div class="newTabTop">
+      <div class="checkbox selectAll">
+        <span class="checkbox-icon">
+          <i class="icon-checked"></i>
+          <input type="checkbox"/>
+        </span>
+       </div>全选本页面
+      <span class="paDing paDing-l" onclick="">批量删除</span>
+        <div class="right" style="height:30px;">
+         <!--分页-->
+          <div class="page-list" id="FenYe">
+          </div>
+         <!--分页-->
+          </div>
+          <div class="clear"></div>
+    </div>
+
+ </div>
+
+  
+ <!--内容部分-->
+ </div><!--end content-->
+</div><!--end container-->
+</body>
+<script type="text/javascript">
+$(function(){
+/*
+*分页
+ */
+  var pageCount = $!ps.pageCount;//模拟后台总页数
+  var pageIndex = $!ps.pageNo;//当前第几页变量
+  var pageSplice = 5;//分页显示个数
+    var pgSp = new Antiwild({
+      pageCount : pageCount,//后台总页数
+      pageIndex : pageIndex,//当前页 >=1 <=pageCount
+      pageSplice : pageSplice,//分页显示个数 > 1
+      indexClass:'active',//当前页显示class
+      pageNode : '#FenYe',//导入的Dom id or class
+      pageClickFn:function(index){//点击页面执行方法
+          //console.log(index);//索引
+          pageNext("3",(parseInt($('#FenYe li a').eq(index).text())));
+      },
+      pageUp : function(){//点击上一页执行方法
+        //console.log('上一页');
+        pageNext("1",$!ps.pageNo);
+      },
+      pageDown : function(){//点击下一个执行方法
+        //console.log('下一页');
+        pageNext("2",$!ps.pageNo);
+      }
+    })
+
+/*
+ *商品分类管理 @ Enjurokcc
+*/
+//单选多选
+$(document).on('click','.select-chexkbox',function(){
+  if($(this).hasClass('checked')){
+    $(this).removeClass('checked');
+    $(this).find('input.AllSelectClass').prop("checked",false);
+  }else{
+    $(this).addClass('checked');
+    $(this).find('input.AllSelectClass').prop("checked",true);
+  }
+});
+var forEaInput = function(bloon){
+  for(var i=0;i<$('#ClassProduct input.checkboxForEach').length;i++){
+    $('#ClassProduct input.checkboxForEach').eq(i).prop("checked",bloon);
+    if(bloon){
+      $('#ClassProduct .select-chexkbox').addClass('checked')
+    }else{
+      $('#ClassProduct .select-chexkbox').removeClass('checked');//全选
+    }
+  }
+}
+//全选
+$(document).on('click','.selectAll',function(){
+   if($(this).hasClass('checked')){
+            $(this).removeClass('checked');
+      forEaInput(false);
+    }else{
+       $(this).addClass('checked');
+       forEaInput(true);
+    }
+})
+//父选
+$(document).on('click','.parTr .select-chexkbox',function(){
+  if($(this).hasClass('checked')){
+      $(this).parents('tbody').find('.select-chexkbox').addClass('checked');
+      $(this).parents('tbody').find('.AllSelectClass').prop("checked",true);
+  }else{
+      $(this).parents('tbody').find('.select-chexkbox').removeClass('checked');
+      $(this).parents('tbody').find('.AllSelectClass').prop("checked",false);
+  }
+})
+//父分类
+var parTbody = '<tbody class="childClass">'
+    +'<tr class="parTr">'
+      +'<td class="first-tl">'
+       +'<div class="checkbox select-chexkbox">'
+                +'<span class="checkbox-icon">'
+                  +'<i class="icon-checked"></i>'
+                 +'<input type="checkbox" class="AllSelectClass checkboxForEach"/>'
+                +'</span>'
+              +'</div>'
+              +'<i class="icon_zwf icon_parentClick _icon-down"></i>'
+              +'<input type="text" class="input calssInput" value="">'
+            +'</td>'
+            +'<td class="td-move">'
+              +'<a href="javascript:;" class="move-icon topDong icon-0" title="置顶">置顶</a>'
+              +'<a href="javascript:;" class="move-icon moveUp icon-1" title="上移">上移</a>'
+              +'<a href="javascript:;" class="move-icon moveDown icon-2" title="下移">下移</a>'
+              +'<a href="javascript:;" class="move-icon downDong icon-3" title="置底">置底</a>'
+            +'</td>'
+            +'<td class="time">'
+              +'2016-09-26'
+            +'</td>'
+            +'<td>'
+              +'<a href="javascript:;" class="blue edit-this remove" title="删除">删除</a>'
+              +'<a href="javascript:;" class="blue edit-this view" title="查看">查看</a>'
+            +'</td>'
+    +'</tr>'
+    +'<tr class="child-child">'
+      +'<td class="first-tl">'
+       +'<div class="checkbox select-chexkbox"style="opacity:0;filter:alpha(opacity=0);visibility: hidden;">'
+                +'<span class="checkbox-icon">'
+                  +'<i class="icon-checked"></i>'
+                  +'<input type="checkbox"/>'
+                +'</span>'
+              +'</div>'
+              +'<i class="icon_zwf"></i>'
+              +'<i class="link-par"></i>'
+              +'<div class="input calssInput disabled addClassChildTR">添加子分类</div>'
+            +'</td>'
+            +'<td></td>'
+            +'<td></td>'
+            +'<td></td>'
+    +'</tr>'
+     +'</tbody>'
+//子分类
+var childTR = '<tr class="child">'
+      +'<td class="first-tl">'
+       +'<div class="checkbox select-chexkbox">'
+                +'<span class="checkbox-icon">'
+                  +'<i class="icon-checked"></i>'
+                  +'<input type="checkbox" class="AllSelectClass checkboxForEach" />'
+                +'</span>'
+              +'</div>'
+              +'<i class="icon_zwf"></i>'
+              +'<i class="link-par"></i>'
+              +'<input type="text" class="input calssInput">'
+            +'</td>'
+            +'<td class="td-move">'
+                +'<a href="javascript:;" class="move-icon moveUp icon-1" title="上移">上移</a>'
+              +'<a href="javascript:;" class="move-icon moveDown icon-2" title="下移">下移</a>'
+              +'<a href="javascript:;" class="move-icon">补位</a>'
+              +'<a href="javascript:;" class="move-icon">补位</a>'
+            +'</td>'
+            +'<td class="time">'
+              +'2016-09-26'
+            +'</td>'
+            +'<td>'
+              +'<a href="javascript:;" class="blue edit-this remove" title="删除">删除</a>'
+              +'<a href="javascript:;" class="blue edit-this view" title="查看">查看</a>'
+            +'</td>'
+    +'</tr>';
+
+  $(document).on('click','tr.child-child .addClassChildTR',function(){ 
+       $(this).parents('tr.child-child').before(childTR);
+  })
+  //删除
+  $(document).on('click','#ClassProduct td a.remove',function(){
+      var par = $(this).parents('tr');
+      if(par.hasClass('parTr')){//父级
+        var le = $(this).parents('tbody').find('tr.child').length;
+        if(le>0){
+          $.alert({
+            type: 'error',
+            text: '此分类中还有子分类,不可以删除',
+            time: 3000
+            });
+          return false;
+        }else if(le==0){
+          $(this).parents('tbody').find('tr').remove();
+        }
+      }else{
+        par.remove();
+      }
+  })
+  //批量删除
+  $(document).on('click','.paDing-l',function(){
+    var  le = $('#ClassProduct .checked').length;
+    if(le==0){
+      $.alert({
+            type: 'error',
+            text: '请选择要删除的分类',
+            time: 3000
+            });
+          return false;
+    }else{
+
+      
+    }
+    //checkboxForEach
+  })
+  //添加父级分类 默认展开
+  $(document).on('click','#addParTbody',function(){
+    $('#ClassProduct').append(parTbody);
+  })
+  //展开收缩
+  $(document).on('click','.icon_parentClick',function(){
+    if($(this).hasClass('_icon-down')){//展开时
+          $(this).removeClass('_icon-down').addClass('_icon-right');
+          $(this).parents('tbody').find('tr:not(:eq(0))').hide();
+    }else{
+      $(this).removeClass('_icon-right').addClass('_icon-down');
+      $(this).parents('tbody').find('tr').show();
+    }
+  })
+  //移动
+  //子集移动 上
+  $(document).on('click','tr.child .moveUp',function(){
+     var arr = $(this).parents('tbody').find('tr.child').toArray();//子集数组
+     var id =  $(this).parents('tr').index();
+     var tr0 = $(this).parents('tbody').find('tr.parTr');
+     var trEnd = $(this).parents('tbody').find('tr.child-child');
+     $.changeLeftArr(arr,(id-1));
+     //把 tr0 塞回数组头部
+     arr.splice(0,0,tr0);
+     arr.push(trEnd);
+     $(this).parents('tbody').html(arr);
+  })
+  //子集移动 下
+  $(document).on('click','tr.child .moveDown',function(){
+     var arr = $(this).parents('tbody').find('tr.child').toArray();//子集数组
+     var id =  $(this).parents('tr').index();
+     var tr0 = $(this).parents('tbody').find('tr.parTr');
+     var trEnd = $(this).parents('tbody').find('tr.child-child');
+     $.changeRightArr(arr,(id-1));
+     //把 tr0 塞回数组头部
+     arr.splice(0,0,tr0);
+     arr.push(trEnd);
+     $(this).parents('tbody').html(arr);
+  })
+  //父集移动 上
+  $(document).on('click','tr.parTr .moveUp',function(){
+   var arr = $(this).parents('#ClassProduct').find('tbody.childClass').toArray();//父集数组
+     var id = $(this).parents('tbody').index();
+     var TH = $(this).parents('#ClassProduct').find('tbody.THtbody');
+     $.changeLeftArr(arr,(id-1));
+     arr.splice(0,0,TH);
+     $(this).parents('#ClassProduct').html(arr);
+  })
+  //父集移动 下
+  $(document).on('click','tr.parTr .moveDown',function(){
+   var arr = $(this).parents('#ClassProduct').find('tbody.childClass').toArray();//父集数组
+     var id = $(this).parents('tbody').index();
+     var TH = $(this).parents('#ClassProduct').find('tbody.THtbody');
+     $.changeRightArr(arr,(id-1));
+     arr.splice(0,0,TH);
+     $(this).parents('#ClassProduct').html(arr);
+  })
+  //置顶
+  $(document).on('click','tr.parTr .topDong',function(){
+    var arr = $(this).parents('#ClassProduct').find('tbody.childClass').toArray();
+    var TH = $(this).parents('#ClassProduct').find('tbody.THtbody');
+    var id = $(this).parents('tbody').index();
+    $.changeTopArr(arr,(id-1));
+    arr.splice(0,0,TH);
+    $(this).parents('#ClassProduct').html(arr);
+  })
+  //置底
+  $(document).on('click','tr.parTr .downDong',function(){
+    var arr = $(this).parents('#ClassProduct').find('tbody.childClass').toArray();
+    var TH = $(this).parents('#ClassProduct').find('tbody.THtbody');
+    var id = $(this).parents('tbody').index();
+    $.changeDownArr(arr,(id-1));
+    arr.splice(0,0,TH);
+    $(this).parents('#ClassProduct').html(arr);
+  })
+})
+</script>
+</html>

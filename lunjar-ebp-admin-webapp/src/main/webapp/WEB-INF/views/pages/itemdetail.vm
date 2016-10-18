@@ -1,0 +1,530 @@
+#parse("pages/commons/header.vm")
+<style type="text/css">
+	 .example h3{
+	 	margin: 0;margin-top: 20px;
+	 }
+	 ._hide{display: none;}
+	 th,td{text-align: center;}
+	 .list-this-table{
+	 border-radius: 3px;
+    border: 1px solid #d9d9d9;
+	 }
+	 .list-this-table > thead{
+	 	border-bottom: 1px solid #d9d9d9;
+	 }
+	 .list-this-table  td, .list-this-table  th{padding-right:10px;}
+	 .list-this-table td,.list-this-table th{border-right: 1px solid #d9d9d9;}
+	 .list-this-table th{background: #F6F8FA;height: 40px;padding: 0;}
+	 .list-this-table  td.w-88{width: 88px;}
+     .list-this-table  td.w-127{width: 127px;}
+     .list-this-table  td p{text-indent: 0;}
+     .bottom-table{margin-top: 14px;margin-bottom: 20px;}
+     .bottom-table span.hah{float: right;}
+     .bottom-table span.red{ color: red;}
+     .time-dd{padding: 0 0 10px 0;}
+     .time-dd span.right{padding-left: 140px;}
+     .btn-large{padding: 0 10px;}
+     .l-h{line-height: 24px!important;padding-left: 20px;}
+     .b-bottom{
+      margin-left: 20px;margin-top:5px;
+     }
+     .table > tbody tr,.list-this-table td.br-no{border-top: none;}
+     .list-this-table td{border-top: 1px solid #d9d9d9;}
+     .breadcrumb{position: relative;}
+     .retuenWin{position: absolute;right: 15px;top: 2px;color: #409BD2;}
+     #showList{
+	  margin-bottom:20px;
+	  margin-top: 0px;
+     }
+
+</style>
+  <!--左侧栏 END-->
+    <div class="content">
+     <div class="breadcrumb">
+		<a class="breadcrumb-item active">订单管理/ 订单详情</a>
+		<a href="javascript:history.back(-1);" class="breadcrumb-item retuenWin">返回上一级</a>
+	 </div>
+      <!--top start-->
+      <div id="orderde">
+      <div class="border-ra-cl" style="margin-top:15px;padding:15px 0;">
+        <p style="font-weight: bold;"class="l-h">当前订单状态：<strong>
+        	#if($!trade.trade.status==1)
+					      待支付
+			#elseif($!trade.trade.status==2)
+					  待支付
+			#elseif($!trade.trade.status==3)
+					  待发货
+			#elseif($!trade.trade.status==4)
+					    待发货
+			#elseif($!trade.trade.status==5)
+					  已发货
+			#elseif($!t.trade.status==6)
+					   已签收
+			#elseif($!trade.trade.status==7)
+					  交易成功
+			#elseif($!trade.trade.status==8)
+					已关闭
+			#elseif($!trade.trade.status==9)
+					 已关闭
+			#end
+        
+        </strong></p>
+        <p class="l-h">卖家备注:<strong>$!trade.trade.saleRemarks</strong></p>
+        <div class="b-bottom">
+        <a href="javascript:;"  class="btn btn-large btn-primary" onclick="addRemark('$!trade.trade.saleRemarks','$!trade.trade.id','1')">卖家备注</a>
+        #if($!trade.trade.status==3 || $!trade.trade.status==4)
+        	<a href="javascript:;"  class="btn btn-large btn-primary" onclick="sendGoogs('$!trade.trade.id','sendGoodsModalMin','1')">发货</a>
+        #elseif($!trade.trade.status==1||$!trade.trade.status==2)
+	        <a href="javascript:;"  class="btn btn-large btn-primary closeTrade" data-tradeId="$!trade.trade.id">关闭交易</a>
+         #end
+        </div>
+        </div>
+         <h3 class="title"style="font-weight: bold;font-size: 15px;">买家信息</h3>
+       <div class="border-ra-cl" style="padding:18px 24px 18px 24px;">
+         <ul class="MJXX">
+           <li>买家姓名：$!trade.trade.buyerName</li>
+           <li>联系电话：$!trade.trade.buyerPhone</li>
+           #if($!trade.trade.distributionMode==2)
+           	##自提码不等于空的话就是自提
+	           <li>选择物流：自提</li>
+	           <li>自提点：$!trade.trade.buyerAddress </li>
+           #else
+           		<li>选择物流：快递</li>
+	           <li>收货地址：$!trade.trade.buyerAddress </li>
+	           <li>运单号：$!trade.trade.expressNo </li>
+           #end
+         </ul>
+
+         <!-- <h3 class="title">物流信息</h3>
+         <ul class="MJXX">
+           <li>配送方式：快递</li>
+           <li>物流公司：中通</li>
+           <li>运单号：1457168345698</li>
+         </ul> -->
+          <!--top end-->
+       </div>
+         <!--table start-->
+         <h3 class="title"style="font-weight: bold;font-size: 15px;margin:0;margin-top:20px;">商品信息</h3>
+         <div id="showList">
+          <div class="border-ra-cl" style="padding:14px 24px 14px 24px;">
+           <div class="time-dd">
+           	<span>订单编号：$!trade.trade.tradeNo</span>
+           	<span class="right">创建时间：$!date.format('yyyy-MM-dd HH:mm:ss ',$!trade.trade.gmtCreate)</span>
+           </div>
+           <!--单人多商品 start-->
+            <table class="table table-checkbox list-this-table">
+              
+              <thead>
+              <tr>
+                <th class="_hide"><div class="checkbox">
+                <span class="checkbox-icon">
+                  <i class="icon-checked"></i>
+                  <input type="checkbox" />
+                </span>
+              </div></th>
+                <th>商品</th>
+                <th>属性</th>
+                <th>单价(元)</th>
+                <th>数量</th>
+                <th>状态</th>
+                <th>优惠</th>
+                <th>商品总价（元）</th>
+              </tr>
+               </thead>
+
+              <tbody>
+              		#foreach($order in $!trade.list)
+			                  <tr class="">
+			                    <td class="_hide"></td>
+			                    <td class="item">
+			                      <img src="$!order.productPicPath" alt="" width="40" height="40">
+			                      <div>
+			                        <p>$!order.productName</p>
+			                      </div>
+			                    </td>
+			                    <td class="p-r w-88">
+			                     <p class="t-l"><span class="-Hui">$!order.propertiesname</span></p>
+			                     </td>
+			                    <td class="p-r w-88">￥$!order.productRealPrice</td>
+			                    <td class="p-r w-88">$!order.num</td>
+                           <td class="Message p-r w-127">
+                              <p>
+                              #if($!trade.trade.status==1)
+                                  待支付
+                              #elseif($!trade.trade.status==2)
+                                  待支付
+                            #elseif($!trade.trade.status==3)
+                                待发货
+                            #elseif($!trade.trade.status==4)
+                                 待发货
+                            #elseif($!trade.trade.status==5)
+                                已发货
+                          #elseif($!t.trade.status==6)
+                                 已签收
+                          #elseif($!trade.trade.status==7)
+                                交易成功
+                          #elseif($!trade.trade.status==8)
+                              已关闭
+                          #elseif($!trade.trade.status==9)
+                               已关闭
+                            #end
+                              </p>
+                            </td>
+			                   <!--统一信息 rowspan基数==订单个数-->
+			                   #if($velocityCount==1)
+				                    <td  class="Message p-r w-127">
+				                        <p></p>
+				                    </td>
+				                    <td  class="Message p-r w-127">
+				                      <p>￥$!trade.trade.realPrice</p>
+				                      <p>(含邮费:￥$!trade.trade.expressPrice)</span></p>
+				                    </td>
+                          #elseif($velocityCount>1)
+                          <td class="w-127 br-no"></td>
+                          <td class="w-127 br-no"></td>
+			                    #end
+			                  </tr>
+			               #end
+                 </tbody>
+               </table>
+               <p class="bottom-table"><span class="hah">实收款：<span class="red">￥$!trade.trade.realPrice</span>元</span></span>
+               </p>
+               <div class="clear"></div>
+             </div>
+           </div>
+         <!--table end-->
+         #if($!trade.trade.isInvoice==1)
+	         <h3 class="title"style="font-weight: bold;font-size: 15px;">发票信息</h3>
+	         <!--table-list start-->
+	         <div class="border-ra-cl" style="padding:18px 24px 18px 24px;">
+	          <ul class="MJXX">
+	           <li>发票类型：#if($!trade.trade.invoiceType==1)电子发票 #else 纸质发票 #end </li>
+	           <li>发票抬头：$!trade.trade.invoiceName</li>
+	           ##<li>发票内容：购买商品明细</li>
+	         </ul>
+	         <!--table-list end-->
+         #end
+       </div>
+
+       </div>
+
+    </div><!--end content-->
+  </div><!--end container-->
+  
+  
+    <!--备注内容小弹窗-->
+<div class="modal fade new-css MarkBGAll-zIndex" id="myModal" tabindex="10" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close btn-close-win" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">卖家备注</h4>
+        </div>
+        <div class="modal-body">
+        
+        <form action="" id="remarkForm">
+        	<input type="hidden" name="remarkTradeIds" id="remarkTradeIds">
+	         <!--内容部分-->
+	         <div class="bzpopu">
+	           <div class="left">备注内容：</div><textarea name="remark" id="remark"></textarea>
+	         </div>
+	         <!--内容部分end-->
+		</form>
+		
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-ok="modal" onclick="addRemarkMethod();">确定</button>
+            <button type="button" class="btn btn-default btn-close-win Hui-black" data-dismiss="modal">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!--备注内容小弹窗end-->
+
+<!--发货小弹窗-->
+<div class="modal fade new-css MarkBGAll-zIndex"  id="sendGoodsModalMin" tabindex="10" role="dialog" aria-labelledby="myModalLabel">
+</div>
+<!--发货小弹窗end-->
+
+</body>
+<script type="text/javascript">
+$(function(){
+	   //弹窗显示控制
+	   //显示弹窗方法 eg；
+	   $(document).on('click','.remark',function(){
+	    $('#myModal').fadeIn(100);
+	   })
+	   $(document).on('click','.MarkBGAll-zIndex .btn-close-win ,.MarkBGAll-zIndex .btn-primary',function(){
+	     $(this).parents('.MarkBGAll-zIndex').fadeOut(100);
+	     $('#MarkBG').remove();//删除蒙版
+	     $('body').removeClass('overflow-hidden-scroll');
+	   })
+	   //下拉选择
+	   $(document).on('click','.selectMessage',function(){
+	      var resultTxt = $(this).find('.result span').text();
+	      var dl = $(this).find('dl');
+	      var dd = dl.find('dd');
+	      var _i =  $(this).find('.result i');
+	      var changehei = dl.height();
+	      dl.css({'bottom':-(changehei+15)})
+	      if(dl.is(':hidden')){
+	        dl.show();
+	        _i.addClass('on');
+	      }else{
+	        dl.hide();
+	        _i.removeClass('on');
+	      }
+	      for(var i=0;i<dd.length;i++){
+	              if(dd.eq(i).text()==resultTxt){
+	                dd.eq(i).addClass('on');
+	              }
+	        }
+	   })
+	   $(document).on('click','.selectMessage dl dd',function(event){
+	     event.stopPropagation();
+	     var t = $(this).text();
+	     $(this).siblings().removeClass('on');
+	     $(this).addClass('on');
+	     $(this).parents('.selectMessage').find('.result span').html(t);
+	     $(this).parents('.selectMessage').find('dl').hide();
+	     $(this).parents('.selectMessage').find('i').removeClass('on');
+	   })
+	   //删除批量发货中的某个订单
+	   $(document).on('click','.close_this_list',function(){
+	        var length = jQuery(".Messagelist").length;
+		    var _self = $(this);
+		    if(length>1){
+		     $(this).tooltip({
+		      text: '您确定删除此订单？',
+		      icon: 'icon-warnfill',
+		      style: 'z-danger',
+		      placement: 'top',
+		      align: 'right',
+		      okHide: function() {
+		        _self.parents('.Messagelist').remove();
+		        $.alert({
+		          text: '删除成功!',
+		          time: 3000
+		        });
+		      },
+		      cancelHide: function() {
+		        $.alert({
+		          type: 'info',
+		          text: '取消成功!',
+		          time: 3000
+		        });
+		      }
+		      });
+		     }else if(length==1){
+		          $.alert({
+		          type: 'info',
+		          text: '最少发货一个',
+		          time: 3000
+		          });
+		        return ;
+		     }
+		     return false; // 记得要 return false;
+	 })
+});
+
+var addMark = function(){
+    $('#myModal').before('<div id="MarkBG"></div>');
+    $('#MarkBG').fadeIn(100);
+    $('body').addClass('overflow-hidden-scroll');
+  }
+//关闭订单
+$('.closeTrade').click(function(){
+	var id= $(this).attr('data-tradeId');
+	$(this).tooltip({
+		text: '您确定关闭交易吗？',
+		icon: 'icon-warnfill',
+		style: 'z-danger',
+		placement: 'top',
+		align: 'center',
+		okHide: function() {
+			closeTrade(id);
+		},
+		cancelHide: function() {
+			
+		}
+	});
+	return false;	// 记得要 return false;
+});
+
+</script>
+<script type="text/javascript">
+/**
+*添加备注
+*str1 是原备注的值
+*str2 是订单号
+*type是不同的类型标识
+***/
+function addRemark(str1,str2,type){
+	var tradeId = str2;
+	if(type==3){
+		//是批量增加备注
+		var val = jQuery("input[name='tradeIds']:checked");
+		if(val.length == 0){
+			jQuery.alert({
+				type: 'error',
+				text: '您还未选择任何订单',
+				time: 3000
+			});
+			return ;
+		}else{
+			val.each(function(index){
+				if(index==(val.length-1)){
+					tradeId = tradeId+jQuery(this).val();
+				}else{
+					tradeId = tradeId+jQuery(this).val()+",";
+				}
+			});
+		}
+	}
+	
+	jQuery("#remarkTradeIds").val(tradeId);
+	jQuery("#remark").val(str1);
+	//显示弹层和遮罩
+	$('#myModal').fadeIn(100);
+	addMark();
+}
+/***
+*添加备注提交方法
+***/
+function addRemarkMethod(){
+	jQuery.ajax({
+		url:"/trade/addSaleRemark",
+		data:jQuery("#remarkForm").serialize(),
+		type:"POST",
+		dataType:"JSON",
+		success:function(data){
+			if(data!=null && data.success){
+				jQuery.alert({
+					type: 'success',
+					text: '添加备注成功',
+					time: 3000
+				});
+				window.location.reload();
+			}else{
+				jQuery.alert({
+					type: 'error',
+					text: data.msg,
+					time: 3000
+				});
+			}
+		},
+		error:function(){
+			jQuery.alert({
+				type: 'error',
+				text: '添加备注失败,请稍后重试!',
+				time: 3000
+			});
+		}
+	});
+}
+
+/**
+*关闭订单
+***/
+function closeTrade(tradeId){
+	jQuery.ajax({
+		url:"/trade/closeTrade",
+		data:"tradeId="+tradeId,
+		type:"post",
+		dataType:"json",
+		success:function(data){
+			if(data!=null && data.success){
+				jQuery.alert({
+					type: 'success',
+					text: '关闭订单成功',
+					time: 3000
+				});
+				window.location.reload();
+			}else{
+				jQuery.alert({
+					type: 'error',
+					text: data.msg,
+					time: 3000
+				});
+			}
+		},
+		error:function(data){
+			jQuery.alert({
+				type: 'error',
+				text: '关闭订单失败,请稍后重试!',
+				time: 3000
+			});
+		}
+	});
+}
+
+/***
+*显示发货弹层
+****/
+function sendGoogs(tradeId,divId,type){
+	if(type==2){
+		//是批量增加备注
+		var val = jQuery("input[name='tradeIds']:checked");
+		if(val.length == 0){
+			jQuery.alert({
+				type: 'error',
+				text: '您还未选择任何订单',
+				time: 3000
+			});
+			return ;
+		}else{
+			val.each(function(index){
+				if(index==(val.length-1)){
+					tradeId = tradeId+jQuery(this).val();
+				}else{
+					tradeId = tradeId+jQuery(this).val()+",";
+				}
+			});
+		}
+	}
+	 jQuery.ajax({
+		url:"/trade/sendGoogsPage",
+		data:"tradeIds="+tradeId,
+		type:"post",
+		dataType:"html",
+		success:function(data){
+			jQuery('#'+divId).html(data);
+		},
+		error:function(data){
+			
+		}
+	}); 
+	 
+	//显示弹层和遮罩
+	jQuery('#'+divId).fadeIn(100);
+	addMark();
+}
+/**
+ * 发货功能
+ */
+function sendGoogsMethod(fromId){
+	jQuery.ajax({
+		url:"/trade/sendGoogs",
+		data:jQuery("#"+fromId).serialize(),
+		type:"post",
+		dataType:"json",
+		success:function(data){
+			if(data!=null && data.success){
+				jQuery.alert({
+					type: 'success',
+					text: '发货成功!',
+					time: 3000
+				});
+				window.location.reload();
+			}else{
+				alert("发货失败,请重试!");
+			}
+		},
+		error:function(){
+			alert("发货失败,请重试!");
+		}
+	});
+}
+
+</script>
+</html>

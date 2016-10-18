@@ -1,0 +1,26 @@
+
+<div class="searchBox">
+    <form method="get" id="form_search" action="$thisActionUrl">
+        <input name="type" type="hidden" value="$!{request.getParameter('type')}" />
+          <table>
+              <tr>
+                <th>账号：</th>
+                <td ><input name="account" type="text" value="$!query.account" placeholder=""  class="inp-w160"/></td>
+				<th>名称：</th>
+                <td ><input name="partnerName" type="text" value="$!query.partnerName" placeholder=""  class="inp-w160"/></td>
+				<td >
+                    <select name="auditStatus" id="status" class="common_select common_input_bg">
+                        <option value="1" #if("$!query.auditStatus"=="1") selected #end>未审核</option>
+                        <option value="2" #if("$!query.auditStatus"=="2") selected #end>已审核</option>
+                        <option value="" #if("$!query.auditStatus"=="") selected #end>全部</option>
+                    </select>
+##                    #formSelect({"name":"status","dictGroup":"partnerStatus","selectedValue":$!query.status})
+				</td>
+				<td >
+                    <input type="submit" value="搜索" class="btn"/>
+                    <input type="button" id="btn_reset" value="清空" onclick="location.href='${thisActionUrl}?type=$!{request.getParameter('type')}';" class="btn"/>
+                </td>
+             </tr>
+        </table>
+    </form>
+</div>

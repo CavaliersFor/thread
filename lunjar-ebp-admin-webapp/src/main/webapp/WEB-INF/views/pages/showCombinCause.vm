@@ -1,0 +1,41 @@
+ <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close btn-close-win" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">查看失败原因</h4>
+        </div>
+        <div class="modal-body">
+         <div class="top"><i></i>组合中的商品已失效您可以<a href="/combinationProduct/add?id=$!c.get(0).id" class="blue">编辑</a>修改商品后重新激活此组合</div>
+         <div class="table">
+         <table class="this-table">
+         	<tr>
+         		<th width="70%">商品名称</th>
+         		<th>失败原因</th>
+         	</tr>
+         	
+			#if($!ds && $!ds.size()>0)
+         	#foreach($d in $ds)
+         	#if($!d.status==2 || $!d.status==3)
+	         	<tr>
+         		<td><span class="name">$!d.productName</span></td>
+         		<td>
+         		#if($!d.status==2)
+							该商品已经下架
+						#end
+						#if($!d.status==3)
+							该商品已被删除
+						#end
+         		</td>
+         	</tr>
+         	#end
+         	#end
+         #end
+         </table>
+         </div>
+        
+         </div>
+        <div class="modal-footer">
+            
+        </div>
+      </div>
+    </div>

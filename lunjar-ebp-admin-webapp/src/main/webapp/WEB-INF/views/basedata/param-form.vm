@@ -1,0 +1,127 @@
+#loadWebResources(["form"]) 
+#set($screen_jsArray=["basedata/param-form"])
+#set($backUrl=$request.getParameter("back"))
+
+#if(!$backUrl)
+	#set($backUrl="listb")
+#end
+#if("$backUrl"=="listb")
+	#set($backLinkText="返回列表")
+#else
+	#set($backLinkText="返回用户信息")
+#end
+<script>_backUrl='$backUrl';</script>
+<div class="formBox">
+    <h3>
+		<i></i>
+        <div class="fl">    		
+            <span>$screen_title</span>
+		</div>
+        <div class="fr">
+			<a href="${backUrl}.htm">&lt;&lt;  $backLinkText</a>
+		</div>
+	</h3>
+    <form method="post" >
+        <div>
+			<input name="id" id="apiId" type="hidden" value="$!api.id"/>
+				<div class="left" style="float:left;width:600px;margin:10px;">
+					<table class="c2"> 
+				
+						<tr>
+							<th class="w200">接口名称</th>
+							<td>
+								#springBind("api.apiName")
+								<input name="apiName" size="30"  class="required {rangelength:[1,100]}" type="text" value="$!{api.apiName}"/>
+								<span class="red">*</span>
+								$!{status.errorMessage}
+							</td>
+							
+						</tr> 
+						<tr>
+							<th>接口类型</th>
+							<td>
+								<select id="apiType" >
+								<option value="1">保全</option>
+								<option value="2">门户</option>
+								<option value="3">数据增值</option>
+								<option value="4">短信</option>
+								<option value="5">邮件</option>
+								<option value="6">其他</option>
+								</select >
+							</td>
+						</tr>
+						<tr>
+							<th>接口地址</th>
+							<td>
+								<div><input name="apiUrl" id="apiUrl" size="30"  class="required {rangelength:[1,200]}" class="apiUrl" type="text" value="$!{api.apiUrl}"/>
+									<span class="red">*</span>
+								</div>											
+							</td>
+						</tr>
+						
+						<tr>
+							<th>接口请求字符编码</th>
+							<td>
+								<select id="apiReqEncoding" >
+								<option value="1">application/x-www-form-urlencoded</option>
+								<option value="2">multipart/form-data</option>
+								</select >
+							</td>
+						</tr>
+						<tr>
+							<th>返回主体</th>
+							<td>
+								<div><input name="apiRespContent" id="apiRespContent" class="required {rangelength:[0,500]}" size="30"  class="apiRespContent" type="text" value="$!{api.apiRespContent}"/>	
+								</div>											
+							</td>
+						</tr>
+					</table>		  
+				</div>
+				<div style="float:left;width:700px;margin:10px;">
+					<table class="c2">
+						<tr>
+							<th>接口描述</th>
+							<td>
+								<div><textarea name="apiDesc" id="apiDesc"  cols="30" type="text" value="$!{api.apiDesc}" class="required {rangelength:[1,500]}"/></textarea>
+									<span class="red">*</span>
+								</div>						
+							</td>
+						</tr>
+						<tr>
+							<th>接口请求方式</th>
+							<td>
+								<select id="apiWay" >
+								<option value="1">POST</option>
+								<option value="2">GET</option>
+								</select >										
+							</td>
+						</tr>
+						<tr >
+							<th>是否付费</th>
+							<td>
+								<select id="isPay" >
+								<option value="1">收费</option>
+								<option value="2">免费</option>
+								</select >											
+							</td>
+						</tr>
+						<tr >
+							<th>返回主体说明</th>
+							<td>
+								<div><textarea name="apiDesc" cols="30" id="apiDesc"  type="text" value="$!{api.apiDesc}"/></textarea>
+									
+								</div>						
+							</td>
+						</tr>
+					</table>
+				</div>
+				
+		</div>
+		
+			
+		<div class="form-but">
+				<button type="submit" class="button-s4" >提交</button>
+				<button type="button" class="button-s4" onclick="javascript:history.back(-1);">取消</button>
+		</div>
+    </form>
+</div>

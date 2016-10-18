@@ -1,0 +1,194 @@
+ <div class="modal-dialog" role="document">
+      <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-close-win"data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">添加搭配商品</h4>
+      </div>
+
+      <div class="modal-body"style="padding:10px;">
+
+        <div class="add-dp-product">
+          <div class="top">
+            <input type="text" class="input new_input_wi-200"placeholder="请输入商品名称"  id="productName">
+            <input type="text" class="input new_input_wi-200"placeholder="请输入商品编码"  id="enterpriseProductNo">
+              <a href="javascript:;" onclick="searchProCom();" class="btn btn-large btn-primary" id="search-data"style="margin-left:5px;">搜  索</a>
+           </div>
+           <div class="product-table">
+              <table>
+                  <tr>
+                     <th width="300">商品名称</th>
+                     <th>商品编码</th>
+                     <th>价格</th>
+                     <th>库存</th>
+                     <th>操作</th>
+                  </tr>
+                  <tbody class="viewChange">
+                  #if($ps && $!ps.data.size()>0)
+                  	#foreach($p in $!ps.data)
+	                    <tr>
+	                    	<input type="hidden" name="productId" value="$!p.product.id"/>
+	                     <td><img src="$!p.product.pathUrl" width="50" height="50">
+	                     <span class="productName">$!p.product.name</span>
+	                     </td>
+	                     <td>$!p.product.enterpriseProductNo</td>
+	                     <td>￥<span class="price">$!p.product.salePrice</span></td>
+	                     <td>$!p.product.productNum</td>
+	                     <td><div class="checkbox select-chexkbox"style="margin-right: 0;margin-top:-2px;">
+	                    <span class="checkbox-icon">
+	                      <i class="icon-checked"></i>
+	                      <input type="checkbox" name=""  value="$!p.product.id"/>
+	                    </span>
+	                   </div></td>
+	                  </tr>
+	                  #end
+                  #else
+                  #end
+                  </tbody>
+                  
+              </table>
+           </div>
+           <div class="newTabTop">
+                  <div class="right" style="height:30px;">
+                  <!--分页-->
+                  <div class="page-list" id="FenYe"></div>
+                  <!--分页-->
+                  </div>
+                <div class="clear"></div>
+              </div>
+        </div>
+     
+                   
+      </div>     
+    </div>
+   <div class="modal-footer">
+    <button type="button" class="btn btn-primary this-close-bz"data-ok="modal" id="sure-select-zh">确定</button>
+    <button type="button"class="btn btn-default btn-close-win Hui-black"data-dismiss="modal">取消</button>
+  </div>
+ </div>
+ <script type="text/javascript">
+ 
+ /*
+ *分页 ajax() 模式
+  */
+   var ajaxGetData = function(_data,url,successFn){//参数1-传给后台参数{json} 2-后台路径 3-成功回调方法
+   $.ajax({
+             //提交数据的类型 POST GET
+             type:"POST",
+             //提交的网址
+             url:url,
+             //提交的数据
+             data:_data,
+             //返回数据的格式
+             datatype: "",//"xml", "html", "script", "json", "jsonp", "text".
+             //在请求之前调用的函数
+             beforeSend:function(){},
+             //成功返回之后调用的函数             
+             success:function(data){
+               successFn(data);//成功回调
+             },
+             //调用执行后调用的函数
+             complete: function(XMLHttpRequest, textStatus){},
+             error: function(){
+                 console.log('异常')
+             }
+    })
+   }
+
+   var successFnPage = function(data){
+	   console.log(data);
+	   var pageCount = data.page.pageCount;
+	   var pageNo = data.page.pageNo;
+	   pageMethod(pageCount,pageNo);
+	 //data
+       //图片路径
+       //产品名称
+       //商品编码
+       //价格
+       //库存
+	   var info = data.list;
+	   var html="";
+	   if(info!=null && info.length>0){
+		   for(var i=0;i<info.length;i++){
+			   var pid=info[i].product.id;
+			   var picPath = info[i].product.pathUrl;
+			   var pName = info[i].product.name;
+			   var pNo = info[i].product.enterpriseProductNo;
+			   var price = info[i].product.salePrice;
+			   var pStore = info[i].product.productNum;
+			   html = html+'<tr><input type="hidden" name="productId" value="'+pid+'"/><td><img src="'+picPath+'" width="50" height="50"><span class="productName">'+pName+'</span></td>'
+			   html = html +'<td>'+pNo+'</td>';
+			   html = html + '<td>￥<span class="price">'+info[i].product.salePrice+'</span></td>';
+			   html = html + '<td>'+pStore+'</td>';
+			   html = html + '<td><div class="checkbox select-chexkbox"style="margin-right: 0;margin-top:-2px;"><span class="checkbox-icon"><i class="icon-checked"></i><input type="checkbox" name=""/></span></div></td>';
+			   html = html + '</tr>';
+		   }
+	   }
+	  //console.log(html);
+	  jQuery(".viewChange").html(html);
+    //  console.log(data);
+   }
+   //点击搜索按钮
+   function searchProCom(){
+	  var productName = jQuery("#productName").val();
+	  var enterpriseProductNo = jQuery("#enterpriseProductNo").val();
+	  var _data = {
+              "productName" : productName,
+              "enterpriseProductNo" : enterpriseProductNo
+            }
+	  var url = '/combinationProduct/listproJson';//后台访问路径
+	  ajaxGetData(_data, url, successFnPage);
+   }
+   
+   
+   function pageMethod(a,b){
+	   
+	   var pageCount = a;//$!trades.pageCount;//模拟后台总页数
+	   var pageIndex = b;//$trades.pageNo;//当前第几页变量
+	   var pageSplice = 5;//分页显示个数
+	   var pgSp = new Antiwild({
+	       pageCount : pageCount,//后台总页数
+	       pageIndex : pageIndex,//当前页 >=1 <=pageCount
+	       pageSplice : pageSplice,//分页显示个数 > 1
+	       indexClass:'active',//当前页显示class
+	       pageNode : '#FenYe',//导入的Dom id or class
+	       ajax : true,
+	       pageClickFn:function(index){//点击页面执行方法
+	           var pageNum = parseInt($('#FenYe li a').eq(index).text());//第几页
+	           var url = '/combinationProduct/listproJson';//后台访问路径
+	           var _data = {
+	                       "pageNo" : pageNum,
+	                       "productName" : jQuery("#productName").val(),
+	                       "enterpriseProductNo" : jQuery("#enterpriseProductNo").val()
+	                     }
+	           ajaxGetData(_data,url,successFnPage)
+	       },
+	       pageUp : function(){//点击上一页执行方法
+	           var pageNum = parseInt($('#FenYe li.active a').text())//第几页
+	           var url = '/combinationProduct/listproJson';//后台访问路径
+	           var _data = {
+	                       "pageNo" : pageNum,
+	                       "productName" : jQuery("#productName").val(),
+	                       "enterpriseProductNo" : jQuery("#enterpriseProductNo").val()
+	                     }
+	          ajaxGetData(_data,url,successFnPage)
+	       },
+	       pageDown : function(){//点击下一个执行方法
+	           var pageNum = parseInt($('#FenYe li.active a').text())//第几页
+	           var url = '/combinationProduct/listproJson';//后台访问路径
+	           var _data = {
+	                       "pageNo" : pageNum,
+	                       "productName" : jQuery("#productName").val(),
+	                       "enterpriseProductNo" : jQuery("#enterpriseProductNo").val()
+	                     }
+	          ajaxGetData(_data,url,successFnPage)
+	       }
+	     });
+   }
+   $(function(){
+		 var pageCount = $!ps.pageCount;
+	     var pageIndex = $!ps.pageNo;
+		 pageMethod(pageCount,pageIndex);
+   });
+ </script>

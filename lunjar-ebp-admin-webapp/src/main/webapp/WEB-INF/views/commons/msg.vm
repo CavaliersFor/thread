@@ -1,0 +1,20 @@
+#set($screen_title=$page_msg.msg)
+<div class="common_msg3">
+	<span class="icons icons_$page_msg.type"></span>
+	<span class="text">
+		<div class="msgtitle msgtitle_$page_msg.type"> #direct($screen_title)</div>
+    	<ul>
+    		#foreach($c in $page_msg.list)
+    			<li>
+    				#direct($c)
+                </li>
+    		#end
+    	</ul>
+	</span>
+	##if("$page_msg.type"!="success" && "$!page_msg.hiddenBack" != "true")
+        ##<div class="clear"></div>
+		##<div class="buttonbox">
+			##<input type="button" value="返 回" onclick="history.back()"/>
+		##</div>
+	##end
+</div>

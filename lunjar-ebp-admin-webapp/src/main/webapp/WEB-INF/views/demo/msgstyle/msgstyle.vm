@@ -1,0 +1,46 @@
+#set($screen_title="提示示例")
+<script>
+	jQuery(function(){
+		jQuery('a.success').click(function(){
+			Core.PopUtil.alert('成功！',{		
+				callback :function(){
+					Core.PopUtil.alert('关闭之后！',{        				
+        				autohide : true//自动消失,默认false
+        			});
+				}
+			});
+		});
+		
+		jQuery('a.fail').click(function(){
+			Core.PopUtil.error('失败！');
+		});
+		
+		jQuery('a.warn').click(function(){
+			Core.PopUtil.warn('警告！');
+		});
+		
+		jQuery('a.confirm').click(function(){
+			Core.PopUtil.confirm('确认XXX？',function(){
+				Core.PopUtil.alert('确认之后！',{
+    				autohide : true
+    			});
+			});
+		});
+	})
+	
+	##详细请查询Core.PopUtil的API
+</script>
+<div class="p10">
+    <div class="msg-success" ><div>成功!</div><sup  onclick="App.closeMsg(this);" >x</sup></div>
+    <div class="msg-error mt10" ><div>失败!<br/>换一行试试!</div><sup  onclick="App.closeMsg(this);">x</sup></div>
+    <div class="msg-info mt10" ><div>提示!<br/>换一行试试!</div><sup  onclick="App.closeMsg(this);">x</sup></div>
+	<br/>
+	<hr>
+    <div class="pt10">弹出层</div>
+	<div class="pl10">
+    	[<a href="javascript:void(0);" class="success">成功</a>]
+    	&nbsp;[<a href="javascript:void(0);" class="fail">失败</a>]
+    	&nbsp;[<a href="javascript:void(0);" class="warn">警告</a>]
+    	&nbsp;[<a href="javascript:void(0);" class="confirm">确认</a>]
+	</div>
+</div>

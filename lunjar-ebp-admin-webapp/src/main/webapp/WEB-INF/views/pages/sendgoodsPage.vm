@@ -1,0 +1,63 @@
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close btn-close-win" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">发货</h4>
+        </div>
+        <form action="" id="sendGoodsMinForm">
+	        <div class="modal-body">
+			
+	         <!--内容部分-->
+				#if($!distributionMode==2)
+					#foreach($t in $trades)
+						<input type="hidden" name="tradeIds" value="$t.id">
+			           <!--上门自提-->
+			           <p class="t-i-0">物流方式：<strong>上门自提</strong></p>
+			           <p class="t-i-0">自提点：$!t.buyerAddress</p>
+			           <p class="t-i-0">自提时间：$!t.pickUpTime</p>
+			            <!--上门自提-->
+		            #end
+				#else
+				#foreach($t in $trades)
+			            <!--快递发货-->
+			            <input type="hidden" name="tradeIds" value="$t.id">
+			            <input type="hidden" name="companys" value="">
+			           <div class="message">
+			              <ul>
+			                 <li class="first">收货信息</li>
+			                 <li>$!t.buyerName,$!t.buyerPhone,$!t.province$!t.city$!t.region$!t.buyerAddress</li>
+			              </ul>
+			           </div>
+			           <p class="t-i-0">物流方式：<strong>快递发货</strong></p>
+			           <div class="select-kd">
+			               <span class="left">物流公司：</span>
+			               <div class="selectMessage"style="width:200px;top:-2px;">
+			                    <div class="result"><span id="result$velocityCount">$!companys.get(0).name</span><i class=""></i></div>
+			                    <div class="result-div">
+			                    
+			                    </div>	
+			                    <dl style="height:240px;">
+			                        <dt><input type="text" class="input search" placeholder="搜索" ></dt>
+				                    	#foreach($c in $companys)
+				                       		<dd class="">$!c.name</dd>
+				                       #end
+			                    </dl>
+			                </div>
+			           </div>
+			           <div class="bt-wlgs">
+			             <span class="left"></span>
+			                <input class="input input-number new_input_wi" type="text"  name="codes" placeholder="请填写运单号" />
+			            </div>
+		            #end
+				#end
+	            <!--快递发货-->
+	         <!--内容部分end-->
+	
+	        </div>
+        </form>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-ok="modal" onclick="sendGoogsMethod('sendGoodsMinForm')">确定</button>
+            <button type="button" class="btn btn-default btn-close-win Hui-black" data-dismiss="modal">取消</button>
+        </div>
+      </div>
+</div>

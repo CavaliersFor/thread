@@ -1,0 +1,53 @@
+#loadWebResources(["list","datePicker"]) 
+#set($screen_jsArray=["basedata/param-list"])
+<div class="formBox">
+    <h3>
+        <div class="fl">    		
+            <span>业务系统详情</span>
+		</div>
+        <div class="fr">
+			<a href="/bizSystem/list">&lt;&lt;  返回列表</a>
+		</div>
+	</h3>
+	<table class="c2"> 
+		<tr>
+			<th width="13%">业务系统名称</th>
+			<td width="38%">
+				${bizSystem.systemName}
+			</td>
+			<th width="13%">发件人邮箱密码</th>
+			<td>
+				${bizSystem.mailPassword}
+			</td>
+		</tr>
+		<tr>
+			<th>SecretKey</th>
+			<td>
+			 	${bizSystem.secretKey}		
+			</td>
+			<th>发件人邮件地址</th>
+			<td>
+				${bizSystem.mailFrom}						
+			</td>
+		</tr>
+		<tr>	
+			<th>AccessKey</th>
+			<td>
+				${bizSystem.accessKey}
+			</td>
+			<th>SMTP服务器地址</th>
+			<td>
+				${bizSystem.mailSmtpServer}									
+			</td>
+		</tr>
+		<tr>	
+			<th>状态</th>
+			<td colspan="3">
+				#getDictionaryName("bizSystemStatus" ${bizSystem.status})
+			</td>
+ 
+		</tr>
+ 
+	</table>
+	
+</div>
