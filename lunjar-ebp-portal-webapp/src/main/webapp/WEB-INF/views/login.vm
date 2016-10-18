@@ -1,0 +1,99 @@
+#loadWebResources(["form"]) 
+#set($screen_title="接入者控制台-安存开放平台")
+#set($screen_jsArray=["login"])
+#loadCommonUrls()
+<link rel="stylesheet" type="text/css" href="#getWebresourcesUrl()/css/cy.css">
+<link rel="stylesheet" type="text/css" href="#getWebresourcesUrl()/css/xpf.css">
+<style>
+    html, body {
+        width: 100%;
+        min-width: 1200px;
+    }
+    span.error1{background-image:url("#getWebresourcesUrl()/img/icn_error2.gif"); background-repeat:no-repeat; color: #EA5200;background-position: 0px;padding-left: 18px;}
+</style>
+
+<div id="login">
+	<div id="header">
+		<div class="w1200">
+			<a href="${partnerPortalUrl}"><img src="#getWebresourcesUrl()/img/logo-web.png" alt="" class="fl logo"></a>
+			<!-- <h1 class="fl">开放平台</h1> -->
+			<div class="fr ghost">
+				<a href="login" class="fl">登录</a>
+				<span class="fl">|</span>
+				<a href="${userPortalUrl}/register.php" class="fl">注册</a>
+				<br class="clr">
+			</div>
+			<ul class="horizontal fr">
+				<li><a href="${partnerPortalUrl}">首页</a></li>
+				<li><a href="${partnerPortalUrl}/api">接入指南</a></li>
+				<li><a href="${partnerPortalUrl}/api-file">开发文档</a></li>
+				##<li><a href="index">管理控制台</a></li>
+			</ul>
+			<br class="clr">
+		</div>
+	</div>
+	<div id="main" class="w1200">
+		<div class="login-box">
+			<div class="yahei">
+				用户登录
+			</div>
+            <div id="errorArea">
+                <span id="error_mes" class="error1" style="display: none;"></span>
+##    				<span id="error_mes1" STYLE="display: none;"></span>
+            </div>
+            <form  id="formLogin" method="post" action="login"  auto-complete="false">
+                <input type="hidden" name="userApplyUrl" value="${userPortalUrl}/user_apply.php"/>
+                <input type="hidden" name="errorMsg" value=""/>
+				#csrfToken()
+				<p class="line line-0 only-input">
+					<em class="icon"></em>
+					<input type="text" class="text"  class="required"  id="account" name="account"  placeholder="请输入账号" value="">
+					<br class="clr">
+				</p>
+				<p class="line line-1 only-input">
+					<em class="icon"></em>
+					<input class="text" type="password"  class="required" id="txtPwd" name="txtPwd"  placeholder="请输入密码" value="">
+					<br class="clr">
+				</p>
+				<div class="line line-2"  id="tr_validateCode" style="display: none">
+					<p class="only-input">
+						<em class="icon"></em>
+						<input type="text" class="text" id="vcode"  name="code" placeholder="请输入验证码">
+						<br class="clr">
+					</p>
+					<img src="" alt=""  id="validateCodeImage">
+					<br class="clr">
+				</div>
+				<p class="line line-3">
+					<a href="javascript:void(0)" class="fl" onclick="showRegist('${userPortalUrl}/resetpassword.php')">忘记密码？</a>
+					<span class="fr" id="ch_code" style="display:none">看不清，换一张</span>
+					<br class="clr">
+				</p>
+				<p class="line line-4">
+					<input  id="btnSubmit"  type="submit" value="登 录" class="fl login-btn" >
+					<input type="button" value="注 册" onclick="showRegist('${userPortalUrl}/register.php?urlFrom=2')" class="fr regist-btn" >
+					<br class="clr">
+				</p>
+			</form>
+		</div>
+					<div class="login_popup1" style="display: none;">
+						 <h1><img src="#getWebresourcesUrl()/img/icon_1.png"><span id="error_mes">请仔细核实用户账号和密码</span></h1>
+						 <div class="popup_text">
+								<p>还没有用户账号&nbsp;<a  class="zc">我要注册</a></p>
+								<p>&nbsp;忘记密码了&nbsp;&nbsp;<a  class="zh">我要找回密码</a></p>
+						 </div>
+					</div>
+
+				<div class="login_popup2" style="display: none;">
+					<h1><img src="#getWebresourcesUrl()/img/icon_2.png">登录信息验证已通过！</h1>
+					<p>当前为接入者的主要登录口，但你还未成为接入者。</p>
+					<div class="dlbtn" style="text-align: center;">
+						<a id="aApplyUserUrl"href="javascript:;">申请成为接入者</a>
+					</div>
+				</div>
+	</div>
+
+	<div class="mak" style="display: none;">
+	</div>
+
+</div>

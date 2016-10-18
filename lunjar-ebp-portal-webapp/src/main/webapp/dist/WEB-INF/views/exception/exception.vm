@@ -1,0 +1,5 @@
+#set($screen_title="异常示例")
+<div style="padding:15px;">
+    <a href="#getAppServer()/exception/exception-service">业务异常</a>
+    <a href="#getAppServer()/exception/exception-system">系统异常</a>
+</div>

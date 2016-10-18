@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>测试微信支付 - 点了么</title>
+</head>
+<body>
+	<div id="console">控制台输出 -----------------------</div>
+
+	<script src="./jquery.min.js"></script>
+	<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	<script type="text/javascript">
+		window.onerror = function() {
+		    $('#console').append(str);
+		};
+
+		$(document).ready(function() {
+			log('ready..');
+
+			function onBridgeReady() {
+				log('onBridgeReady...');
+
+				$.ajax({
+					type: 'post',
+		            url: 'http://wx.mall.lunjar.com/internal',
+		            data: {
+		            	method: 'createWeiXinPayOrder',
+		            	userId: 1,
+		            	deviceInfo: '员村分店',
+		            	outTradeNo: '2016081110310005',
+		            	desc: '潮汕炒粿条_商城',
+		            	totalFee: 1,
+		            	openId: 'op7Ors09hV39wHCbFAwi5zAmc2is'
+		            },
+		            dataType: 'json',
+		            success: function(data) {
+		            	log(JSON.stringify(data));
+		            	if (data.isSuccess) {
+							WeixinJSBridge.invoke(
+		            			'getBrandWCPayRequest',
+		            			data.prepayParams,
+								function(res) {
+									log(JSON.stringify(res));
+									log(res.err_msg);
+								}
+							);
+		            	}
+		            },
+		            error: function(e) {
+		                log('创建微信预付单出错，出错信息：' + JSON.stringify(e));
+		            }
+				});
+			}
+
+			if (typeof WeixinJSBridge == 'undefined') {
+				if (document.addEventListener) {
+					document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+				} else if (document.attachEvent) {
+					document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
+			        document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+				}
+			} else {
+				onBridgeReady();
+			}
+		});
+
+		function log(str) {
+			$('#console').append('<br>' + str);
+		}
+	</script>
+</body>
+</html>

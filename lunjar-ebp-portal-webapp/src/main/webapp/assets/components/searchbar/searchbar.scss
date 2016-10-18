@@ -1,0 +1,41 @@
+/**
+ * 搜索框
+ */
+
+.searchbar {
+	width: 96%;
+	display: inline-block;
+	vertical-align: middle;
+	box-sizing: border-box;
+	margin: auto 2%;
+
+	&-input {
+		box-sizing: border-box;
+		width: 86%;
+		height: 1.92rem;
+		padding: 0.5rem 0;
+		font-size: 0.75rem;
+		text-indent: 0.3rem;
+		margin: 0.5rem auto;
+		vertical-align: middle;
+		display: inline-block;
+		float: left;
+		border: 1px solid #E0E0E0;
+	  background-color: #fff;
+	  border-radius: 0;
+	  -webkit-appearance: none;
+	}
+
+	&-btn {
+		width: 14%;
+		display: inline-block;
+		height: 1.92rem;
+		margin-top: 0.5rem;
+		border-left: none;
+		vertical-align: middle;
+		background:url(./search.png) center center;
+		background-size: 1.1rem;
+		background-repeat: no-repeat;
+		border: 1px solid #E0E0E0;
+	}
+}

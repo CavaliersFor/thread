@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no">
+  <title>Document</title>
+</head>
+<body>
+  <div class="main">
+    <div class="address-box">
+      <div class="location">
+        <span class="icon-location"></span>
+      </div>
+      <!-- <div class="detail">
+        <div>收货人：陈先生</div>
+        <div>收货地址：辽宁省沈阳市沈北新区人民路32号</div>
+      </div> -->
+      <div class="detail">
+        <div>请选择收货地址</div>
+      </div>
+    </div>
+    <div class="bill-list">
+      <div class="bill">
+        <div class="shop-header">
+          <img src="https://img.alicdn.com/5c/b1/T1CDCGXdteXXb1upjX.jpg" alt="" class="shop-pic">
+          <span>淘店长</span>
+        </div>
+        <div class="items">
+          <div class="item">
+            <a href="">
+              <img src="" alt="" class="product">
+            </a>
+            <div class="pro-right">
+              <div>2016秋装童装男童毛衣套头针织衫中大童纯棉儿童圆领男孩上衣潮</div>
+              <div class="detail">
+                <span class="price">￥ 999</span>
+                <span class="num">X 1</span>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <a href="">
+              <img src="" alt="" class="product">
+            </a>
+            <div class="pro-right">
+              <div>2016秋装童装男童毛衣套头针织衫中大童纯棉儿童圆领男孩上衣潮</div>
+              <div class="detail">
+                <span class="price">￥ 999</span>
+                <span class="num">X 1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="deliver">
+          <span>运费：</span>
+          <span>￥ 10</span>
+        </div>
+        <div class="memo">
+          <textarea placeholder="给卖家留言"></textarea>
+        </div>
+        <div class="total">
+          <span>共 <strong>1</strong> 件商品</span>
+          <span>合计：<strong>￥ 159</strong></span>
+        </div>
+      </div>
+      <div class="bill">
+        <div class="shop-header">
+          <img src="https://img.alicdn.com/5c/b1/T1CDCGXdteXXb1upjX.jpg" alt="" class="shop-pic">
+          <span>淘店长</span>
+        </div>
+        <div class="items">
+          <div class="item">
+            <a href="">
+              <img src="" alt="" class="product">
+            </a>
+            <div class="pro-right">
+              <div>2016秋装童装男童毛衣套头针织衫中大童纯棉儿童圆领男孩上衣潮</div>
+              <div class="detail">
+                <span class="price">￥ 999</span>
+                <span class="num">X 1</span>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <a href="">
+              <img src="" alt="" class="product">
+            </a>
+            <div class="pro-right">
+              <div>2016秋装童装男童毛衣套头针织衫中大童纯棉儿童圆领男孩上衣潮</div>
+              <div class="detail">
+                <span class="price">￥ 999</span>
+                <span class="num">X 1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="deliver">
+          <span>运费：</span>
+          <span>￥ 10</span>
+        </div>
+        <div class="memo">
+          <textarea placeholder="给卖家留言"></textarea>
+        </div>
+        <div class="total">
+          <span>共 <strong>1</strong> 件商品</span>
+          <span>合计：<strong>￥ 159</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <span>合计：<strong>￥ 300</strong></span>
+      <a href="" class="ft-btn">支付</a>
+    </div>
+  </div>
+  <script>
+    //js控制web页面适配
+    (function (doc, win) {
+      var docEl = doc.documentElement,
+        resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+        recalc = function() {
+          var clientWidth = docEl.clientWidth;
+          if (!clientWidth) return;
+          if (clientWidth > 720) {
+            clientWidth = 720;
+          }
+          docEl.style.fontSize = 40 * (clientWidth / 720) + 'px';
+        };
+      if (!doc.addEventListener) return;
+      win.addEventListener(resizeEvt, recalc, false);
+      doc.addEventListener('DOMContentLoaded', recalc, false);
+    })(document, window)
+  </script>
+</body>
+</html>

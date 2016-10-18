@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no">
+  <title>Document</title>
+</head>
+<body>
+  <div id="main" class="address-wrap">
+    <div class="address-content">
+      <div class="address">
+        <a href="javascript:void(0);" class="address-info choose">
+          <div class="ad-info">
+            <div>淘店长</div>
+            <div>18888888888</div>
+          </div>
+          <div class="ad-detail">广东省广州市天河区天河南街道壬丰大厦壬丰大厦东厅1406</div>
+        </a>
+      </div>
+      <div class="address">
+        <a href="javascript:void(0);" class="address-info">
+          <div class="ad-info">
+            <div>淘店长</div>
+            <div>18888888888</div>
+          </div>
+          <div class="ad-detail">广东省广州市天河区天河南街道壬丰大厦壬丰大厦东厅1406</div>
+        </a>
+      </div>
+      <div class="address">
+        <a href="javascript:void(0);" class="address-info">
+          <div class="ad-info">
+            <div>淘店长</div>
+            <div>18888888888</div>
+          </div>
+          <div class="ad-detail">广东省广州市天河区天河南街道壬丰大厦壬丰大厦东厅1406</div>
+        </a>
+      </div>
+      <div class="address">
+        <a href="javascript:void(0);" class="address-info">
+          <div class="ad-info">
+            <div>淘店长</div>
+            <div>18888888888</div>
+          </div>
+          <div class="ad-detail">广东省广州市天河区天河南街道壬丰大厦壬丰大厦东厅1406</div>
+        </a>
+      </div>
+      <div class="address">
+        <a href="javascript:void(0);" class="address-info">
+          <div class="ad-info">
+            <div>淘店长</div>
+            <div>18888888888</div>
+          </div>
+          <div class="ad-detail">广东省广州市天河区天河南街道壬丰大厦壬丰大厦东厅1406</div>
+        </a>
+      </div>
+    </div>
+    <div class="btn-footer">
+      <a href="javascript:void(0);" class="btn-add">添加新地址</a>
+    </div>
+  </div>
+  <script>
+    //js控制web页面适配
+    (function (doc, win) {
+      var docEl = doc.documentElement,
+        resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+        recalc = function() {
+          var clientWidth = docEl.clientWidth;
+          if (!clientWidth) return;
+          if (clientWidth > 720) {
+            clientWidth = 720;
+          }
+          docEl.style.fontSize = 40 * (clientWidth / 720) + 'px';
+        };
+      if (!doc.addEventListener) return;
+      win.addEventListener(resizeEvt, recalc, false);
+      doc.addEventListener('DOMContentLoaded', recalc, false);
+    })(document, window)
+  </script>
+</body>
+</html>

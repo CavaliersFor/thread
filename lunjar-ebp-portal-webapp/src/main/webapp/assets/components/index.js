@@ -1,0 +1,21 @@
+import './base';
+import './icon';
+import './checkbox';
+import './loading';
+export Message from './message';
+export Popup from './popup';
+import './searchbar';
+import './stepper';
+export Swiper from './swiper';
+import './tabbar';
+import './tooltab';
+import './confirm';
+import './datepicker';
+
+export AddToCar from './addtocar';
+import './address-list';
+import './goodslist';
+import './itemlist';
+import './shop-common';
+import './tradelist';
+import './empty-tip';

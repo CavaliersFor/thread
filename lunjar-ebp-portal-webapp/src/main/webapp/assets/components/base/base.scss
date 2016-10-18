@@ -1,0 +1,85 @@
+html {
+  font-size: 20px;
+}
+
+body {
+  color: #333;
+  font-family: "微软雅黑";
+  background-color: #f7f7f7;
+  -webkit-user-select: none;
+}
+
+body,
+dd,
+dl,
+dt,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+li,
+ol,
+p,
+ul {
+  margin: 0;
+  padding: 0
+}
+
+li,
+ol,
+ul {
+  list-style: none
+}
+
+img {
+  border: none;
+}
+
+input {
+  outline: 0;
+}
+
+a {
+  color: #333;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* 取消链接高亮 */
+}
+
+a:hover {
+  text-decoration: none
+}
+
+
+/*去掉iPhone、iPad的默认按钮样式*/
+
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+input[type="text"],
+input[type="number"] {
+  -webkit-appearance: none;
+}
+
+// 页面主布局
+#main {
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+  height: auto;
+  max-width: 45pc;
+  min-width: 18pc;
+  font-size: 0.75rem;
+}
+
+.z-hidden {
+  display: none !important;
+}
+
+.empty-list {
+  padding: .5rem 0;
+  text-align: center;
+}
+

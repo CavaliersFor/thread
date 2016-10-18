@@ -1,0 +1,99 @@
+#parse("pages/commons/header.vm")
+<body>
+  <!-- inject:css -->
+  <link rel="stylesheet" href="#getWebresourcesUrl()assets/center.159a764f50256424be5f.css">
+  <!-- endinject -->
+  <div id="main">
+    <div class="personal">
+      <div class="personal-inform">
+        <div class="personal-inform-avatar" style="background-image:url(https://img.alicdn.com/5c/b1/T1CDCGXdteXXb1upjX.jpg)"></div>
+        <div class="personal-inform-name">$!buyer.nickname</div>
+        <div class="personal-inform-phone">
+          <span class="personal-inform-phone_icon"></span>
+          <p class="personal-inform-phone_num">$!buyer.phone</p>
+        </div>
+      </div>
+      <div class="personal-nav">
+        <ul>
+          <li>
+            <a href="/trade/list?status=2">
+              <p class="personal-nav-icon icon-b"></p>
+              #if ($waitPay > 0)
+              <span class="personal-icon">$!waitPay</span>
+              #end
+              <p class="personal-nav-text">待付款</p>
+            </a>
+          </li>
+          <li>
+            <a href="/trade/list?status=3">
+              <p class="personal-nav-icon icon-c"></p>
+              #if ($waitSend > 0)
+              <span class="personal-icon">$!waitSend</span>
+              #end
+              <p class="personal-nav-text">待发货</p>
+            </a>
+          </li>
+          <li>
+            <a href="/trade/list?status=5">
+              <p class="personal-nav-icon icon-d"></p>
+              #if ($waitDelivery > 0)
+              <span class="personal-icon">$!waitDelivery</span>
+              #end
+              <p class="personal-nav-text">待收货</p>
+            </a>
+          </li>
+          <li>
+            <a href="/trade/list?status=7">
+              <p class="personal-nav-icon icon-e"></p>
+              #if ($completed > 0)
+              <span class="personal-icon">$!completed</span>
+              #end
+              <p class="personal-nav-text">已完成</p>
+            </a>
+          </li>
+          <li>
+            <a href="/trade/list?refundStatus=1">
+              <p class="personal-nav-icon icon-f"></p>
+              #if ($refunded > 0)
+              <span class="personal-icon">$!refunded</span>
+              #end
+              <p class="personal-nav-text">已退款</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="main-content">
+      <a href="/trade/list">
+        <div class="main-content-box">
+          <div class="main-content-icon icon-trade"></div>
+          <div class="main-content-text">我的订单</div>
+          <div class="main-content-position"></div>
+        </div>
+      </a>
+      <a href="/product/listCart">
+        <div class="main-content-box">
+          <div class="main-content-icon icon_car"></div>
+          <div class="main-content-text">购物车</div>
+          <div class="main-content-position"></div>
+        </div>
+      </a>
+      <a href="/buyAddress/list">
+        <div class="main-content-box">
+          <div class="main-content-icon icon_member"></div>
+          <div class="main-content-text">收货地址管理</div>
+          <div class="main-content-position"></div>
+        </div>
+      </a>
+    </div>
+
+    <!-- 底部菜单 -->
+    #parse("pages/commons/tabbar.vm")
+    <!-- /底部菜单 -->
+  </div>
+  <!-- inject:js -->
+  <script src="#getWebresourcesUrl()assets/common.d602c6046ddb4170db1e.js"></script>
+  <script src="#getWebresourcesUrl()assets/center.159a764f50256424be5f.js"></script>
+  <!-- endinject -->
+</body>
+</html>

@@ -1,0 +1,53 @@
+
+.classicalmix {
+
+	&-list {
+		margin-top: .48rem;
+
+		.itemlist-item:first-child {
+			border-bottom-style: dashed;
+		}
+	}
+
+	&-buybox {
+		z-index: 1;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		box-sizing: border-box;
+		width: 100%;
+		padding: .384rem .48rem;
+		font-size: .6rem;
+		text-align: right;
+		background-color: #fff;
+		border-top: 1px solid #eee;
+
+		section {
+			display: inline-block;
+			vertical-align: middle;
+			margin-right: .3rem;
+			font-size: .55rem;
+		}
+
+		.total-pay {
+			color: #f00;
+
+			span {
+				margin-left: .2rem;
+				font-size: .7rem;
+			}
+		}
+
+		.pay-btn {
+			display: inline-block;
+			height: 1.728rem;
+			padding: 0 .48rem;
+			line-height: 1.728rem;
+			vertical-align: middle;
+			color: #fff;
+			background-color: #f00;
+			border-radius: .15rem;
+			border: none;
+		}
+	}
+}

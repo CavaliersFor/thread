@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+	<head>	
+		#consoleHtmlHeador()
+		
+		#loadConsoleWr()
+	</head>
+	<body>
+		$screen_content
+	</body>
+</html>

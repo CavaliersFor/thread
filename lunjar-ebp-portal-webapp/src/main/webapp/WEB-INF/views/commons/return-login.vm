@@ -1,0 +1,9 @@
+<script type="text/javascript">
+$(function(){
+	if(window.parent.length >0){ 
+		window.parent.location="/";
+	}else {
+		window.location="/";
+	}
+})
+</script>

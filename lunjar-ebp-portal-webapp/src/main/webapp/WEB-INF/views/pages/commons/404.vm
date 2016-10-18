@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no">
+	<title>404</title>
+	<style type="text/css">
+     *{padding:0;margin: 0;}
+     html,body{height: 100%;font-size: 20px;background: #F7F4EF;font-family:'Microsoft Yahei';}
+     .main-se-error{width: 100%;height: 100%;background: #F7F4EF;overflow: hidden;}
+     .list{width: 100%;text-align: center;margin: 0 auto;
+     	margin-top:45%;vertical-align: middle;
+     }
+     .list p{line-height: 1.1rem;font-size: .7rem;display: inline-block;margin: 0 auto;text-align: left;}
+     .text {margin-top: -.3rem;color: #666;margin-left:1rem;}
+     .link{color: #1d8ae7;text-decoration: underline;}
+     .centerImg{
+     	width: 100%;height:12rem;
+     	display: inline-block;
+     	background:url(../../assets/images/404.png) center  no-repeat;
+     	background-size:50%;
+      }
+     .changeImg{background-size:80%; }
+	</style>
+</head>
+<body>
+	<div class="main-se-error">
+		<div class="list">
+		    
+		     <div class="centerImg"></div>
+		   
+		    <div class="text">
+			<p>
+				sorry！您所访问的页面不存在。
+			</p>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

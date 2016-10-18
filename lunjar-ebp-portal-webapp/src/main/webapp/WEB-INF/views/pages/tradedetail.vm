@@ -1,0 +1,215 @@
+#parse("pages/commons/header.vm")
+<body>
+  <!-- inject:css -->
+  <!-- endinject -->
+	<div id="main" class="tradedetail">
+    #set ($orders=$trade.list)
+    #set ($trade=$trade.trade)
+
+    <!-- 收货信息 -->
+    <div class="addr-box">
+      <span class="addr-icon"></span>
+      #if ($trade.distributionMode == 1)
+      <div class="addr-info">
+        <div class="buyer-info">
+          <span>收货人 : $!trade.buyerName</span>
+          <span>$!trade.buyerPhone</span>
+        </div>
+        <div class="addr-detail">收货地址 : $!{trade.province}$!{trade.city}$!{trade.region}$!{trade.buyerAddress}</div>
+      </div>
+      #else
+      <div class="addr-info">
+        <div class="buyer-info">
+          <span>取货码 : $!trade.pickUpNo</span>
+          <span>自提时间 : $!trade.pickUpTime</span>
+        </div>
+        <div class="addr-detail">提货地址 : $!{trade.province}$!{trade.city}$!{trade.region}$!{trade.buyerAddress}</div>
+      </div>
+      #end
+    </div>
+    <!-- /收货信息 -->
+
+    <!-- 订单宝贝 -->
+    <div class="tradelist-item js-trade">
+      <div class="tradelist-header">
+        <a class="show-info" href="/index/$!{shopId}">
+          <img src="$!trade.headPicUrl" alt="">
+          <span>$!trade.shopName</span>
+        </a>
+        #if ($trade.status == 1 || $trade.status == 2)
+          <span class="trade-status js-trade-status">待付款</span>
+        #end
+        #if ($trade.status == 3)
+          <span class="trade-status js-trade-status">部分发货</span>
+        #end
+        #if ($trade.status == 4)
+          <span class="trade-status js-trade-status">待发货</span>
+        #end
+        #if ($trade.status == 5)
+          <span class="trade-status js-trade-status">已发货</span>
+        #end
+        #if ($trade.status == 6)
+          <span class="trade-status js-trade-status">已签收</span>
+        #end
+        #if ($trade.status == 7)
+          <span class="trade-status js-trade-status">交易成功</span>
+        #end
+        #if ($trade.status == 8 || $trade.status == 9)
+          <span class="trade-status js-trade-status">已关闭</span>
+        #end
+        #if ($trade.status == 10)
+          <span class="trade-status js-trade-status">待付款确认中付款</span>
+        #end
+        #if ($trade.status == 11)
+          <span class="trade-status js-trade-status">0元购合约中</span>
+        #end
+      </div>
+
+      <!-- 宝贝列表 -->
+      <div class="itemlist">
+        #foreach ($order in $orders)
+        <div class="itemlist-item checkbox small">
+          <a class="itemlist-pic" href="/product/getInfo/$!{shopId}-$!order.productId">
+            <img data-normal="$!order.productPicPath">
+          </a>
+          <div class="itemlist-detail">
+            <a class="itemlist-title" href="/product/getInfo/$!{shopId}-$!order.productId">$!order.productName</a>
+            <div class="itemlist-sku">
+              <span>$!order.propertiesname</span>
+            </div>
+            #if ($order.refundStatus == 1)
+            <div class="itemlist-status">已申请退款，等待卖家同意</div>
+            #end
+            #if ($order.refundStatus == 2)
+            <div class="itemlist-status">已同意退款，等待买家退货</div>
+            #end
+            #if ($order.refundStatus == 3)
+            <div class="itemlist-status">已退货，等待卖家确认收货</div>
+            #end
+            #if ($order.refundStatus == 4)
+            <div class="itemlist-status">卖家拒绝退款</div>
+            #end
+            #if ($order.refundStatus == 5)
+            <div class="itemlist-status">退款关闭</div>
+            #end
+            #if ($order.refundStatus == 6)
+            <div class="itemlist-status">退款成功</div>
+            #end
+            #if (!$order.refundStatus && $order.status > 2 && $order.status < 7)
+            <a class="action-btn js-apply-refund" data-oid="$!order.id">退款</a>
+            #end
+            #if (!$order.refundStatus && $trade.showRefundBtn == 2 && $order.status == 8)
+            <a class="action-btn js-apply-refund" data-oid="$!order.id">退款</a>
+            #end
+          </div>
+          <div class="itemlist-vertical-price">
+            <span>¥$!order.totalRealPrice</span>
+            #if ($order.totalPrice && $order.totalPrice != $order.totalRealPrice)
+            <span>¥$!order.totalPrice</span>
+            #end
+            <span>x$!order.num</span>
+            #if ($order.productStatus == 2)
+            <span>已下架</span>
+            #end
+          </div>
+        </div>
+        #end
+      </div>
+      <!-- /宝贝列表 -->
+
+      <div class="tradelist-summary">
+        #if ($trade.expressPrice > 0)
+        <div class="pay-item">
+          <span>运费</span>
+          <span>¥ $!trade.expressPrice</span>
+        </div>
+        #end
+        #if ($trade.discountPrice > 0)
+        <div class="pay-item">
+          <span>优惠</span>
+          <span>-¥ $!trade.discountPrice</span>
+        </div>
+        #end
+        <div class="pay-item">
+          <span>实付款（含运费）</span>
+          <span class="payment">¥ $!trade.realPrice</span>
+        </div>
+      </div>
+      <div class="tradelist-actions">
+        #if ($trade.status == 1 || $trade.status == 2)
+          <a class="action-btn js-close-trade" data-tid="$!trade.id">取消订单</a>
+          #if ($trade.itCanPaid == true)
+          <a class="action-btn js-pay-trade" data-tid="$!trade.id" data-tradeno="$!trade.tradeNo" data-shopname="$!trade.shopName" data-realprice="$!trade.realPrice">付款</a>
+          #end
+        #end
+        #if ($trade.status == 3 || $trade.status == 4)
+          <!-- <a class="action-btn js-tip-send">提醒发货</a> -->
+        #end
+        #if ($trade.distributionMode == 1)
+          #if ($trade.status == 3 || $trade.status == 5  || $trade.status == 6  || $trade.status == 7)
+            <a class="action-btn js-show-logicinfo" data-lid="{{$!trade.expressNo}}">查看物流</a>
+          #end
+          #if ($trade.status == 5)
+            <a class="action-btn js-confirm-get" data-tid="$!trade.id">确认收货</a>
+          #end
+        #end
+      </div>
+    </div>
+    <!-- /订单宝贝 -->
+
+    <!-- 订单基本信息 -->
+    <div class="trade-box">
+      <div>订单编号 : $!trade.tradeNo</div>
+      <div>创建时间 : $!date.format('yyyy-MM-dd HH:mm:ss ',$!trade.gmtCreate)</div>
+      #if ($trade.buyerPayTime)
+      <div>付款时间 : $!date.format('yyyy-MM-dd HH:mm:ss ',$!trade.buyerPayTime)</div>
+      #end
+      #if ($trade.consignTime)
+      <div>发货时间 : $!date.format('yyyy-MM-dd HH:mm:ss ',$!trade.consignTime)</div>
+      #end
+      #if ($trade.endTime && ($trade.status == 8 || $trade.status == 9))
+      <div>关闭时间 : $!date.format('yyyy-MM-dd HH:mm:ss ',$!trade.endTime)</div>
+      #end
+      #if ($trade.endTime && $trade.status == 7)
+      <div>完成时间 : $!date.format('yyyy-MM-dd HH:mm:ss ',$!trade.endTime)</div>
+      #end
+    </div>
+    <!-- 订单基本信息 -->
+
+    <!-- 推荐 -->
+    #if($groomShops && $groomShops.size() > 0)
+    <div class="recommand-box">
+      <div class="recommand-title">推荐商品</div>
+      <div class="goodslist">
+        #foreach($rec in $groomShops)
+        <div class="goodslist-item">
+          <a href="/product/getInfo/$!{shopId}-$rec.id">
+            <img class="goodslist-pic" data-normal="$rec.pathUrl" alt="加载中...">
+            <p class="goodslist-title">$rec.name</p>
+          </a>
+          <p class="goodslist-price">
+            <span>¥ $rec.salePrice</span>
+            <a class="icon-add2car goodslist-car js-add-item-2-car" data-pid="$!rec.id">
+            </a>
+          </p>
+        </div>
+        #end
+      </div>
+    </div>
+    #end
+    <!-- /推荐 -->
+
+    <!-- footer -->
+    <footer class="footer">
+      <div class="logo-box">
+        <img class="logo_main" src="" alt="">
+      </div>
+    </footer>
+    <!-- /footer -->
+  </div>
+
+  <!-- inject:js -->
+  <script type="text/javascript" src="http://192.168.1.119:8088/tradedetail.js"></script>
+  <!-- endinject -->
+</body>
+</html>

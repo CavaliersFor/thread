@@ -1,0 +1,41 @@
+// 多选组件
+.radios_box {
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 50%;
+  vertical-align: middle;
+  -webkit-tap-highlight-color: transparent;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0.25rem;
+    left: 0.25rem;
+    width: 0.6rem;
+    height: 0.3rem;
+    opacity: 0;
+    border: 2px solid #fff;
+    border-right: none;
+    border-top: none;
+    background: transparent;
+    z-index: 10;
+    transform: rotate(-45deg);
+  }
+
+  &.checked {
+    background-color: #ffa800;
+    border-width: 0;
+
+    &:after {
+      opacity: 1;
+    }
+  }
+
+  .input_redu {
+    display: none;
+  }
+}

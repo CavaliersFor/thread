@@ -1,0 +1,93 @@
+#parse("pages/commons/header.vm")
+<body>
+  <!-- inject:css -->
+  <link rel="stylesheet" href="#getWebresourcesUrl()assets/home.3dc73e65747ceabec3b6.css">
+  <!-- endinject -->
+	<div id="main" class="home-wrapper">
+    <!-- 顶部轮播图 -->
+    #if ($shopIndexDto.slides && $shopIndexDto.slides.size() > 0)
+    <div class="swiper-container swiper-container-horizontal js-top-swiper">
+      <div class="swiper-wrapper">
+        #foreach ($slider in $shopIndexDto.slides)
+        <a href="$slider.skipUrl" class="swiper-slide slide-item" style="background-image: url(&quot;$slider.url&quot;);"></a>
+        #end
+      </div>
+      <!-- Add Pagination -->
+      <div class="swiper-pagination"></div>
+    </div>
+    #end
+    <!-- /顶部轮播图 -->
+
+    <!-- 搜索框 -->
+    <!-- <form class="searchbar" method="get">
+      <input class="searchbar-input" type="text" placeholder="搜索您想要的宝贝" />
+      <button class="searchbar-btn" type="submit"></button>
+    </form> -->
+    <!-- /搜索框 -->
+
+    <!-- 商品活动位 -->
+    #if ($shopIndexDto.recommends && $shopIndexDto.recommends.size() > 0)
+    <div class="activity-list" id="activitiesBox">
+      #foreach ($reco in $shopIndexDto.recommends)
+      <a href="$!reco.skipUrl">
+        <img data-normal="$!reco.url" alt="加载中...">
+      </a>
+      #end
+    </div>
+    #end
+    <!-- /商品活动位 -->
+
+    <!-- 最热商品 -->
+    <div id="product-box"></div>
+    <!-- /最热商品 -->
+
+    <!-- 商品分类 -->
+    #if ($shopIndexDto.map && $shopIndexDto.map.size() > 0)
+    <div id="groupGoodsBox">
+      #foreach ($list in $shopIndexDto.map)
+        #if ($list && $list.size() > 0)
+        <div class="product-box item-category">
+          <div class="category-title">$!list[0].categoryName</div>
+          <div class="goodslist">
+            #foreach ($item in $list)
+            <div class="goodslist-item">
+              <a href="/product/getInfo?id=$!item.productId">
+                <img class="goodslist-pic" data-normal="$!item.productPicPath" alt="加载中...">
+                <p class="goodslist-title">$!item.productName</p>
+              </a>
+              <p class="goodslist-price">
+                <span>¥ $!item.realPrice</span>
+                <a class="icon-add2car goodslist-car js-add-item-2-car" data-pid="$!item.productId"></a>
+              </p>
+            </div>
+            #end
+          </div>
+          <a class="category-more" href="/product/list?categoryId=$!list[0].categoryId">查看更多</a>
+        </div>
+        #end
+      #end
+    </div>
+    #end
+    <!-- /商品分类 -->
+
+    <!-- 商城自定义信息 -->
+    <div id="divDefine"></div>
+    <!-- /商城自定义信息 -->
+
+    <!-- logo -->
+    <div class="logo-box">
+      <img class="logo_main" src="" alt="">
+    </div>
+    <!-- /logo -->
+
+    <!-- 底部菜单 -->
+    #parse("pages/commons/tabbar.vm")
+    <!-- /底部菜单 -->
+  </div>
+
+  <!-- inject:js -->
+  <script src="#getWebresourcesUrl()assets/common.d602c6046ddb4170db1e.js"></script>
+  <script src="#getWebresourcesUrl()assets/home.3dc73e65747ceabec3b6.js"></script>
+  <!-- endinject -->
+</body>
+</html>

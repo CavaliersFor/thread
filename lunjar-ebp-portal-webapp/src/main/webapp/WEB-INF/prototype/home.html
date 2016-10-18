@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>首页</title>
+	<meta charset="UTF-8">
+	<meta name="keywords" content="移动电商,电商,营销平台">
+  <meta name="description" content="">
+  <meta name="renderer" content="webkit">
+  <meta name="screen-orientation" content="portrait">
+  <meta name="x5-orientation" content="portrait">
+  <meta name="browsermode" content="application">
+  <meta name="x5-page-mode" content="app">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no">
+  <script>
+	  //js控制web页面适配
+	  (function (doc, win) {
+	    var docEl = doc.documentElement,
+	      resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+	      recalc = function() {
+	        var clientWidth = docEl.clientWidth;
+	        if (!clientWidth) return;
+	        if (clientWidth > 720) {
+	          clientWidth = 720;
+	        }
+	        docEl.style.fontSize = 40 * (clientWidth / 720) + 'px';
+	      };
+	    if (!doc.addEventListener) return;
+	    win.addEventListener(resizeEvt, recalc, false);
+	    doc.addEventListener('DOMContentLoaded', recalc, false);
+	  })(document, window)
+  </script>
+</head>
+<body>
+	<div id="main">
+		<!-- 顶部幻灯片 -->
+		<div id="slideBox" class="slidebox">
+			<div class="bd">
+				<ul>
+					<li>
+						<a class="pic">
+							<img src="http://upload.renrenma.com/upload/201608/03/201608031814335818.jpg" alt="">
+						</a>
+					</li>
+					<li>
+						<a class="pic">
+							<img src="http://upload.renrenma.com/upload/201608/03/201608031814335818.jpg" alt="">
+						</a>
+					</li>
+					<li>
+						<a class="pic">
+							<img src="http://upload.renrenma.com/upload/201608/03/201608031814335818.jpg" alt="">
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="hd">
+				<ul>
+					<li>1</li>
+					<li>2</li>
+					<li>3</li>
+				</ul>
+			</div>
+		</div>
+		<!-- /顶部幻灯片 -->
+
+		<!-- 搜索框 -->
+		<form class="searchbar" method="get">
+			<input class="searchbar-input" type="text" placeholder="搜索您想要的宝贝" />
+			<button class="searchbar-btn" type="submit"></button>
+		</form>
+		<!-- /搜索框 -->
+
+		<!-- 商品活动位 -->
+		<div class="activity-list" id="activitiesBox">
+			<a href=""><img src="http://upload.renrenma.com/upload/201608/03/201608031812215289.jpg" alt=""></a>
+			<a href=""><img src="http://upload.renrenma.com/upload/201608/03/201608031812215289.jpg" alt=""></a>
+			<a href=""><img src="http://upload.renrenma.com/upload/201608/03/201608031812215289.jpg" alt=""></a>
+		</div>
+		<!-- /商品活动位 -->
+
+		<!-- 最热商品 -->
+		<div id="product-box"></div>
+		<!-- /最热商品 -->
+
+		<!-- 商品分类 -->
+		<div id="groupGoodsBox">
+			<div class="product-box item-category">
+				<div class="category-title">七夕情人节约炮专场</div>
+				<div class="goodslist">
+					<div class="goodslist-item">
+						<a href="">
+							<img class="goodslist-pic" src="http://upload.renrenma.com/upload/201606/29/201606291618011991.jpg" alt="加载中...">
+							<p class="goodslist-title">【七夕特惠】情人节专属，”伴侣装“大麦若叶100%青汁粉</p>
+						</a>
+						<p class="goodslist-price">
+							<span>¥ 30.9</span>
+							<img class="goodslist-car" src="/assets/images/shopping_car.png"></img>
+						</p>
+					</div>
+					<div class="goodslist-item">
+						<a href="">
+							<img class="goodslist-pic" src="http://upload.renrenma.com/upload/201606/29/201606291618011991.jpg" alt="加载中...">
+							<p class="goodslist-title">【七夕特惠】情人节专属，”伴侣装“大麦若叶100%青汁粉</p>
+						</a>
+						<p class="goodslist-price">
+							<span>¥ 30.9</span>
+							<img class="goodslist-car" src="/assets/images/shopping_car.png"></img>
+						</p>
+					</div>
+					<div class="goodslist-item">
+						<a href="">
+							<img class="goodslist-pic" src="http://upload.renrenma.com/upload/201606/29/201606291618011991.jpg" alt="加载中...">
+							<p class="goodslist-title">【七夕特惠】情人节专属，”伴侣装“大麦若叶100%青汁粉</p>
+						</a>
+						<p class="goodslist-price">
+							<span>¥ 30.9</span>
+							<img class="goodslist-car" src="/assets/images/shopping_car.png"></img>
+						</p>
+					</div>
+					<div class="goodslist-item">
+						<a href="">
+							<img class="goodslist-pic" src="http://upload.renrenma.com/upload/201606/29/201606291618011991.jpg" alt="加载中...">
+							<p class="goodslist-title">【七夕特惠】情人节专属，”伴侣装“大麦若叶100%青汁粉</p>
+						</a>
+						<p class="goodslist-price">
+							<span>¥ 30.9</span>
+							<img class="goodslist-car" src="/assets/images/shopping_car.png"></img>
+						</p>
+					</div>
+					<div class="goodslist-item">
+						<a href="">
+							<img class="goodslist-pic" src="http://upload.renrenma.com/upload/201606/29/201606291618011991.jpg" alt="加载中...">
+							<p class="goodslist-title">【七夕特惠】情人节专属，”伴侣装“大麦若叶100%青汁粉</p>
+						</a>
+						<p class="goodslist-price">
+							<span>¥ 30.9</span>
+							<img class="goodslist-car" src="/assets/images/shopping_car.png"></img>
+						</p>
+					</div>
+					<div class="goodslist-item">
+						<a href="">
+							<img class="goodslist-pic" src="http://upload.renrenma.com/upload/201606/29/201606291618011991.jpg" alt="加载中...">
+							<p class="goodslist-title">【七夕特惠】情人节专属，”伴侣装“大麦若叶100%青汁粉</p>
+						</a>
+						<p class="goodslist-price">
+							<span>¥ 30.9</span>
+							<img class="goodslist-car" src="/assets/images/shopping_car.png"></img>
+						</p>
+					</div>
+				</div>
+				<a class="category-more">查看更多</a>
+			</div>
+		</div>
+		<!-- /商品分类 -->
+
+		<!-- 商城自定义信息 -->
+		<div id="divDefine"></div>
+		<!-- /商城自定义信息 -->
+
+		<!-- logo -->
+		<div class="logo-box">
+			<img class="logo_main" src="" alt="">
+		</div>
+		<!-- /logo -->
+
+		<!-- 底部菜单 -->
+		<nav class="tabbar">
+			<ul>
+				<li class="tabbar-item">
+					<a href="">
+						<span>logo</span>
+					</a>
+				</li>
+				<li class="tabbar-item">
+					<a class="on" href="">
+						<span>商品分类</span>
+					</a>
+					<dl>
+						<dd>
+							<a href="">
+								<span>七夕情人节</span>
+							</a>
+						</dd>
+						<dd>
+							<a href="">
+								<span>护肤</span>
+							</a>
+						</dd>
+						<dd>
+							<a href="">
+								<span>健身</span>
+							</a>
+						</dd>
+						<dd>
+							<a href="">
+								<span>生活</span>
+							</a>
+						</dd>
+						<dd>
+							<a href="">
+								<span>美容</span>
+							</a>
+						</dd>
+					</dl>
+				</li>
+				<li class="tabbar-item">
+					<a href="">
+						<span>个人中心</span>
+					</a>
+				</li>
+				<li class="tabbar-item">
+					<a href="">
+						<span>个人中心</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
+		<!-- /底部菜单 -->
+	</div>
+</body>
+</html>

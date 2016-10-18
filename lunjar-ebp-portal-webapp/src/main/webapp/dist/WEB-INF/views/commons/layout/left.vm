@@ -1,0 +1,24 @@
+<!-- 左侧菜单栏 -->
+<div class="main-left">
+<!--a href="" class="main-left-t">首页</a-->
+<ul class="left-nav">
+	<li>
+		<a data-url="product/list" href="javascript:;"><i class="save icons" title="产品管理"></i><span class="contractsNav">产品管理</span><!--<i class="save-next icons"></i>--></a>
+			<!--<div class="nav-ul" style="display: block;">
+				<a href="console-create-product.html" style="margin-left: -14px;" target="myiframe">创建产品应用</a>
+			</div>-->
+	</li>
+	<li>
+		<a data-url="search/bqdata" href="javascript:;"><i class="save-queries icons" title="保全查询"></i><span class="contractsNav">保全查询</span><!--<i class="save-next icons">--></i></a>
+	</li>
+	<li>
+		<a data-url="account" href="javascript:;"><i class="save-set icons" title="帐号设置"></i><span class="contractsNav">帐号设置</span><!--<i class="save-next icons"></i>--></a>
+		<!--<div class="nav-ul">
+			<a href="password-change.html" style="margin-left: -40px;" target="myiframe">修改密码</a>
+		</div>-->
+	</li>
+</ul>
+<a class="contracts" href="javascript:;" style=""> </a>
+</div>
+<!--side bar-->
+<a class="sidebar" href="javascript:;"><i></i></a>

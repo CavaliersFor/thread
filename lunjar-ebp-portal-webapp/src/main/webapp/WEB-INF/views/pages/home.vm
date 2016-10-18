@@ -1,0 +1,108 @@
+#parse("pages/commons/header.vm")
+<body>
+  <!-- inject:css -->
+  <!-- endinject -->
+	<div id="main" class="home-wrapper">
+    #if ($shopIndexDto && $shopIndexDto.size() > 0)
+      #foreach ($item in $shopIndexDto)
+
+        #if ($item.type == 1 && $item.list && $item.list.size() > 0)
+        <!-- 顶部轮播图 -->
+        <div class="swiper-container swiper-container-horizontal js-top-swiper">
+          <div class="swiper-wrapper">
+            #foreach ($slider in $item.list)
+            <a href="$slider.skipUrl" class="swiper-slide slide-item" style="background-image: url(&quot;$slider.url&quot;);"></a>
+            #end
+          </div>
+          <!-- Add Pagination -->
+          <div class="swiper-pagination"></div>
+        </div>
+        <!-- /顶部轮播图 -->
+        #end
+
+        #if ($item.type == 2 && $item.list && $item.list.size() > 0)
+        <!-- 大图（广告图） -->
+        <div class="activity-list">
+          #foreach ($adv in $item.list)
+          <a href="$!adv.skipUrl">
+            <img data-normal="$!adv.url" alt="加载中..." />
+          </a>
+          #end
+        </div>
+        <!-- /大图（广告图） -->
+        #end
+
+        #if ($item.type == 3 && $item.proList && $item.proList.size() > 0)
+        <!-- 商品分类 -->
+        <div class="product-box item-category">
+          <div class="category-title">$!item.name</div>
+          <div class="goodslist">
+            #foreach ($prod in $item.proList)
+            <div class="goodslist-item">
+              <a href="/product/getInfo/$!{shopId}-$!prod.productId">
+                <img class="goodslist-pic" data-normal="$!prod.productPicPath" alt="加载中...">
+                <p class="goodslist-title">$!prod.productName</p>
+              </a>
+              <p class="goodslist-price">
+                <span>¥ $!prod.realPrice</span>
+                <a class="icon-add2car goodslist-car js-add-item-2-car" data-pid="$!prod.productId"></a>
+              </p>
+            </div>
+            #end
+          </div>
+        </div>
+        <!-- /商品分类 -->
+        #end
+
+        #if ($item.type == 5 && $item.proList && $item.proList.size() > 0)
+        <!-- 商品分类 -->
+        <div class="product-box item-category">
+          <div class="category-title">$!item.proList[0].categoryName</div>
+          <div class="goodslist">
+            #foreach ($prod in $item.proList)
+            <div class="goodslist-item">
+              <a href="/product/getInfo/$!{shopId}-$!prod.productId">
+                <img class="goodslist-pic" data-normal="$!prod.productPicPath" alt="加载中...">
+                <p class="goodslist-title">$!prod.productName</p>
+              </a>
+              <p class="goodslist-price">
+                <span>¥ $!prod.realPrice</span>
+                <a class="icon-add2car goodslist-car js-add-item-2-car" data-pid="$!prod.productId"></a>
+              </p>
+            </div>
+            #end
+          </div>
+          <a class="category-more" href="/product/list/$!{shopId}?categoryId=$!item.proList[0].categoryId">查看更多</a>
+        </div>
+        <!-- /商品分类 -->
+        #end
+      #end
+    #end
+
+    <!-- 搜索框 -->
+    <!-- <form class="searchbar" method="get">
+      <input class="searchbar-input" type="text" placeholder="搜索您想要的宝贝" />
+      <button class="searchbar-btn" type="submit"></button>
+    </form> -->
+    <!-- /搜索框 -->
+
+    <!-- 商城自定义信息 -->
+    <!-- <div id="divDefine"></div> -->
+    <!-- /商城自定义信息 -->
+
+    <!-- logo -->
+    <!-- <div class="logo-box">
+      <img class="logo_main" src="" alt="">
+    </div> -->
+    <!-- /logo -->
+
+    <!-- 底部菜单 -->
+    #parse("pages/commons/tabbar.vm")
+    <!-- /底部菜单 -->
+  </div>
+
+  <!-- inject:js -->
+  <script type="text/javascript" src="http://192.168.1.119:8088/home.js"></script>
+  <!-- endinject -->
+</body>
+</html>

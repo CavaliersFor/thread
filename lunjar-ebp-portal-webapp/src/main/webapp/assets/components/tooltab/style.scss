@@ -1,0 +1,31 @@
+
+.tooltab {
+	display: flex;
+	height: 2.11rem;
+	line-height: 2.11rem;
+	text-align: center;
+	background-color: #fff;
+	border-bottom: 1px solid #eee;
+
+	li {
+		flex: 1;
+	}
+	a {
+		position: relative;
+		display: block;
+
+		&.active {
+			color: #f00;
+
+			&:after {
+				content: " ";
+				position: absolute;
+				bottom: -1px;
+				left: 0;
+				width: 100%;
+				height: .1rem;
+				background-color: #f00;
+			}
+		}
+	}
+}

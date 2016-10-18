@@ -1,0 +1,81 @@
+/*商城主页*/
+.home-wrapper {
+	background-color: #fff;
+	
+	.swiper-container {
+		height: 10.2rem;
+		margin-bottom: .4rem;
+	}
+
+	.swiper-slide {
+		background-size: 100% 100%;
+		background-repeat: no-repeat;
+	}
+}
+
+
+// 活动列表
+.activity-list {
+	margin-bottom: .4rem;
+
+	a {
+		display: block;
+		font-size: 0;
+	}
+
+	img {
+		width: 100%;
+		height: 6.2rem;
+	}
+}
+
+
+// hot 商品
+.product-box {
+	width: 100%;
+	background-color: #ffa3a3;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	margin-bottom: 2.5%
+}
+.thead {
+	margin-top: 0.25rem;
+	width: 100%;
+	float: left;
+}
+
+
+// 商品分类列表
+.item-category {
+	background-color: #f7f7f7!important;
+}
+.category-title {
+	text-indent: 0.6rem;
+	font-size: 0.8rem;
+	color: #4c4c4c;
+	height: 2.5rem;
+	line-height: 2.5rem; 
+}
+.category-more {
+	height:2.1rem;
+	line-height: 1.8rem;
+	display: inline-block;
+	width: 100%;
+	color: #ffa800;
+	font-size: 0.75rem;
+	text-align: center; 
+}
+
+
+// logo
+.logo-box {
+	width: 100%;
+	display: inline-block;
+	text-align: center;
+
+	img {
+		width: 6rem;
+		text-align: center;
+		margin: 1.2rem auto;
+	}
+}

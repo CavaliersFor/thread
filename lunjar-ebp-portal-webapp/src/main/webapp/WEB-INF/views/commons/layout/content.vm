@@ -1,0 +1,3 @@
+<div class="myiframe">
+<iframe id="iframe_content" src="user/main" frameborder="0"></iframe>
+</div>

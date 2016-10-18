@@ -1,0 +1,47 @@
+#parse("pages/commons/header.vm")
+<body>
+  <!-- inject:css -->
+  <link rel="stylesheet" href="#getWebresourcesUrl()assets/classicalmix.dc9441dd67fea734ecdd.css">
+  <!-- endinject -->
+  <div id="main" class="classicalmix">
+    <ul class="tooltab js-tab">
+      
+    </ul>
+
+    <!-- 搭配商品列表 -->
+    <div class="itemlist classicalmix-list" id="itemList">
+      
+    </div>
+    <!-- /搭配商品列表 -->
+
+    <!-- footer -->
+    <footer class="footer">
+      <div class="logo-box">
+        <img class="logo_main" src="" alt="">
+      </div>
+    </footer>
+    <!-- /footer -->
+
+    <!-- 底部购买区域 -->
+    <form action="/trade/commitCombinPage" method="POST" class="classicalmix-buybox  js-pay-form" >
+      <section>
+        <div class="total-pay">合计: ¥<span class="js-total"></span></div>
+        <div class="total-promotion">优惠: ¥<span class="js-discount"></span></div>
+      </section>
+      <input type="hidden" name="value" value="">
+      <input type="hidden" name="id" value="">
+      <button class="pay-btn" type="submit">立即购买</button>
+    </form>
+    <!-- /底部购买区域 -->
+  </div>
+  <script>
+    var globalData = {
+      combinationProducts: JSON.parse('$combinationProducts'.replace(/&quot;/g, '"'))
+    };
+  </script>
+  <!-- inject:js -->
+  <script src="#getWebresourcesUrl()assets/common.d602c6046ddb4170db1e.js"></script>
+  <script src="#getWebresourcesUrl()assets/classicalmix.dc9441dd67fea734ecdd.js"></script>
+  <!-- endinject -->
+</body>
+</html>

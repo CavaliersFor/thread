@@ -1,0 +1,63 @@
+#parse("pages/commons/header.vm")
+<body>
+  <!-- inject:css -->
+  <link rel="stylesheet" href="#getWebresourcesUrl()assets/editaddress.f0d3f9a5c280c938088a.css">
+  <!-- endinject -->
+  <div class="main">
+    <form id="addrForm" class="address-form">
+      <input type="hidden" name="id" value="$!buyerAddress.id">
+      <div class="input-control">
+        <label>收货人：</label>
+        <div>
+          <input name="buyerName" type="text" placeholder="请填写收货人姓名" value="$!buyerAddress.buyerName">
+        </div>
+      </div>
+      <div class="input-control">
+        <label>联系电话：</label>
+        <div>
+          <input name="buyerPhone" type="number" placeholder="请填写手机号码" value="$!buyerAddress.buyerPhone">
+        </div>
+      </div>
+      <div class="input-control addr-selectors">
+        <label>选择地区：</label>
+        <div>
+          <select id="" name="province">
+            #foreach ($province in $regions)
+            #if ($buyerAddress.province == $province.regionName)
+            <option value="$!province.regionName" data-code="$!province.code" selected="selected">$!province.regionName</option>
+            #else
+            <option value="$!province.regionName" data-code="$!province.code">$!province.regionName</option>
+            #end
+            #end
+          </select>
+          <select name="city">
+            <option value="">$!buyerAddress.city</option>
+          </select>
+          <select name="region">
+            <option value="">$!buyerAddress.region</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-control">
+        <label>详细地址：</label>
+        <div>
+          <input name="buyerAddress" type="text" placeholder="请填写街道门牌信息" value="$!buyerAddress.buyerAddress">
+        </div>
+      </div>
+      <div class="input-control">
+        <label>邮政编码：</label>
+        <div>
+          <input name="buyerPostCode" type="text" placeholder="请填写邮政编码（选填）" value="$!buyerAddress.buyerPostCode">
+        </div>
+      </div>
+    </form>
+    <div class="footer">
+      <a class="js-saveaddr" href="javascript:void(0);">保存</a>
+    </div>
+  </div>
+  <!-- inject:js -->
+  <script src="#getWebresourcesUrl()assets/common.d602c6046ddb4170db1e.js"></script>
+  <script src="#getWebresourcesUrl()assets/editaddress.f0d3f9a5c280c938088a.js"></script>
+  <!-- endinject -->
+</body>
+</html>

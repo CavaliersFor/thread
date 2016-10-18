@@ -1,0 +1,151 @@
+#parse("pages/commons/header.vm")
+<body>
+  <!-- inject:css -->
+  <link rel="stylesheet" href="#getWebresourcesUrl()assets/tradelist.fc13cf68619259c088d8.css">
+  <!-- endinject -->
+	<div id="main" class="tradelist">
+    <input type="hidden" name="hasLoadDone" value="$trades.recordCount">
+    <input type="hidden" name="status" value="$!tradeQuery.status">
+
+    <!-- 订单列表 -->
+    <div id="tradelistWrapper" class="tradelist-box">
+      #if ($trades.data && $trades.data.size() > 0)
+        #foreach ($trade in $trades.data)
+        <div class="tradelist-item js-trade" data-tid="$trade.trade.id">
+          <div class="tradelist-header">
+            <a class="show-info" href="/index">
+              <img data-normal="$!trade.trade.headPicUrl" alt="">
+              <span>$!trade.trade.shopName</span>
+            </a>
+            #if ($trade.trade.status == 1 || $trade.trade.status == 2)
+              <span class="trade-status js-trade-status">待付款</span>
+            #end
+            #if ($trade.trade.status == 3)
+              <span class="trade-status js-trade-status">部分发货</span>
+            #end
+            #if ($trade.trade.status == 4)
+              <span class="trade-status js-trade-status">待发货</span>
+            #end
+            #if ($trade.trade.status == 5)
+              <span class="trade-status js-trade-status">已发货</span>
+            #end
+            #if ($trade.trade.status == 6)
+              <span class="trade-status js-trade-status">已签收</span>
+            #end
+            #if ($trade.trade.status == 7)
+              <span class="trade-status js-trade-status">交易成功</span>
+            #end
+            #if ($trade.trade.status == 8 || $trade.trade.status == 9)
+              <span class="trade-status js-trade-status">已关闭</span>
+            #end
+            #if ($trade.trade.status == 10)
+              <span class="trade-status js-trade-status">待付款确认中付款</span>
+            #end
+            #if ($trade.trade.status == 11)
+              <span class="trade-status js-trade-status">0元购合约中</span>
+            #end
+          </div>
+
+          <!-- 宝贝列表 -->
+          <div class="itemlist">
+            #set ($totalNum=0)  
+            #foreach ($item in $trade.list)
+            #set ($totalNum=$totalNum+$item.num) 
+            <div class="itemlist-item checkbox small">
+              <a class="itemlist-pic" href="javascript:void(0);">
+                <img data-normal="$!item.productPicPath">
+              </a>
+              <div class="itemlist-detail">
+                <span class="itemlist-title">$!item.productName</span>
+                <div class="itemlist-sku">
+                  <span>$!item.propertiesname</span>
+                </div>
+                #if ($item.refundStatus == 1)
+                <div class="itemlist-status">已申请退款，等待卖家同意</div>
+                #end
+                #if ($item.refundStatus == 2)
+                <div class="itemlist-status">已同意退款，等待买家退货</div>
+                #end
+                #if ($item.refundStatus == 3)
+                <div class="itemlist-status">已退货，等待卖家确认收货</div>
+                #end
+                #if ($item.refundStatus == 4)
+                <div class="itemlist-status">卖家拒绝退款</div>
+                #end
+                #if ($item.refundStatus == 5)
+                <div class="itemlist-status">退款关闭</div>
+                #end
+                #if ($item.refundStatus == 6)
+                <div class="itemlist-status">退款成功</div>
+                #end
+              </div>
+              <div class="itemlist-vertical-price">
+                <span>¥$item.totalRealPrice</span>
+                #if ($item.totalPrice && $item.totalPrice != $item.totalRealPrice)
+                <span>¥$!item.totalPrice</span>
+                #end
+                <span>x$item.num</span>
+              </div>
+            </div>
+            #end
+          </div>
+          <!-- /宝贝列表 -->
+
+          <div class="tradelist-summary">
+            共$totalNum件商品 合计 : ¥ $!trade.trade.realPrice 
+            #if ($!trade.trade.expressPrice > 0)
+            (含运费 ¥$!trade.trade.expressPrice)
+            #end
+          </div>
+          <div class="tradelist-actions">
+          #if ($trade.trade.status == 1 || $trade.trade.status == 2)
+            <a class="action-btn js-close-trade" data-tid="$!trade.trade.id">取消订单</a>
+            <a class="action-btn js-pay-trade" data-tid="$!trade.trade.id" data-tradeno="$!trade.trade.tradeNo" data-shopname="$!trade.trade.shopName" data-realprice="$!trade.trade.realPrice">付款</a>
+          #end
+          #if ($trade.trade.status == 3 || $trade.trade.status == 4)
+            <!-- <a class="action-btn js-tip-send">提醒发货</a> -->
+          #end
+          #if (($trade.trade.status == 3 || $trade.trade.status == 5  || $trade.trade.status == 6  || $trade.trade.status == 7) && $!trade.trade.distributionMode == 1)
+            <a class="action-btn js-show-logicinfo" data-lid="$!trade.trade.expressNo">查看物流</a>
+          #end
+          #if ($trade.trade.status == 5)
+            <a class="action-btn js-confirm-get" data-tid="$!trade.trade.id">确认收货</a>
+          #end
+          </div>
+        </div>
+        #end
+      #else
+      <div class="empty-list-tip">
+        <span class="empty-icon"></span>
+        <div class="empty-cnt">您还没有相关的订单记录哦！</div>
+      </div>
+      #end
+    </div>
+    
+    <!-- /订单列表 -->
+
+    #if ($trades.data && $trades.data.size() > 0 && $trades.data.size() < 10)
+      <p class="empty-list js-loaded-all">亲，已经看完了哦！</p>
+      #else
+      <p class="empty-list z-hidden js-loaded-all">亲，已经看完了哦！</p>
+      #end
+    <div class="loading-box z-hidden js-loading-box">
+      <span class="loading-gif"></span>
+      <span class="loading-text">加载中...</span>
+    </div>
+
+    <!-- footer -->
+    <footer class="footer">
+      <div class="logo-box">
+        <img class="logo_main" src="" alt="">
+      </div>
+    </footer>
+    <!-- /footer -->
+  </div>
+
+  <!-- inject:js -->
+  <script src="#getWebresourcesUrl()assets/common.d602c6046ddb4170db1e.js"></script>
+  <script src="#getWebresourcesUrl()assets/tradelist.fc13cf68619259c088d8.js"></script>
+  <!-- endinject -->
+</body>
+</html>

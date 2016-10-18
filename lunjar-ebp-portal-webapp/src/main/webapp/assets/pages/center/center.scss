@@ -1,0 +1,221 @@
+/*个人中心*/
+
+.personal {
+  width: 100%;
+  height: 10.24rem;
+  position: relative;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  color: #fff;
+  background-image: url(./personal-center-banner.jpg);
+}
+
+.personal-inform {
+  width: 95%;
+  height: 3.277rem;
+  position: relative;
+  top: 2.048rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.personal-inform-avatar {
+  background-size: 3.1744rem 3.1744rem;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border: 1px solid #fff;
+  width: 3.1744rem;
+  height: 3.1744rem;
+}
+
+.personal-inform-name {
+  font-size: 0.7373rem;
+  position: absolute;
+  top: 0.6144rem;
+  left: 3.789rem;
+  letter-spacing: 0.0614rem;
+}
+
+.personal-inform-phone {
+  font-size: 0.6rem;
+  letter-spacing: 0.0614rem;
+}
+
+.personal-inform-phone_icon {
+  background-image: url(./personal-phone.png);
+  width: 0.4096rem;
+  height: 0.7168rem;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  top: 1.843rem;
+  left: 3.789rem;
+}
+
+.personal-inform-phone_num {
+  position: absolute;
+  top: 1.884rem;
+  left: 4.506rem;
+}
+
+.personal_position_box {
+  display: inline-block;
+  width: 4.096rem;
+  height: 1.024rem;
+  position: absolute;
+  right: 0;
+  top: 1.331rem;
+}
+
+.personal-inform-position {
+  // background-image: url(./personal-position.png);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  width: 0.328rem;
+  height: 0.614rem;
+  float: right;
+}
+
+.personal-nav {
+  position: relative;
+  top: 4.198rem;
+  left: 0;
+  width: 100%;
+  height: 2.007rem;
+}
+
+.personal-nav li {
+  width: 19.5%;
+  height: 2.007rem;
+  float: left;
+  text-align: center;
+}
+
+.personal-nav-icon {
+  background-repeat: no-repeat;
+  width: 1.024rem;
+  height: 1.024rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.personal-nav-text {
+  font-size: .6rem;
+  color: #fff;
+  position: absolute;
+  bottom: 0;
+  width: 20%;
+}
+
+.personal-icon {
+  background-image: url(./center-num.png);
+  background-size: 0.799rem 0.799rem;
+  background-position: top center;
+  background-repeat: no-repeat;
+  width: 0.799rem;
+  height: 1.024rem;
+  font-size: .576rem;
+  display: inline-block;
+  color: #fff;
+  line-height: 0.799rem;
+  text-align: center;
+  position: absolute;
+  top: -0.451rem;
+  box-sizing: border-box;
+}
+
+.icon-b {
+  background-image: url(./personal-pay.png);
+  background-size: 1.024rem 0.942rem;
+}
+
+.icon-c {
+  background-image: url(./personal-shipments.png);
+  background-size: 1.024rem 1.004rem;
+}
+
+.icon-d {
+  background-image: url(./personal-receipt.png);
+  background-size: 0.922rem 0.942rem;
+  background-position-x: 0.103rem
+}
+
+.icon-e {
+  background-image: url(./personal-stocks.png);
+  background-size: 0.922rem 1.024rem;
+  background-position-x: 0.103rem;
+}
+
+.icon-f {
+  background-image: url(./personal-refunded.png);
+  background-size: 1.024rem 1.024rem;
+  /*background-position-x: 0.06rem;*/
+}
+
+.main-content {
+  background-color: #fff;
+}
+
+.main-content-box {
+  width: 100%;
+  height: 2.048rem;
+  border-bottom: 1px solid rgba(229, 229, 229, 0.5);
+  position: relative;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.main-content-icon {
+  width: 2.048rem;
+  height: 2.048rem;
+  background-repeat: no-repeat;
+  display: inline-block;
+  background-size: 1.638rem 1.638rem;
+  background-position: center;
+
+  & ~ .main-content-text {
+    margin-left: 0;
+  }
+}
+
+.main-content-text {
+  font-size: 0.7rem;
+  color: #808080;
+  height: 2.048rem;
+  margin-left: .5rem;
+  line-height: 2.058rem;
+  display: inline-block;
+  text-align: center;
+  position: absolute;
+  box-sizing: border-box;
+}
+
+.main-content-position {
+  background-image: url(./personal-rg.png);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  width: 0.328rem;
+  height: 0.6144rem;
+  position: absolute;
+  right: 0.4096rem;
+  top: 0.717rem;
+  display: inline-block
+}
+
+.icon-trade {
+  background-image: url(./all-trades.png);
+  background-size: 50% 50%;
+}
+
+.icon_car {
+  background-image: url(./personal-cer.png);
+}
+
+// .icon_addre {background-image: url(./personal-coupons.png); }
+// .icon_account { background-image: url(./personal-account.png);}
+.icon_member {
+  background-image: url(./personal-member.png);
+}
+
+// .icon_manage {background-image: url(./personal-manage.png);  }

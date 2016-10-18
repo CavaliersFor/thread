@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>$!title</title>
+	<meta charset="UTF-8">
+	<meta name="keywords" content="移动电商,电商,营销平台">
+  <meta name="description" content="">
+  <meta name="renderer" content="webkit">
+  <meta name="screen-orientation" content="portrait">
+  <meta name="x5-orientation" content="portrait">
+  <meta name="browsermode" content="application">
+  <meta name="x5-page-mode" content="app">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no">
+  <!-- inject:css -->
+  <link rel="stylesheet" href="#getWebresourcesUrl()assets/common.d602c6046ddb4170db1e.css">
+  <!-- endinject -->
+  <script>
+	  //js控制web页面适配
+	  (function (doc, win) {
+	    var docEl = doc.documentElement,
+	      resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+	      recalc = function() {
+	        var clientWidth = docEl.clientWidth;
+	        if (!clientWidth) return;
+	        if (clientWidth > 720) {
+	          clientWidth = 720;
+	        }
+	        docEl.style.fontSize = 40 * (clientWidth / 720) + 'px';
+	      };
+	    if (!doc.addEventListener) return;
+	    win.addEventListener(resizeEvt, recalc, false);
+	    doc.addEventListener('DOMContentLoaded', recalc, false);
+	  })(document, window)
+  </script>
+  <script type="text/javascript">
+  	window.openId = '$!openId';
+  	// window.openId = 'op7Ors13q8yWoNVT5trsHiW1_Lok';
+  </script>
+  <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+</head>

@@ -1,0 +1,168 @@
+#parse("pages/commons/header.vm")
+<body>
+	<!-- inject:css -->
+  <link rel="stylesheet" href="#getWebresourcesUrl()assets/itemdetail.a0a480124ce689fabd7b.css">
+  <!-- endinject -->
+	<div id="main" class="itemdetail">
+		<!-- 顶部轮播图 -->
+		<div class="swiper-container swiper-container-horizontal js-top-swiper">
+      <div class="swiper-wrapper">
+      	#foreach( $img in $propImgs )
+      		<div class="swiper-slide slide-item" style="background-image: url(&quot;$img.picPath&quot;);"></div>
+      	#end
+      </div>
+      <!-- Add Pagination -->
+      <div class="swiper-pagination"></div>
+  	</div>
+		<!-- /顶部轮播图 -->
+
+		<!-- 商品信息 -->
+		<div class="item-info-box keyvalue-list">
+			<div class="item-title">
+				<p>$product.name</p>
+				<div class="item-price">
+					<span class="current-price">¥$product.salePrice</span>
+					<span class="original-price">¥$product.price</span>
+				</div>
+			</div>
+			<div class="keyvalue">
+				<label>销量 : </label>
+				<div>$product.saleNum件</div>
+			</div>
+			<div class="keyvalue skus js-addcart" data-type="ADD_TO_CAR">
+				<label>规格 : </label>
+				<div>
+					选择规格
+				</div>
+			</div>
+			<div class="keyvalue">
+				<label>运费 : </label>
+				<div>
+					<span class="js-express-price">- -</span>
+					<!-- <span>（单笔订单满39.00元包邮）</span> -->
+				</div>
+			</div>
+			<a class="keyvalue skus" href="$!shopUrl">
+				<label>商铺 : </label>
+				<div>$!shopName</div>
+			</a>
+		</div>
+		<!-- /商品信息 -->
+
+		<!-- 套餐搭配 -->
+		#if($combinationProduct)
+			<div class="classical-mix js-to-combine" data-id="$product.id">
+				<span class="classical-title">自由搭配</span>
+				<div class="classical-list">
+					#if($!combinationProduct.product1Name)
+					<div href="/product/getInfo?id=$!combinationProduct.product1Id" class="classical-item">
+						<img data-normal="$!combinationProduct.product1PicPath" alt="">
+						<span></span>
+					</div>
+					#end
+					#if($!combinationProduct.product2Name)
+					<div class="classical-split">+</div>
+					<div href="/product/getInfo?id=$!combinationProduct.product2Id" class="classical-item">
+						<img data-normal="$!combinationProduct.product2PicPath" alt="">
+						<span></span>
+					</div>
+					#end
+					#if($!combinationProduct.product3Name)
+					<div class="classical-split">+</div>
+					<div href="/product/getInfo?id=$!combinationProduct.product3Id" class="classical-item">
+						<img data-normal="$!combinationProduct.product3PicPath" alt="">
+						<span></span>
+					</div>
+					#end
+					#if($!combinationProduct.product4Name)
+					<div class="classical-split">+</div>
+					<div href="/product/getInfo?id=$!combinationProduct.product4Id" class="classical-item">
+						<img data-normal="$!combinationProduct.product4PicPath" alt="">
+						<span></span>
+					</div>
+					#end
+					#if($!combinationProduct.product5Name)
+					<div class="classical-split">+</div>
+					<div href="/product/getInfo?id=$!combinationProduct.product5Id" class="classical-item">
+						<img data-normal="$combinationProduct.product5PicPath" alt="">
+						<span></span>
+					</div>
+					#end
+				</div>
+			</div>
+		#end
+		<!-- /套餐搭配 -->
+
+		<!-- 商品详情 -->
+		<div class="item-detail-box">
+			#if ($productDto.list && $productDto.list.size() > 0)
+				#foreach ($item in $productDto.list)
+				<a href="$!item.skipUrl">
+					<img data-normal="$!item.url">
+				</a>
+				#end
+			#end
+		</div>
+		<!-- /商品详情 -->
+
+		<!-- 推荐 -->
+		#if($groomShops && $groomShops.size() > 0)
+		<div class="recommand-box">
+			<div class="recommand-title">推荐商品</div>
+			<div class="goodslist">
+				#foreach($rec in $groomShops)
+				<div class="goodslist-item">
+					<a href="/product/getInfo?id=$rec.id">
+						<img class="goodslist-pic" data-normal="$rec.pathUrl" alt="加载中...">
+						<p class="goodslist-title">$rec.name</p>
+					</a>
+					<p class="goodslist-price">
+						<span>¥ $rec.salePrice</span>
+						<a class="icon-add2car goodslist-car js-add-item-2-car" data-pid="$!rec.id"></a>
+					</p>
+				</div>
+				#end
+			</div>
+		</div>
+		#end
+		<!-- /推荐 -->
+
+		<!-- footer -->
+		<footer class="footer">
+			<div class="logo-box">
+				<img class="logo_main" src="" alt="">
+			</div>
+		</footer>
+		<!-- /footer -->
+
+		<!-- 底部菜单 -->
+		<nav class="tabbar addtocar-bar">
+			<ul>
+				<a class="tabbar-item addtocar-entry" href="/product/listCart">
+					<span class="js-cart-num"></span>
+				</a>
+				<li class="tabbar-item item-add">
+					<a href="javascript:void(0);" class="js-addcart" data-type="ADD_TO_CAR">加入购物车</a>
+				</li>
+				<li class="tabbar-item item-buy">
+					<a href="javascript:void(0);" class="js-addcart" data-type="DIRECT_BUY">立即购买</a>
+				</li>
+			</ul>
+		</nav>
+		<!-- /底部菜单 -->
+	</div>
+	<script>
+		var globalData = {
+			productId: $!product.id
+		};
+
+		#if($express)
+			globalData.ecPrice = '$express.ecPrice';
+		#end
+	</script>
+	<!-- inject:js -->
+  <script src="#getWebresourcesUrl()assets/common.d602c6046ddb4170db1e.js"></script>
+  <script src="#getWebresourcesUrl()assets/itemdetail.a0a480124ce689fabd7b.js"></script>
+  <!-- endinject -->
+</body>
+</html>

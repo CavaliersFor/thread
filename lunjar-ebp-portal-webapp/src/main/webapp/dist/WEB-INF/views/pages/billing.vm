@@ -1,0 +1,39 @@
+#parse("pages/commons/header.vm")
+<body>
+  <!-- inject:css -->
+  <link rel="stylesheet" href="#getWebresourcesUrl()assets/billing.ca4255ebbc6cb0555db9.css">
+  <!-- endinject -->
+  <div class="main">
+    #if ($postFlag == 1)
+    <div class="address-box js-show-add">
+      <div class="location">
+        <span class="icon-location"></span>
+      </div>
+      
+      <div class="detail js-add-detail">
+        <div>请选择快递收货地址</div>
+      </div>
+    </div>
+    #end
+    <div class="bill-list" id="billList">
+      
+    </div>
+    <div class="footer">
+      <span>合计：<strong>￥ <span class="js-total">$!total</span></strong></span>
+      <a href="javascript:void(0);" class="ft-btn js-commit">支付</a>
+    </div>
+  </div>
+  <script>
+    var globalData = {};
+    globalData.postFlag = +'$postFlag';
+    globalData.bills = JSON.parse('$cartDtos'.replace(/&quot;/g, '"'));
+    globalData.value = '$!value' ? '$value'.replace(/&quot;/g, '"') : null;
+    globalData.combineId = '$!id' ? '$id' : null;
+    // console.log(globalData.bills);
+  </script>
+  <!-- inject:js -->
+  <script src="#getWebresourcesUrl()assets/common.d602c6046ddb4170db1e.js"></script>
+  <script src="#getWebresourcesUrl()assets/billing.ca4255ebbc6cb0555db9.js"></script>
+  <!-- endinject -->
+</body>
+</html>

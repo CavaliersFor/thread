@@ -1,0 +1,15 @@
+.empty-list-tip {
+	text-align: center;
+
+	.empty-icon {
+		display: inline-block;
+		width: 5rem;
+		height: 5rem;
+		background-image: url(./empty-icon.png);
+		background-size: 100% 100%;
+	}
+
+	.empty-cnt {
+		color: #888;
+	}
+}

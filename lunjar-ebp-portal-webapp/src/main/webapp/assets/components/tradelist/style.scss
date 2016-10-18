@@ -1,0 +1,88 @@
+
+
+.tradelist {
+
+	&-item {
+		display: block;
+		margin-bottom: .48rem;
+		background-color: #fff;
+
+		.action-btn {
+			box-sizing: border-box;
+			display: inline-block;
+			min-width: 3.84rem;
+			padding: 0 .48rem;
+			margin-top: .48rem;
+			line-height: 1.248rem;
+			font-size: .7rem;
+			text-align: center;
+			border: 1px solid #eee;
+			border-radius: .1rem;
+		}
+	}
+
+	&-header {
+		display: flex;
+		justify-content: space-between;
+		padding: .48rem;
+		font-size: .75rem;
+		border-bottom: 1px solid #eee;
+
+		.show-info {
+			position: relative;
+			display: block;
+			padding-right: .72rem;
+			color: #888;
+			font-size: 0;
+
+			img {
+				display: inline-block;
+				width: 1.152rem;
+				height: 1.152rem;
+				vertical-align: middle;
+			}
+
+			span {
+				display: inline-block;
+				vertical-align: middle;
+				margin-left: .48rem;
+				font-size: .75rem;
+			}
+
+			&:after {
+				content: " ";
+				position: absolute;
+				top: .4rem;
+				right: 0;
+				display: inline-block;
+				width: .4rem;
+				height: .4rem;
+				border-top: 1px solid #888;
+				border-right: 1px solid #888;
+				transform: rotate(45deg);
+			}
+		}
+
+		.trade-status {
+			color: #f00;
+		}
+	}
+
+	&-summary {
+		padding: 0 .48rem;
+		line-height: 2.11rem;
+		font-size: .6rem;
+		text-align: right;
+		border-bottom: 1px solid #eee;
+	}
+
+	&-actions {
+		// padding: .48rem 0;
+		font-size: 0;
+		text-align: right;
+
+		.action-btn {
+			margin: .48rem .48rem .48rem 0;
+		}
+	}
+}

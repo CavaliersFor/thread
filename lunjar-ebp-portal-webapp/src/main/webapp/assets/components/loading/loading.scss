@@ -1,0 +1,21 @@
+
+.loading-box {
+	font-size: 0;
+	text-align: center;
+	background-color: #fff;
+}
+.loading-gif {
+	display: inline-block;
+	width: 32px;
+	height: 32px;
+	vertical-align: middle;
+	background: url(./loading.gif);
+
+	& + .loading-text {
+		margin-left: 10px;
+	}
+}
+.loading-text {
+	vertical-align: middle;
+	font-size: .6rem;
+}

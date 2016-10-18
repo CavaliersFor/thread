@@ -1,0 +1,31 @@
+<!-- 底部菜单 -->
+<nav class="tabbar">
+	<ul>
+		<li class="tabbar-item">
+			<a href="/index/$!{shopId}?t">$!shopName</a>
+		</li>
+		<li class="tabbar-item">
+			<a class="js-item-category" href="javascript:void(0);">
+				<span>商品分类</span>
+			</a>
+			<dl>
+				#if ($categorys && $categorys.size() > 0)
+					#foreach ($cat in $categorys)
+					<dd>
+						<a href="/product/list/$!{shopId}?categoryId=$!cat.id">
+							<span>$!cat.name</span>
+						</a>
+					</dd>
+					#end
+				#end
+			</dl>
+		</li>
+		<li class="tabbar-item">
+			<a href="/product/listCart/$!{shopId}">购物车</a>
+		</li>
+		<li class="tabbar-item">
+			<a href="/buyer/info/$!{shopId}">个人中心</a>
+		</li>
+	</ul>
+</nav>
+<!-- /底部菜单 -->

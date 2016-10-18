@@ -1,0 +1,97 @@
+#set($screen_title="控制台主页")
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>	
+		<link rel="stylesheet" type="text/css" href="#getWebresourcesUrl()/css/common.css">
+		<link rel="stylesheet" type="text/css" href="#getWebresourcesUrl()/css/console-common.css">
+		<link rel="stylesheet" type="text/css" href="#getWebresourcesUrl()/css/console-wy.css">
+		<style>
+			.header {
+				height: 55px;
+			}
+			html, body {
+				height: 100%;
+				overflow: hidden;
+			}
+			iframe {
+				height: 100%;
+				float: right;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 头部 -->
+		<div class="header">
+			<div class="header-left">
+				<img src="#getWebresourcesUrl()/img/console/logo.png" class="logo">
+				<span class="logo-right">控制台</span>
+			</div>
+
+			<div class="header-right">
+				<div class="remind-main">
+					<i class="remind icons"></i>
+					<span class="remind-w">提醒</span>
+					<span class="remind-numb">12</span>
+				</div>
+				<ul class="ul-top">
+					<li><a href="">开发文档</a></li>
+					<li><a href=""><span class="api">API</span><i class="round icons"></i></a></li>
+					<li><a href="">平台首页</a></li>
+				</ul>
+
+				<div class="user">
+					<span class="user-email">$!{loginUser.account}(企业)</span>
+					<i class="triangle icons"></i>
+				</div>
+				<div class="exit">
+					<i class="exit-img icons" onclick="window.location.href='#getAppServer()/logout'"></i>
+					退出
+				</div>
+			</div>
+
+		</div>
+		<div class="main-left">
+			<a href="product/protection-mngt"  target="myFrameName" class="main-left-t">控制台首页</a>
+			<ul class="left-nav">
+				<li>
+					<a href="javascript:;"><i class="save icons"></i>产品管理<!--<i class="put-next icons"></i>--></a>
+						<div class="nav-ul" style="display: block;">
+							<a href="console-create-product.html" style="margin-left: -14px;">创建产品应用</a>
+						</div>
+				</li>
+				<li>
+					<a href="console-save-nothing" target="myFrameName"><i class="save-queries icons"></i>保全查询<!--<i class="put-next icons">--></i></a>
+				</li>
+				<li>
+##					<a href="console-setting-company.html"><i class="put-set icons"></i>帐号设置<!--<i class="put-next icons"></i>--></a>
+    				<a href="/account"><i class="save-set icons"></i>帐号设置<!--<i class="put-next icons"></i>--></a>
+					<!--<div class="nav-ul">
+						<a href="password-change.html" style="margin-left: -40px;" >修改密码</a>
+					</div>
+					-->
+				</li>
+			</ul>
+		</div>
+		<!-- 主要内容 -->
+		<iframe frameborder="0" name="myFrameName" scrolling="no" frameborder="0" src="product/console-save-nothing" ></iframe>
+
+	</body>
+	
+	<script type="text/javascript" src="#getWebresourcesUrl()/js/common.js"></script>
+	<script type="text/javascript">
+		$(function () {
+			var headerHeight = $('.header').height();
+			var screenHeight = $(window).height();
+			var screenWidth = $(window).width();
+			var mainLeftWidth = $('.main-left').width();
+
+			$('iframe').width(screenWidth - mainLeftWidth);
+			$('iframe').height(screenHeight - headerHeight);
+			window.onresize=function(){
+				location.reload();
+			}
+			
+		});
+	</script>
+</html>

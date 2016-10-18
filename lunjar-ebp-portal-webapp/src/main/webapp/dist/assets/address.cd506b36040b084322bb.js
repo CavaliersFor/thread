@@ -1,0 +1,2 @@
+webpackJsonp([11],{0:function(e,n,t){e.exports=t(32)},32:function(e,n,t){"use strict";function d(e){return e&&e.__esModule?e:{"default":e}}function r(e){var n=e.data("id");(0,o.deleteAddress)(n).then(function(n){(0,s.showSuccessTip)(n.msg),e.parents(".address").remove()},s.handleError)}t(3);var u=t(1),c=d(u),o=t(9),s=t(4);(0,c["default"])(function(){(0,c["default"])(document).on("click",".js-del-addr",function(e){r((0,c["default"])(e.currentTarget))})})}});
+//# sourceMappingURL=address.cd506b36040b084322bb.js.map

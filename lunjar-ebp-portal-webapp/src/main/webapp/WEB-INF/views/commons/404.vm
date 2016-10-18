@@ -1,0 +1,62 @@
+<script> 
+if (window != top) 
+top.location.href = location.href; 
+</script>
+#set($screen_title="404页面") 
+#loadCommonUrls()
+<link rel="stylesheet" type="text/css" href="#getWebresourcesUrl()/css/common.css">
+<link rel="stylesheet" type="text/css" href="#getWebresourcesUrl()/css/system.css">
+<div id="header">
+		<div class="w1200">
+			<img src="#getWebresourcesUrl()/img/1.png" alt="" class="fl logo">
+			<h1 class="fl">保全开放平台</h1>
+			<div class="fr ghost">
+				<a href="login" class="fl">登录</a>
+				<span class="fl">|</span>
+				<a href="${userPortalUrl}/register.php" class="fl">注册</a>
+				<br class="clr">
+			</div>
+			<div class="fr user">
+				<span class="user-email"></span>
+			</div>
+			<ul class="horizontal fr">
+				<li><a href="${partnerPortalUrl}">首页</a></li>
+				<li><a href="${partnerPortalUrl}/platform-introduction">平台简介</a></li>
+				<li><a href="${partnerPortalUrl}/api">文档API</a></li>
+				<li><a href="${partnerPortalUrl}/help">帮助中心</a></li>
+				<li><a href="/index">管理控制台</a></li>
+			</ul>
+			<br class="clr">
+		</div>
+	</div>
+<div id="main">			
+	<div class="site_title">
+		<div>
+            <h1 class="fl">很抱歉！</h1>   
+            <span class="fl content">
+                <h2>您访问的页面失联啦...</h2>
+                <p>算了，<a href="/index"><u>还是去其它页面吧！</u></a></p>
+            </span>
+        </div>
+          <div align="center"><img src="#getWebresourcesUrl()/img/index/404.jpg" title="404提示" width="632px" height="161px" /></div>
+    </div>              
+</div>
+##js获取登录信息
+<script>
+$(function(){
+	var name = Core.CookieUtil.readCookie('account');
+	var type = Core.CookieUtil.readCookie('type');
+	var _type="(企业 )";
+	if(type=="1"){
+		_type="(个人)";
+	}
+	if(name!="" && name!=null){
+		$(".ghost").hide();
+		$(".user-email").html(name+_type);
+		$(".user").show();
+	}else{
+		$(".user").hide();
+		$(".ghost").show();
+	}
+});
+</script>

@@ -1,0 +1,51 @@
+.stepper {
+  display: inline-block;
+  // width: 64%;
+  font-size: 0;
+
+  & > * {
+    display: inline-block;
+    vertical-align: top;
+    height: 1.4rem;
+    line-height: 1.4rem;
+  }
+
+  & > input {
+    // width: 32%;
+    box-sizing: border-box;
+    width: 2rem;
+    border-width: 0;
+    background-color: #fff;
+    color: #000;
+    font-size: .7rem;
+    text-align: center;
+  }
+
+  .btn-minus,
+  .btn-add {
+    width: 1.4rem;
+    text-align: center;
+    cursor: pointer;
+    background-position: center center;
+    background-size: 50% 50%;
+    background-repeat: no-repeat;
+  }
+  .btn-minus {
+    background-image: url(./add_img_1.png);
+    background-color: #f7f7f7;
+    background-size: 50% 10%;
+
+    &.red {
+      background-image: url(./add_img_3.png);
+    }
+  }
+  .btn-add {
+    background-image: url(./add_img_2.png);
+    background-color: #ffa800;
+
+    &.red {
+      background-image: url(./add_img_4.png);
+      background-color: #f7f7f7;
+    }
+  }
+}

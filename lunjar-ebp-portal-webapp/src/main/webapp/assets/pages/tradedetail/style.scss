@@ -1,0 +1,53 @@
+// 地址
+.addr {
+
+	&-box {
+		display: flex;
+		padding: .384rem .48rem;
+		margin-bottom: .48rem;
+		line-height: 1.3;
+		font-size: .7rem;
+		color: #888;
+		background-color: #fff;
+	}
+
+	&-info {
+		flex: 1;
+
+		.buyer-info {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: .2rem;
+		}
+	}
+}
+
+
+// 订单详情
+.tradedetail {
+	.tradelist-summary {
+		padding-top: .288rem;
+		padding-bottom: .288rem;
+	}
+	.pay-item {
+		display: flex;
+		justify-content: space-between;
+		line-height: 1.7;
+
+		span:first-child {
+			color: #888;
+		}
+	}
+	.payment {
+		color: #f00;
+	}
+}
+
+
+// 订单基本信息
+.trade-box {
+	padding: .48rem;
+	font-size: .65rem;
+	color: #888;
+	background-color: #fff;
+}

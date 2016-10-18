@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans	
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/mvc 
+	http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<import resource="webui-mvc.xml" />
+<!-- 	<import resource="exception-mvc.xml" /> -->
+
+	<!-- 使用annotation 自动注册bean -->
+	<context:component-scan
+		base-package="com.lunjar.bps.core.web.controller,com.lunjar.ebp.portal.console.controller"
+		use-default-filters="false">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+		<context:include-filter type="annotation"
+			expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Component" />
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Service" />
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Repository" />
+	</context:component-scan>
+
+	<!-- velocity config -->
+	<!-- velocityConfigurer 定义在webui-mvc.xml -->
+	<bean id="demoVelocityConfigurer" parent="velocityConfigurer"
+		class="com.lunjar.products.core.web.velocity.config.FixedVelocityConfigurer">
+		<constructor-arg value="macros/macros-portal.vm" />
+	</bean>
+
+	<!-- velocity View Resolver -->
+	<bean id="demoVelocityViewResolver" parent="velocityViewResolver"
+		class="com.lunjar.products.core.web.velocity.resolver.FixedVelocityLayoutViewResolver">
+		<property name="layoutUrl" value="commons/layout-default.vm" />
+	</bean>
+
+	<mvc:resources mapping="*.xml" location="/" />
+	<bean id="portalWebInterceptor"
+		class="com.lunjar.ebp.portal.console.interceptor.PortalWebInterceptor">
+	</bean>
+
+	<!-- session过期 -->
+	<bean id="noLoginExceptionResolver"
+		class="com.lunjar.products.core.web.exception.resolvers.NoLoginExceptionResolver">
+		<property name="loginUrl" value="/invalidSession" />
+	</bean>
+	<!--静态文件访问配置 start -->
+	<mvc:default-servlet-handler />
+	<mvc:resources location="/assets/" mapping="/assets/**" />
+	<!--静态文件访问配置 end -->
+
+ 	<mvc:interceptors>
+	 	<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<ref bean="portalWebInterceptor" />
+		</mvc:interceptor> 
+	</mvc:interceptors>
+
+</beans>

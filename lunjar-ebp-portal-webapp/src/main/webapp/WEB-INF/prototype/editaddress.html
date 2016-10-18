@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no">
+  <title>Document</title>
+</head>
+<body>
+  <div class="main">
+    <form class="address-form">
+      <div class="input-control">
+        <label>收货人：</label>
+        <div>
+          <input type="text" placeholder="请填写收货人姓名">
+        </div>
+      </div>
+      <div class="input-control">
+        <label>联系电话：</label>
+        <div>
+          <input type="number" placeholder="请填写手机号码">
+        </div>
+      </div>
+      <div class="input-control">
+        <label>选择地区：</label>
+        <div>
+          <select name="" id="">
+            <option value="">广东省</option>
+            <option value="">上海市</option>
+          </select>
+          <select name="" id="">
+            <option value="">广州市</option>
+            <option value="">佛山市</option>
+          </select>
+          <select name="" id="">
+            <option value="">海珠区</option>
+            <option value="">天河区</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-control">
+        <label>详细地址：</label>
+        <div>
+          <input type="text" placeholder="请填写街道门牌信息">
+        </div>
+      </div>
+      <div class="input-control">
+        <label>邮政编码：</label>
+        <div>
+          <input type="text" placeholder="请填写邮政编码（选填）">
+        </div>
+      </div>
+    </form>
+    <div class="footer">
+      <a href="">保存</a>
+    </div>
+  </div>
+  <script>
+    //js控制web页面适配
+    (function (doc, win) {
+      var docEl = doc.documentElement,
+        resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+        recalc = function() {
+          var clientWidth = docEl.clientWidth;
+          if (!clientWidth) return;
+          if (clientWidth > 720) {
+            clientWidth = 720;
+          }
+          docEl.style.fontSize = 40 * (clientWidth / 720) + 'px';
+        };
+      if (!doc.addEventListener) return;
+      win.addEventListener(resizeEvt, recalc, false);
+      doc.addEventListener('DOMContentLoaded', recalc, false);
+    })(document, window)
+  </script>
+</body>
+</html>

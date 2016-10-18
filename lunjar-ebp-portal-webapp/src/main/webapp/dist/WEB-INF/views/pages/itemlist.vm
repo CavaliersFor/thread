@@ -1,0 +1,116 @@
+#parse("pages/commons/header.vm")
+<body>
+	<!-- inject:css -->
+  <link rel="stylesheet" href="#getWebresourcesUrl()assets/itemlist.461f29e53d49f47ccba5.css">
+  <!-- endinject -->
+	<div id="main" class="item-list-wrapper">
+		<!-- 顶部轮播图 -->
+  	#if ($categoryDto.list && $categoryDto.list.size() > 0)
+		<div class="swiper-container swiper-container-horizontal js-top-swiper">
+      <div class="swiper-wrapper">
+	      	#foreach ($item in $categoryDto.list)
+	    		<a href="$!item.skipUrl" class="swiper-slide slide-item" style="background-image: url(&quot;$!item.url&quot;);"></a>
+	    		#end
+      </div>
+      <!-- Add Pagination -->
+      <div class="swiper-pagination"></div>
+  	</div>
+		#end
+		<!-- /顶部轮播图 -->
+
+		<!-- 顶部幻灯片 -->
+		<!-- <div id="slideBox" class="slidebox">
+			<div class="bd">
+				<ul>
+					<li>
+						<a class="pic">
+							<img src="http://upload.renrenma.com/upload/201608/03/201608031814335818.jpg" alt="">
+						</a>
+					</li>
+					<li>
+						<a class="pic">
+							<img src="http://upload.renrenma.com/upload/201608/03/201608031814335818.jpg" alt="">
+						</a>
+					</li>
+					<li>
+						<a class="pic">
+							<img src="http://upload.renrenma.com/upload/201608/03/201608031814335818.jpg" alt="">
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="hd">
+				<ul>
+					<li>1</li>
+					<li>2</li>
+					<li>3</li>
+				</ul>
+			</div>
+		</div> -->
+		<!-- /顶部幻灯片 -->
+
+		<!-- 商品分类 -->
+		<div id="groupGoodsBox" class="product-box item-category">
+    	<input type="hidden" name="hasLoadDone" value="$!page.recordCount">
+			<input type="hidden" name="cid" value="$!categoryId">
+
+			<div class="category-title">#if ($page.data && $page.data.size() > 0)$!page.data[0].categoryName#end</div>
+			<div id="itemlistWrapper" class="itemlist">
+				#if ($page.data && $page.data.size() > 0)
+					#foreach($item in $page.data)
+					<div class="itemlist-item">
+	          <a class="itemlist-pic" href="/product/getInfo?id=$!item.productId">
+	            <img data-normal="$!item.productPicPath">
+	          </a>
+	          <div class="itemlist-detail">
+	            <a class="itemlist-title" href="/product/getInfo?id=$!item.productId">$!item.productName</a>
+	            <div class="itemlist-horizontal-price">
+	              <p>¥ $!item.realPrice</p>
+	              <a class="icon-add2car js-add-item-2-car" data-pid="$!item.productId"></a>
+	            </div>
+	          </div>
+	        </div>
+					#end
+				#else
+				<div class="empty-list-tip">
+	        <span class="empty-icon"></span>
+	        <div class="empty-cnt">暂时还没有相关的商品哦！</div>
+	      </div>
+				#end
+			</div>
+			
+			#if ($page.data && $page.data.size() > 0 && $page.data.size() < 10)
+			<p class="empty-list js-loaded-all">亲，已经看完了哦！</p>
+			#else
+			<p class="empty-list z-hidden js-loaded-all">亲，已经看完了哦！</p>
+			#end
+			<div class="loading-box z-hidden js-loading-box">
+				<span class="loading-gif"></span>
+				<span class="loading-text">加载中...</span>
+			</div>
+		</div>
+		<!-- /商品分类 -->
+
+		<!-- 商城自定义信息 -->
+		<div id="divDefine"></div>
+		<!-- /商城自定义信息 -->
+
+		<!-- footer -->
+		<footer class="footer">
+			<div class="logo-box">
+				<img class="logo_main" src="" alt="">
+			</div>
+		</footer>
+		<!-- /footer -->
+
+		<!-- 底部菜单 -->
+		#parse("pages/commons/tabbar.vm")
+		<!-- /底部菜单 -->
+	</div>
+
+	<!-- inject:js -->
+  <script src="#getWebresourcesUrl()assets/common.d602c6046ddb4170db1e.js"></script>
+  <script src="#getWebresourcesUrl()assets/itemlist.461f29e53d49f47ccba5.js"></script>
+  <!-- endinject -->
+</body>
+</html>

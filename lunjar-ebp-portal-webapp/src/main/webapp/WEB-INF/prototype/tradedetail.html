@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>订单详情</title>
+  <meta charset="UTF-8">
+  <meta name="keywords" content="移动电商,电商,营销平台">
+  <meta name="description" content="">
+  <meta name="renderer" content="webkit">
+  <meta name="screen-orientation" content="portrait">
+  <meta name="x5-orientation" content="portrait">
+  <meta name="browsermode" content="application">
+  <meta name="x5-page-mode" content="app">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta content="telephone=no" name="format-detection" /> 
+  <meta content="email=no" name="format-detection" />
+  <script>
+    //js控制web页面适配
+    (function (doc, win) {
+      var docEl = doc.documentElement,
+        resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+        recalc = function() {
+          var clientWidth = docEl.clientWidth;
+          if (!clientWidth) return;
+          if (clientWidth > 720) {
+            clientWidth = 720;
+          }
+          docEl.style.fontSize = 40 * (clientWidth / 720) + 'px';
+        };
+      if (!doc.addEventListener) return;
+      win.addEventListener(resizeEvt, recalc, false);
+      doc.addEventListener('DOMContentLoaded', recalc, false);
+    })(document, window)
+  </script>
+</head>
+<body>
+  <div id="main" class="tradedetail">
+
+    <!-- 收货信息 -->
+    <div class="addr-box">
+      <span class="addr-icon"></span>
+      <div class="addr-info">
+        <div class="buyer-info">
+          <span>收货人 : 张三</span>
+          <span>76492135793485</span>
+        </div>
+        <div class="addr-detail">收货地址 : 广东省广州市天河区石牌桥岗顶画室1234号</div>
+      </div>
+    </div>
+    <!-- /收货信息 -->
+
+    <!-- 订单宝贝 -->
+    <div class="tradelist-item">
+      <div class="tradelist-header">
+        <a class="show-info">
+          <img src="https://img.alicdn.com/5c/b1/T1CDCGXdteXXb1upjX.jpg" alt="">
+          <span>淘店长</span>
+        </a>
+        <span class="trade-status">已发货</span>
+      </div>
+
+      <!-- 宝贝列表 -->
+      <div class="itemlist">
+        <div class="itemlist-item checkbox small">
+          <a class="itemlist-pic" href="">
+            <img src="http://upload.renrenma.com/upload/201608/03/201608031702116709.jpg">
+          </a>
+          <div class="itemlist-detail">
+            <a class="itemlist-title" href="">【七夕特惠】浪漫玫瑰花+初恋柠檬片，爱情拍档，约惠真爱【七夕特惠】浪漫玫瑰花+初恋柠檬片，爱情拍档，约惠真爱</a>
+            <div class="itemlist-sku">
+              <span>颜色分类</span>
+            </div>
+          </div>
+          <div class="itemlist-vertical-price">
+            <span>$9999.9</span>
+            <span>$88.0</span>
+            <span>x1</span>
+          </div>
+        </div>
+        <div class="itemlist-item checkbox small">
+          <a class="itemlist-pic" href="">
+            <img src="http://upload.renrenma.com/upload/201608/03/201608031702116709.jpg">
+          </a>
+          <div class="itemlist-detail">
+            <a class="itemlist-title" href="">【七夕特惠】浪漫玫瑰花+初恋柠檬片，爱情拍档，约惠真爱【七夕特惠】浪漫玫瑰花+初恋柠檬片，爱情拍档，约惠真爱</a>
+            <div class="itemlist-sku">
+              <span>颜色分类</span>
+            </div>
+          </div>
+          <div class="itemlist-vertical-price">
+            <span>$99.9</span>
+            <span>$88.0</span>
+            <span>x1</span>
+          </div>
+        </div>
+        <div class="itemlist-item checkbox small">
+          <a class="itemlist-pic" href="">
+            <img src="http://upload.renrenma.com/upload/201608/03/201608031702116709.jpg">
+          </a>
+          <div class="itemlist-detail">
+            <a class="itemlist-title" href="">【七夕特惠】浪漫玫瑰花+初恋柠檬片，爱情拍档，约惠真爱【七夕特惠】浪漫玫瑰花+初恋柠檬片，爱情拍档，约惠真爱</a>
+            <div class="itemlist-sku">
+              <span>颜色分类</span>
+            </div>
+          </div>
+          <div class="itemlist-vertical-price">
+            <span>$99.9</span>
+            <span>$88.0</span>
+            <span>x1</span>
+          </div>
+        </div>
+      </div>
+      <!-- /宝贝列表 -->
+
+      <div class="tradelist-summary">
+        <div class="pay-item">
+          <span>运费</span>
+          <span>¥ 12</span>
+        </div>
+        <div class="pay-item">
+          <span>优惠</span>
+          <span>-¥ 12</span>
+        </div>
+        <div class="pay-item">
+          <span>实付款（含运费）</span>
+          <span class="payment">¥ 120</span>
+        </div>
+      </div>
+      <div class="tradelist-actions">
+        <a class="action-btn">查看物流</a>
+        <a class="action-btn">退款</a>
+      </div>
+    </div>
+    <!-- /订单宝贝 -->
+
+    <!-- 订单基本信息 -->
+    <div class="trade-box">
+      <div>订单编号 : 12649325703245023</div>
+      <div>创建时间 : 2016-09-09 12:12:12</div>
+      <div>付款时间 : 2016-09-09 12:12:12</div>
+    </div>
+    <!-- 订单基本信息 -->
+
+    <!-- footer -->
+    <footer class="footer">
+      <div class="logo-box">
+        <img class="logo_main" src="" alt="">
+      </div>
+    </footer>
+    <!-- /footer -->
+  </div>
+</body>
+</html>

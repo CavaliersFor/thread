@@ -1,0 +1,112 @@
+#set($layout="") 
+<!DOCTYPE html>
+<html>
+	<head>	
+	#loadCommonRes()
+	#loadCommonUrls()
+    <style>
+    .header {
+    	height: 55px;
+    }
+    html, body {
+    	height: 100%;
+    	overflow: hidden;
+    }
+	.myiframe {
+		position: absolute;
+    	top: 55px;
+    	left: 180px;
+    	bottom: 0;
+    	right: 0;
+	}
+    iframe {
+    	float: right;
+    	width: 100%;
+    	_width: expression(document.body.offsetWidth - 185 + 'px');
+    	height: 100%;
+    }
+	.selectBox {
+		position: fixed;
+		right: 413px;
+		top: 50px;
+		width: 130px;
+		text-align: center;
+		background-color: #4e8bca;
+		display: none;
+		z-index:10000;
+	}
+	.selectBox a {
+		display: block;
+		height: 30px;
+		line-height: 30px;
+	}
+    </style>
+</head>
+<body>
+#parse("commons/layout/top.vm")
+#parse("commons/layout/left.vm")
+#parse("commons/layout/content.vm")
+</body>
+<script type="text/javascript" src="#getWebresourcesUrl()/js/jquery.min.js"></script>
+<script type="text/javascript" src="#getWebresourcesUrl()/js/common.js"></script>
+<script type="text/javascript" src="#getComponentUrl()/jquery/boxy/javascripts/jquery.boxy.js"></script>
+<script type="text/javascript" src="#getComponentUrl()/ancun/core.js"></script>
+<script>
+	$(function () {
+	
+		##js获取登录信息
+    	var name = Core.CookieUtil.readCookie('account');
+    	var type = Core.CookieUtil.readCookie('type');
+    	var _type="(企业 )";
+    	if(type=="1"){
+    		_type="(个人)";
+    	}
+    	if(name!="" && name!=null){
+    		$(".ghost").hide();
+    		$(".user-email").html(name+_type);
+    		$(".user").show();
+    	}else{
+    		$(".user").hide();
+    		$(".ghost").show();
+    	}
+	
+		//左边栏click事件
+		$(".main-left,.selectBox").find("a").click(function(){
+    		var src=$(this).attr("data-url");
+    		if(src!=""&&src!="index"){
+    			$("#iframe_content").attr("src",src);
+    		}else{
+				location.reload();
+			}
+		});
+		
+		$(".user-email").click(function(){
+			$("#iframe_content").attr("src","account");
+		});
+		
+		//头部退出
+        $(".exit").click(function(){
+			Core.PopUtil.confirm('确定<b style="color:#ff6600;">退出</b>?',function(){
+				location.href="logout";
+        	});
+    	});
+		
+		$('.selectBox').find('a').click(function(){
+			$('.selectBox').toggle();
+		});
+	});
+	
+	//左侧导航收缩
+	$('.sidebar').click(function(){
+		$('.left-nav a span').toggle();
+		$('.main-left').toggleClass('left_on');
+		$(this).toggleClass('side_on');
+		
+		if($(this).hasClass('side_on')) {
+			$('.myiframe').css('left', '48px');
+		} else {
+			$('.myiframe').css('left', '180px');
+		}
+	})
+</script>
+</html>

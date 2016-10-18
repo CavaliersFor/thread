@@ -1,0 +1,80 @@
+@mixin clearfix {
+	&:after {
+		display: block;
+		height: 0;
+		clear: both;
+		content: " ";
+	}
+}
+
+.goodslist {
+	// margin-bottom: -1%;
+	@include clearfix;	
+	// display: inline-block;
+
+	&-item {
+		width: 47%;
+		height: 12.5rem;
+		margin-left: 2%;
+		background-color: #fff;
+		float: left;
+		text-align: center;
+	  margin-bottom: 2.15%;
+	}
+
+	&-pic {
+		width: 92%;
+		height: 8.3rem;
+		box-sizing: border-box;
+		margin-top: 4%;
+		margin-bottom: 1.9%;
+		border: 1px solid #F0EFEF;
+	}
+
+	&-title {
+		width: 92%;
+		font-size: 0.7rem;
+		text-align: left;
+		display: -webkit-box;
+		overflow: hidden;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		margin: 0 auto;
+		line-height: 1.2;
+	}
+
+	&-price {
+		width: 92%;
+		margin-top: 0.28rem;
+		height: 2rem;
+		margin-left: auto;
+		margin-right: auto;
+		line-height: 2rem;
+
+		span {
+			display: inline-block;
+			text-align: center;
+			float: left;
+			color: #ff4a4a;
+			font-size: 0.8rem;
+		}
+	}
+
+	&-car {
+		width: 1.85rem;
+		float: right;
+		cursor: pointer;
+	}
+}
+
+// 推荐  goodslist 一般会配合推荐商品列表使用
+.recommand-box {
+	background-color: #f7f7f7;
+
+	.recommand-title {
+		height: 2.4rem;
+		line-height: 2.4rem;
+		font-size: .6rem;
+		text-align: center;
+	}
+}

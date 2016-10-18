@@ -1,0 +1,124 @@
+
+.itemlist {
+	background-color: #fff;
+
+	&-item {
+		display: flex;
+		// align-items: center;
+		padding: 0.48rem;
+		border-bottom: 1px solid rgba(229,229,229,0.5);
+	}
+
+	.radios_box {
+		align-self: center;
+		flex: none;
+		margin-right: .384rem;
+	}
+
+	&-pic, {
+		display: flex;
+		flex: none;
+
+		img {
+			width: 5rem;
+			height: 5rem;
+			text-align: center;
+			border-radius: .1rem;
+		}
+	}
+
+	&-detail {
+		flex: 1;
+		margin-left: .384rem;
+		font-size: 0.7rem;
+	}
+
+	&-title {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		word-wrap: break-word;
+		overflow: hidden;
+	}
+
+	&-sku {
+		// display: flex;
+		// align-items: center;
+		// justify-content: space-between;
+		margin-top: .3rem;
+		font-size: .55rem;
+
+		span {
+			color: #888;
+		}
+
+		&btn {
+			display: inline-block;
+			min-width: 3rem;
+			padding: .1rem .2rem;
+			color: #f00;
+			text-align: center;
+			border: 1px solid #eee;
+			border-radius: .1rem;
+		}
+	}
+
+	&-status {
+		margin-top: .2rem;
+		color: #f00;
+	}
+
+	&-horizontal-price {
+		height: 1.6rem;
+		margin-top: 1.25rem;
+
+		p {
+			display: inline-block;
+			font-size: 0.75rem;
+			color: #ff4a4a;
+			line-height: 1.6rem;
+		}
+
+		.icon-add2car {
+			width: 1.85rem;
+			float: right;
+			cursor: pointer;
+		}
+	}
+
+	&-vertical-price {
+		margin-left: .384rem;
+		font-size: .6rem;
+		text-align: right;
+
+		span:nth-child(2) {
+			display: block;
+			margin-top: .1rem;
+			margin-bottom: .1rem;
+			color: #999;
+			text-decoration: line-through;
+		}
+
+		span:last-child {
+			text-decoration: initial;
+		}
+	}
+}
+
+.itemlist-item.small {
+	.itemlist-pic img {
+		width: 3.5rem;
+		height: 3.5rem;
+	}
+
+	.itemlist-detail {
+		font-size: .6rem;
+	}
+}
+
+.itemlist-item.checkbox {
+	.itemlist-pic img {
+		width: 3rem;
+		height: 3rem;
+	}
+}
