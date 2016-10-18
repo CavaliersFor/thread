@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.DiscountMapper">
+	<resultMap id="discountMap" type="discount">
+		<id column="id" property="id" /><!-- 主键 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+		<result column="status" property="status" /><!-- 状态1：使用中 2：停止使用 -->
+		<result column="conditions" property="conditions" /><!-- 优惠条件 -->
+		<result column="discount_fee" property="discountFee" /><!-- 减免金额 -->
+		<result column="enterprise_id" property="enterpriseId" /><!-- 商家id -->
+		<result column="is_post" property="isPost" /><!-- 是否包邮 1是包邮 -->
+		<result column="free_post_area" property="freePostArea" /><!-- 包邮地区,多个地区之间用,分隔 -->
+		<result column="name" property="name" /><!-- 优惠活动名称 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="discount" useGeneratedKeys="true"
+		keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_discount.nextval from dual
+		</selectKey>
+		insert into
+		discount(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="status != null">,status</if>
+			<if test="conditions != null">,conditions</if>
+			<if test="discountFee != null">,discount_fee</if>
+			<if test="enterpriseId != null">,enterprise_id</if>
+			<if test="isPost != null">,is_post</if>
+			<if test="freePostArea != null">,free_post_area</if>
+			<if test="name != null">,name</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			<if test="conditions != null">,#{conditions,jdbcType=NUMERIC}</if>
+			<if test="discountFee != null">,#{discountFee,jdbcType=NUMERIC}</if>
+			<if test="enterpriseId != null">,#{enterpriseId,jdbcType=BIGINT}</if>
+			<if test="isPost != null">,#{isPost,jdbcType=INTEGER}</if>
+			<if test="freePostArea != null">,#{freePostArea,jdbcType=VARCHAR}</if>
+			<if test="name != null">,#{name,jdbcType=VARCHAR}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="discount">
+		update discount
+		<set>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="conditions != null">conditions=#{conditions,jdbcType=NUMERIC},</if>
+			<if test="discountFee != null">discount_fee=#{discountFee,jdbcType=NUMERIC},</if>
+			<if test="enterpriseId != null">enterprise_id=#{enterpriseId,jdbcType=BIGINT},</if>
+			<if test="isPost != null">is_post=#{isPost,jdbcType=INTEGER},</if>
+			<if test="freePostArea != null">free_post_area=#{freePostArea,jdbcType=VARCHAR},</if>
+			<if test="name != null">name=#{name,jdbcType=VARCHAR},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="discountMap">
+		select * from discount where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM discount d
+		<where>
+			<if test="idArray != null">
+				d.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="gmtCreateFrom != null">and d.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and d.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and d.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and d.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and d.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and d.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<choose>
+				<when test="status != null">and d.status = #{status}</when>
+				<when test="statusArray != null">
+					and d.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and d.status > 0
+				</otherwise>
+			</choose>
+			<if test="conditionsFrom != null">and d.conditions >= #{conditionsFrom}</if>
+			<if test="conditionsTo != null"><![CDATA[and d.conditions <= #{conditionsTo}]]></if>
+			<if test="discountFeeFrom != null">and d.discount_fee >= #{discountFeeFrom}</if>
+			<if test="discountFeeTo != null"><![CDATA[and d.discount_fee <= #{discountFeeTo}]]></if>
+			<if test="enterpriseId != null">and d.enterprise_id = #{enterpriseId}</if>
+			<if test="isPost != null">and d.is_post = #{isPost}</if>
+			<if test="freePostArea != null and freePostArea.trim() !=''">and d.free_post_area = #{freePostArea}</if>
+			<if test="name != null and name.trim() !=''">and d.name = #{name}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by d.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="discountQuery" resultMap="discountMap">
+		<include refid="common.pageBegin" />
+		select d.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}
+				</foreach>
+			</when>
+			<otherwise>
+				,d.GMT_CREATE
+				,d.GMT_MODIFY
+				,d.status
+				,d.conditions
+				,d.discount_fee
+				,d.enterprise_id
+				,d.is_post
+				,d.free_post_area
+				,d.name
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="discountQuery"
+		resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="discount">
+		update discount set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from discount where id=#{id}
+	</delete>
+</mapper>

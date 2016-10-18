@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.CartMapper">
+	<resultMap id="cartMap" type="cart">
+		<id column="id" property="id" /><!-- 主键id -->
+		<result column="buyer_id" property="buyerId" /><!-- 买家id -->
+		<result column="product_id" property="productId" /><!-- 商品id -->
+		<result column="status" property="status" /><!-- 状态 1：未结算 2：已结算 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+		<result column="sku_id" property="skuId" /><!-- sku id -->
+		<result column="shop_id" property="shopId" /><!-- 店铺id -->
+		<result column="num" property="num" /><!-- 数量 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="cart" useGeneratedKeys="true"
+		keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_cart.nextval from dual
+		</selectKey>
+		insert into
+		cart(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="buyerId != null">,buyer_id</if>
+			<if test="productId != null">,product_id</if>
+			<if test="status != null">,status</if>
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="skuId != null">,sku_id</if>
+			<if test="shopId != null">,shop_id</if>
+			<if test="num != null">,num</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="buyerId != null">,#{buyerId,jdbcType=BIGINT}</if>
+			<if test="productId != null">,#{productId,jdbcType=BIGINT}</if>
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="skuId != null">,#{skuId,jdbcType=BIGINT}</if>
+			<if test="shopId != null">,#{shopId,jdbcType=BIGINT}</if>
+			<if test="num != null">,#{num,jdbcType=INTEGER}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="cart">
+		update cart
+		<set>
+			<if test="buyerId != null">buyer_id=#{buyerId,jdbcType=BIGINT},</if>
+			<if test="productId != null">product_id=#{productId,jdbcType=BIGINT},</if>
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="skuId != null">sku_id=#{skuId,jdbcType=BIGINT},</if>
+			<if test="shopId != null">shop_id=#{shopId,jdbcType=BIGINT},</if>
+			<if test="num != null">num=#{num,jdbcType=INTEGER},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="cartMap">
+		select * from cart where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM cart c
+		<where>
+			<if test="idArray != null">
+				c.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="buyerId != null">and c.buyer_id = #{buyerId}</if>
+			<if test="productId != null">and c.product_id = #{productId}</if>
+			<choose>
+				<when test="status != null">and c.status = #{status}</when>
+				<when test="statusArray != null">
+					and c.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and c.status > 0
+				</otherwise>
+			</choose>
+			<if test="gmtCreateFrom != null">and c.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and c.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and c.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and c.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and c.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and c.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="skuId != null">and c.sku_id = #{skuId}</if>
+			<if test="shopId != null">and c.shop_id = #{shopId}</if>
+			<if test="num != null">and c.num = #{num}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by c.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="cartQuery" resultMap="cartMap">
+		<include refid="common.pageBegin" />
+		select c.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}
+				</foreach>
+			</when>
+			<otherwise>
+				,c.buyer_id
+				,c.product_id
+				,c.status
+				,c.GMT_CREATE
+				,c.GMT_MODIFY
+				,c.sku_id
+				,c.shop_id
+				,c.num
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="cartQuery" resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="cart">
+		update cart set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from cart where id=#{id}
+	</delete>
+	
+	<delete id="deleteByQuery" parameterType="cartQuery" >
+		delete from cart 
+		<where>
+			<if test="idArray != null">
+				id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="buyerId != null">and buyer_id = #{buyerId}</if>
+			<if test="productId != null">and product_id = #{productId}</if>
+			<choose>
+				<when test="status != null">and status = #{status}</when>
+				<when test="statusArray != null">
+					and status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and status > 0
+				</otherwise>
+			</choose>
+			<if test="gmtCreateFrom != null">and GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="skuId != null">and sku_id = #{skuId}</if>
+			<if test="shopId != null">and shop_id = #{shopId}</if>
+			<if test="num != null">and num = #{num}</if>
+		</where>
+	</delete>
+</mapper>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.ItemMapper">
+	<resultMap id="itemMap" type="item">
+		<id column="id" property="id" /><!-- 主键id -->
+		<result column="parent_id" property="parentId" /><!-- 父类id -->
+		<result column="name" property="name" /><!-- 类目名称 -->
+		<result column="level" property="level" /><!-- 类目等级 -->
+		<result column="status" property="status" /><!-- 状态 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="item" useGeneratedKeys="true"
+		keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_item.nextval from dual
+		</selectKey>
+		insert into
+		item(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="parentId != null">,parent_id</if>
+			<if test="name != null">,name</if>
+			<if test="level != null">,level</if>
+			<if test="status != null">,status</if>
+			,GMT_CREATE
+			,GMT_MODIFY
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="parentId != null">,#{parentId,jdbcType=BIGINT}</if>
+			<if test="name != null">,#{name,jdbcType=VARCHAR}</if>
+			<if test="level != null">,#{level,jdbcType=INTEGER}</if>
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="item">
+		update item
+		<set>
+			<if test="parentId != null">parent_id=#{parentId,jdbcType=BIGINT},</if>
+			<if test="name != null">name=#{name,jdbcType=VARCHAR},</if>
+			<if test="level != null">level=#{level,jdbcType=INTEGER},</if>
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="itemMap">
+		select * from item where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM item i
+		<where>
+			<if test="idArray != null">
+				i.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="parentId != null">and i.parent_id = #{parentId}</if>
+			<if test="name != null and name.trim() !=''">and i.name like CONCAT('%','${name}','%' )</if>
+			<if test="level != null">and i.level = #{level}</if>
+			<choose>
+				<when test="status != null">and i.status = #{status}</when>
+				<when test="statusArray != null">
+					and i.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and i.status > 0
+				</otherwise>
+			</choose>
+			<if test="gmtCreateFrom != null">and i.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and i.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and i.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and i.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and i.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and i.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by i.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="itemQuery" resultMap="itemMap">
+		<include refid="common.pageBegin" />
+		select i.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}</foreach>
+			</when>
+			<otherwise>
+				,i.parent_id
+				,i.name
+				,i.level
+				,i.status
+				,i.GMT_CREATE
+				,i.GMT_MODIFY
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="itemQuery" resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="item">
+		update item set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from item where id=#{id}
+	</delete>
+</mapper>

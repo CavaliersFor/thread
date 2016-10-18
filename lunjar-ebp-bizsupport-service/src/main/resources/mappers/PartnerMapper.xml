@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.PartnerMapper">
+	<resultMap id="partnerMap" type="partner">
+		<id column="id" property="id" /><!-- 主键 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+		<result column="status" property="status" /><!-- 状态1：接入中 2：停止 -->
+		<result column="name" property="name" /><!-- 合作者平台名称 如：微信公众号，某某APP -->
+	</resultMap>
+
+	<insert id="insert" parameterType="partner" useGeneratedKeys="true"
+		keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_partner.nextval from dual
+		</selectKey>
+		insert into
+		partner(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="status != null">,status</if>
+			<if test="name != null">,name</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			<if test="name != null">,#{name,jdbcType=VARCHAR}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="partner">
+		update partner
+		<set>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="name != null">name=#{name,jdbcType=VARCHAR},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="partnerMap">
+		select * from partner where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM partner p
+		<where>
+			<if test="idArray != null">
+				p.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="gmtCreateFrom != null">and p.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and p.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and p.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and p.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and p.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and p.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<choose>
+				<when test="status != null">and p.status = #{status}</when>
+				<when test="statusArray != null">
+					and p.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and p.status > 0
+				</otherwise>
+			</choose>
+			<if test="name != null and name.trim() !=''">and p.name = #{name}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by p.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="partnerQuery" resultMap="partnerMap">
+		<include refid="common.pageBegin" />
+		select p.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}</foreach>
+			</when>
+			<otherwise>
+				,p.GMT_CREATE
+				,p.GMT_MODIFY
+				,p.status
+				,p.name
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="partnerQuery" resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="partner">
+		update partner set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from partner where id=#{id}
+	</delete>
+</mapper>

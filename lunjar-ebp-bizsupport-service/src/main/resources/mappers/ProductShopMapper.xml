@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.ProductShopMapper">
+	<resultMap id="productShopMap" type="productShop">
+		<id column="id" property="id" /><!-- 主键 -->
+		<result column="product_id" property="productId" /><!-- 商品id -->
+		<result column="shop_id" property="shopId" /><!-- 商铺id -->
+		<result column="category_id" property="categoryId" /><!-- 自定义类id -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+		<result column="status" property="status" /><!-- 状态1：正常2：删除 -->
+		<result column="type" property="type" /><!-- 商品类型 1：普通商品 2：组合商品 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="productShop"
+		useGeneratedKeys="true" keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_product_shop.nextval from dual
+		</selectKey>
+		insert into
+		product_shop(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="productId != null">,product_id</if>
+			<if test="shopId != null">,shop_id</if>
+			<if test="categoryId != null">,category_id</if>
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="status != null">,status</if>
+			<if test="type != null">,type</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="productId != null">,#{productId,jdbcType=BIGINT}</if>
+			<if test="shopId != null">,#{shopId,jdbcType=BIGINT}</if>
+			<if test="categoryId != null">,#{categoryId,jdbcType=BIGINT}</if>
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			<if test="type != null">,#{type,jdbcType=INTEGER}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="productShop">
+		update product_shop
+		<set>
+			<if test="productId != null">product_id=#{productId,jdbcType=BIGINT},</if>
+			<if test="shopId != null">shop_id=#{shopId,jdbcType=BIGINT},</if>
+			<if test="categoryId != null">category_id=#{categoryId,jdbcType=BIGINT},</if>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="type != null">type=#{type,jdbcType=INTEGER},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="productShopMap">
+		select * from product_shop where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM product_shop ps
+		<where> 
+			<if test="idArray != null">
+				ps.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="pIdArray != null">
+				ps.product_id in
+				<foreach collection="pIdArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="productId != null">and ps.product_id = #{productId}</if>
+			<if test="shopId != null">and ps.shop_id = #{shopId}</if>
+			<if test="categoryId != null">and ps.category_id = #{categoryId}</if>
+			<if test="gmtCreateFrom != null">and ps.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and ps.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and ps.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and ps.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and ps.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and ps.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<choose>
+				<when test="status != null">and ps.status = #{status}</when>
+				<when test="statusArray != null">
+					and ps.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and ps.status > 0
+				</otherwise>
+			</choose>
+			<if test="type != null">and ps.type = #{type}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by ps.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="productShopQuery"
+		resultMap="productShopMap">
+		<include refid="common.pageBegin" />
+		select ps.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}
+				</foreach>
+			</when>
+			<otherwise>
+				,ps.product_id
+				,ps.shop_id
+				,ps.category_id
+				,ps.GMT_CREATE
+				,ps.GMT_MODIFY
+				,ps.status
+				,ps.type
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="productShopQuery"
+		resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="productShop">
+		update product_shop set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from product_shop where id=#{id}
+	</delete>
+	
+	<!--通过条件灵活更新-->
+	<update id="updateByCondition" parameterType="productShop">
+		update product_shop
+		<set>
+			<if test="productId != null">product_id=#{productId,jdbcType=BIGINT},</if>
+			<if test="shopId != null">shop_id=#{shopId,jdbcType=BIGINT},</if>
+			<if test="categoryId != null">category_id=#{categoryId,jdbcType=BIGINT},</if>
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="type != null">type=#{type,jdbcType=INTEGER},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+		</set>
+		<where>
+			<if test="productId != null">and product_id = #{productId}</if>
+			<if test="shopId != null">and shop_id = #{shopId}</if>
+			<if test="categoryId != null">and category_id = #{categoryId}</if>
+			<if test="type != null">and type = #{type}</if>
+		</where>
+	</update>
+	
+	<delete id="deleteProductShop" parameterType="productShop">
+		delete from product_shop 
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="shopId != null">and shop_id = #{shopId}</if>
+		</where>
+	</delete>
+</mapper>

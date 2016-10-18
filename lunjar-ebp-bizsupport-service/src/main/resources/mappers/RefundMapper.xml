@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.RefundMapper">
+	<resultMap id="refundMap" type="refund">
+		<id column="id" property="id" /><!-- 主键 -->
+		<result column="orders_id" property="ordersId" /><!-- 订单id -->
+		<result column="price" property="price" /><!-- 退款金额 -->
+		<result column="type" property="type" /><!-- 状态1：退款申请中2：拒绝退款 3：退款完成 -->
+		<result column="enterprise_id" property="enterpriseId" /><!-- 商家id -->
+		<result column="enterprise_name" property="enterpriseName" /><!-- 
+			商家名称 -->
+		<result column="buyer_id" property="buyerId" /><!-- 买家id -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 更新时间 -->
+		<result column="reason" property="reason" /><!-- 退款理由 -->
+		<result column="refuse_reason" property="refuseReason" /><!-- 商家拒绝原因 -->
+		<result column="buyer_phone" property="buyerPhone" /><!-- 买家联系电话 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="refund" useGeneratedKeys="true"
+		keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_refund.nextval from dual
+		</selectKey>
+		insert into
+		refund(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="ordersId != null">,orders_id</if>
+			<if test="price != null">,price</if>
+			<if test="type != null">,type</if>
+			<if test="enterpriseId != null">,enterprise_id</if>
+			<if test="enterpriseName != null">,enterprise_name</if>
+			<if test="buyerId != null">,buyer_id</if>
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="reason != null">,reason</if>
+			<if test="refuseReason != null">,refuse_reason</if>
+			<if test="buyerPhone != null">,buyer_phone</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="ordersId != null">,#{ordersId,jdbcType=BIGINT}</if>
+			<if test="price != null">,#{price,jdbcType=NUMERIC}</if>
+			<if test="type != null">,#{type,jdbcType=INTEGER}</if>
+			<if test="enterpriseId != null">,#{enterpriseId,jdbcType=BIGINT}</if>
+			<if test="enterpriseName != null">,#{enterpriseName,jdbcType=VARCHAR}</if>
+			<if test="buyerId != null">,#{buyerId,jdbcType=BIGINT}</if>
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="reason != null">,#{reason,jdbcType=VARCHAR}</if>
+			<if test="refuseReason != null">,#{refuseReason,jdbcType=VARCHAR}</if>
+			<if test="buyerPhone != null">,#{buyerPhone,jdbcType=VARCHAR}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="refund">
+		update refund
+		<set>
+			<if test="ordersId != null">orders_id=#{ordersId,jdbcType=BIGINT},</if>
+			<if test="price != null">price=#{price,jdbcType=NUMERIC},</if>
+			<if test="type != null">type=#{type,jdbcType=INTEGER},</if>
+			<if test="enterpriseId != null">enterprise_id=#{enterpriseId,jdbcType=BIGINT},</if>
+			<if test="enterpriseName != null">enterprise_name=#{enterpriseName,jdbcType=VARCHAR},</if>
+			<if test="buyerId != null">buyer_id=#{buyerId,jdbcType=BIGINT},</if>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="reason != null">reason=#{reason,jdbcType=VARCHAR},</if>
+			<if test="refuseReason != null">refuse_reason=#{refuseReason,jdbcType=VARCHAR},</if>
+			<if test="buyerPhone != null">buyer_phone=#{buyerPhone,jdbcType=VARCHAR},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="refundMap">
+		select * from refund where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM refund r
+		<where>
+			<if test="idArray != null">
+				r.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="ordersId != null">and r.orders_id = #{ordersId}</if>
+			<if test="priceFrom != null">and r.price >= #{priceFrom}</if>
+			<if test="priceTo != null"><![CDATA[and r.price <= #{priceTo}]]></if>
+			<if test="type != null">and r.type = #{type}</if>
+			<if test="enterpriseId != null">and r.enterprise_id = #{enterpriseId}</if>
+			<if test="enterpriseName != null and enterpriseName.trim() !=''">and r.enterprise_name = #{enterpriseName}</if>
+			<if test="buyerId != null">and r.buyer_id = #{buyerId}</if>
+			<if test="gmtCreateFrom != null">and r.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and r.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and r.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and r.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and r.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and r.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="reason != null and reason.trim() !=''">and r.reason = #{reason}</if>
+			<if test="refuseReason != null and refuseReason.trim() !=''">and r.refuse_reason = #{refuseReason}</if>
+			<if test="buyerPhone != null and buyerPhone.trim() !=''">and r.buyer_phone = #{buyerPhone}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by r.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="refundQuery" resultMap="refundMap">
+		<include refid="common.pageBegin" />
+		select r.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}</foreach>
+			</when>
+			<otherwise>
+				,r.orders_id
+				,r.price
+				,r.type
+				,r.enterprise_id
+				,r.enterprise_name
+				,r.buyer_id
+				,r.GMT_CREATE
+				,r.GMT_MODIFY
+				,r.reason
+				,r.refuse_reason
+				,r.buyer_phone
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="refundQuery" resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="refund">
+		update refund set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from refund where id=#{id}
+	</delete>
+</mapper>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.CollectPlaceMapper">
+	<resultMap id="collectPlaceMap" type="collectPlace">
+		<id column="id" property="id" /><!-- 主键id -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+		<result column="clp_status" property="clpStatus" /><!-- 状态1：使用中 
+			2：停止使用 -->
+		<result column="clp_name" property="clpName" /><!-- 领取点名称 -->
+		<result column="clp_address" property="clpAddress" /><!-- 领取点详细地址 -->
+		<result column="clp_telephone" property="clpTelephone" /><!-- 领取点联系电话 -->
+		<result column="enterprise_id" property="enterpriseId" /><!-- 商家id -->
+		<result column="collect_time" property="collectTime" /><!-- 多少时间能取货单位小时，0就是可以及时取货 -->
+		<result column="fee" property="fee" /><!-- 自提费用 -->
+		<result column="start_time" property="startTime" /><!-- 开始取货时间 -->
+		<result column="end_time" property="endTime" /><!-- 结束取货时间 -->
+		<result column="max_deposit_days" property="maxDepositDays" /><!-- 
+			货物最多存放时间 -->
+		<result column="province" property="province" /><!-- 所属省 -->
+		<result column="city" property="city" /><!-- 所属市 -->
+		<result column="REGION" property="region" /><!-- 所属区 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="collectPlace"
+		useGeneratedKeys="true" keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_collect_place.nextval from dual
+		</selectKey>
+		insert into
+		collect_place(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="clpStatus != null">,clp_status</if>
+			<if test="clpName != null">,clp_name</if>
+			<if test="clpAddress != null">,clp_address</if>
+			<if test="clpTelephone != null">,clp_telephone</if>
+			<if test="enterpriseId != null">,enterprise_id</if>
+			<if test="collectTime != null">,collect_time</if>
+			<if test="fee != null">,fee</if>
+			<if test="startTime != null">,start_time</if>
+			<if test="endTime != null">,end_time</if>
+			<if test="maxDepositDays != null">,max_deposit_days</if>
+			<if test="province != null">,province</if>
+			<if test="city != null">,city</if>
+			<if test="region != null">,REGION</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="clpStatus != null">,#{clpStatus,jdbcType=INTEGER}</if>
+			<if test="clpName != null">,#{clpName,jdbcType=VARCHAR}</if>
+			<if test="clpAddress != null">,#{clpAddress,jdbcType=VARCHAR}</if>
+			<if test="clpTelephone != null">,#{clpTelephone,jdbcType=VARCHAR}</if>
+			<if test="enterpriseId != null">,#{enterpriseId,jdbcType=BIGINT}</if>
+			<if test="collectTime != null">,#{collectTime,jdbcType=INTEGER}</if>
+			<if test="fee != null">,#{fee,jdbcType=NUMERIC}</if>
+			<if test="startTime != null">,#{startTime,jdbcType=VARCHAR}</if>
+			<if test="endTime != null">,#{endTime,jdbcType=VARCHAR}</if>
+			<if test="maxDepositDays != null">,#{maxDepositDays,jdbcType=INTEGER}</if>
+			<if test="province != null">,#{province,jdbcType=VARCHAR}</if>
+			<if test="city != null">,#{city,jdbcType=VARCHAR}</if>
+			<if test="region != null">,#{region,jdbcType=VARCHAR}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="collectPlace">
+		update collect_place
+		<set>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="clpStatus != null">clp_status=#{clpStatus,jdbcType=INTEGER},</if>
+			<if test="clpName != null">clp_name=#{clpName,jdbcType=VARCHAR},</if>
+			<if test="clpAddress != null">clp_address=#{clpAddress,jdbcType=VARCHAR},</if>
+			<if test="clpTelephone != null">clp_telephone=#{clpTelephone,jdbcType=VARCHAR},</if>
+			<if test="enterpriseId != null">enterprise_id=#{enterpriseId,jdbcType=BIGINT},</if>
+			<if test="collectTime != null">collect_time=#{collectTime,jdbcType=INTEGER},</if>
+			<if test="fee != null">fee=#{fee,jdbcType=NUMERIC},</if>
+			<if test="startTime != null">start_time=#{startTime,jdbcType=VARCHAR},</if>
+			<if test="endTime != null">end_time=#{endTime,jdbcType=VARCHAR},</if>
+			<if test="maxDepositDays != null">max_deposit_days=#{maxDepositDays,jdbcType=INTEGER},</if>
+			<if test="province != null">province=#{province,jdbcType=VARCHAR},</if>
+			<if test="city != null">city=#{city,jdbcType=VARCHAR},</if>
+			<if test="region != null">REGION=#{region,jdbcType=VARCHAR},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="collectPlaceMap">
+		select * from collect_place where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM collect_place cp
+		<where>
+			<if test="idArray != null">
+				cp.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="gmtCreateFrom != null">and cp.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and cp.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and cp.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and cp.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and cp.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and cp.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="clpStatus != null">and cp.clp_status = #{clpStatus}</if>
+			<if test="clpName != null and clpName.trim() !=''">and cp.clp_name = #{clpName}</if>
+			<if test="clpAddress != null and clpAddress.trim() !=''">and cp.clp_address = #{clpAddress}</if>
+			<if test="clpTelephone != null and clpTelephone.trim() !=''">and cp.clp_telephone = #{clpTelephone}</if>
+			<if test="enterpriseId != null">and cp.enterprise_id = #{enterpriseId}</if>
+			<if test="collectTime != null">and cp.collect_time = #{collectTime}</if>
+			<if test="feeFrom != null">and cp.fee >= #{feeFrom}</if>
+			<if test="feeTo != null"><![CDATA[and cp.fee <= #{feeTo}]]></if>
+			<if test="startTime != null and startTime.trim() !=''">and cp.start_time = #{startTime}</if>
+			<if test="endTime != null and endTime.trim() !=''">and cp.end_time = #{endTime}</if>
+			<if test="maxDepositDays != null">and cp.max_deposit_days = #{maxDepositDays}</if>
+			<if test="province != null and province.trim() !=''">and cp.province = #{province}</if>
+			<if test="city != null and city.trim() !=''">and cp.city = #{city}</if>
+			<if test="region != null and region.trim() !=''">and cp.REGION = #{region}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by cp.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="collectPlaceQuery"
+		resultMap="collectPlaceMap">
+		<include refid="common.pageBegin" />
+		select cp.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}</foreach>
+			</when>
+			<otherwise>
+				,cp.GMT_CREATE
+				,cp.GMT_MODIFY
+				,cp.clp_status
+				,cp.clp_name
+				,cp.clp_address
+				,cp.clp_telephone
+				,cp.enterprise_id
+				,cp.collect_time
+				,cp.fee
+				,cp.start_time
+				,cp.end_time
+				,cp.max_deposit_days
+				,cp.province
+				,cp.city
+				,cp.REGION
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="collectPlaceQuery"
+		resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="collectPlace">
+		update collect_place set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from collect_place where id=#{id}
+	</delete>
+</mapper>

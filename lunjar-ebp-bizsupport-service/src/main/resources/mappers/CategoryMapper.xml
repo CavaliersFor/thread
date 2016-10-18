@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.CategoryMapper">
+	<resultMap id="categoryMap" type="category">
+		<id column="id" property="id" /><!-- 主键 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+		<result column="status" property="status" /><!-- 状态1：使用中2：停止使用 -->
+		<result column="name" property="name" /><!-- 类目名称 -->
+		<result column="shop_id" property="shopId" /><!-- 商铺id -->
+		<result column="sort_num" property="sortNum" /><!-- 排序(按此顺序) -->
+		<result column="parent_id" property="parentId" /><!-- 父类目id -->
+		<result column="slides_urls" property="slidesUrls" /><!-- -->
+	</resultMap>
+	<insert id="insert" parameterType="category" useGeneratedKeys="true"
+		keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+
+
+
+			select SEQ_category.nextval from dual
+		</selectKey>
+		insert into
+		category(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="status != null">,status</if>
+			<if test="name != null">,name</if>
+			<if test="shopId != null">,shop_id</if>
+			<if test="sortNum != null">,sort_num</if>
+			<if test="parentId != null">,parent_id</if>
+			<if test="slidesUrls != null">,slides_urls</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			<if test="name != null">,#{name,jdbcType=VARCHAR}</if>
+			<if test="shopId != null">,#{shopId,jdbcType=BIGINT}</if>
+			<if test="sortNum != null">,#{sortNum,jdbcType=INTEGER}</if>
+			<if test="parentId != null">,#{parentId,jdbcType=BIGINT}</if>
+			<if test="slidesUrls != null">,#{slidesUrls,jdbcType=VARCHAR}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="category">
+		update category
+		<set>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="name != null">name=#{name,jdbcType=VARCHAR},</if>
+			<if test="shopId != null">shop_id=#{shopId,jdbcType=BIGINT},</if>
+			<if test="sortNum != null">sort_num=#{sortNum,jdbcType=INTEGER},</if>
+			<if test="parentId != null">parent_id=#{parentId,jdbcType=BIGINT},</if>
+			<if test="slidesUrls != null">slides_urls=#{slidesUrls,jdbcType=VARCHAR},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="categoryMap">
+		select * from
+		category where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM category c
+		<where>
+			<if test="idArray != null">
+				c.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="gmtCreateFrom != null">and c.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and c.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and c.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and c.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and c.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and c.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<choose>
+				<when test="status != null">and c.status = #{status}</when>
+				<when test="statusArray != null">
+					and c.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and c.status > 0
+				</otherwise>
+			</choose>
+			<if test="name != null and name.trim() !=''">and c.name like CONCAT('%','${name}','%' ) </if>
+			<if test="shopId != null">and c.shop_id = #{shopId}</if>
+			<if test="sortNum != null">and c.sort_num = #{sortNum}</if>
+			<if test="parentId != null">and c.parent_id = #{parentId}</if>
+			<if test="slidesUrls != null and slidesUrls.trim() !=''">and c.slides_urls = #{slidesUrls}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by c.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="categoryQuery" resultMap="categoryMap">
+		<include refid="common.pageBegin" />
+		select c.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}</foreach>
+			</when>
+			<otherwise>
+				,c.GMT_CREATE
+				,c.GMT_MODIFY
+				,c.status
+				,c.name
+				,c.shop_id
+				,c.sort_num
+				,c.parent_id
+				,c.slides_urls
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="categoryQuery"
+		resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="category">
+		update category set
+		status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from category where
+		id=#{id}
+	</delete>
+</mapper>

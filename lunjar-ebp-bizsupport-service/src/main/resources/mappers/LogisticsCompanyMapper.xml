@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.LogisticsCompanyMapper">
+	<resultMap id="logisticsCompanyMap" type="logisticsCompany">
+		<id column="id" property="id" /><!-- 主键id -->
+		<result column="code" property="code" /><!-- 编码 -->
+		<result column="name" property="name" /><!-- 公司名称 -->
+		<result column="status" property="status" /><!-- 状态1：正常2：停用 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="logisticsCompany"
+		useGeneratedKeys="true" keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_logistics_company.nextval from dual
+		</selectKey>
+		insert into
+		logistics_company(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="code != null">,code</if>
+			<if test="name != null">,name</if>
+			<if test="status != null">,status</if>
+			,GMT_CREATE
+			,GMT_MODIFY
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="code != null">,#{code,jdbcType=VARCHAR}</if>
+			<if test="name != null">,#{name,jdbcType=VARCHAR}</if>
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="logisticsCompany">
+		update logistics_company
+		<set>
+			<if test="code != null">code=#{code,jdbcType=VARCHAR},</if>
+			<if test="name != null">name=#{name,jdbcType=VARCHAR},</if>
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="logisticsCompanyMap">
+		select * from logistics_company where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM logistics_company lc
+		<where>
+			<if test="idArray != null">
+				lc.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="code != null and code.trim() !=''">and lc.code = #{code}</if>
+			<if test="name != null and name.trim() !=''">and lc.name like CONCAT('%','${name}','%' )</if>
+			<choose>
+				<when test="status != null">and lc.status = #{status}</when>
+				<when test="statusArray != null">
+					and lc.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and lc.status > 0
+				</otherwise>
+			</choose>
+			<if test="gmtCreateFrom != null">and lc.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and lc.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and lc.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and lc.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and lc.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and lc.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by lc.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="logisticsCompanyQuery"
+		resultMap="logisticsCompanyMap">
+		<include refid="common.pageBegin" />
+		select lc.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}
+				</foreach>
+			</when>
+			<otherwise>
+				,lc.code
+				,lc.name
+				,lc.status
+				,lc.GMT_CREATE
+				,lc.GMT_MODIFY
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="logisticsCompanyQuery"
+		resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="logisticsCompany">
+		update logistics_company set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from logistics_company where id=#{id}
+	</delete>
+</mapper>

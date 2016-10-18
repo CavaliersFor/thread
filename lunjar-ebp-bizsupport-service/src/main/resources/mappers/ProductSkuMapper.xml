@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.ProductSkuMapper">
+	<resultMap id="productSkuMap" type="productSku">
+		<id column="id" property="id" /><!-- 主键 -->
+		<result column="product_id" property="productId" /><!-- 商品id -->
+		<result column="properties" property="properties" /><!-- sku的销售属性组合字符串(p1:v1;p2:v2) -->
+		<result column="propertiesName" property="propertiesname" /><!-- 
+			组合字符串的值 -->
+		<result column="quantity" property="quantity" /><!-- 数量 -->
+		<result column="price" property="price" /><!-- 价格 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+		<result column="status" property="status" /><!-- 状态1：使用中 2：停用 -->
+		<result column="enterprise_product_no" property="enterpriseProductNo" /><!-- 
+			商品在商家自己系统中的编号 -->
+		<result column="volume" property="volume" /><!-- 体积 -->
+		<result column="weight" property="weight" /><!-- 重量 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="productSku" useGeneratedKeys="true"
+		keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_product_sku.nextval from dual
+		</selectKey>
+		insert into
+		product_sku(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="productId != null">,product_id</if>
+			<if test="properties != null">,properties</if>
+			<if test="propertiesname != null">,propertiesName</if>
+			<if test="quantity != null">,quantity</if>
+			<if test="price != null">,price</if>
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="status != null">,status</if>
+			<if test="enterpriseProductNo != null">,enterprise_product_no</if>
+			<if test="volume != null">,volume</if>
+			<if test="weight != null">,weight</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="productId != null">,#{productId,jdbcType=BIGINT}</if>
+			<if test="properties != null">,#{properties,jdbcType=VARCHAR}</if>
+			<if test="propertiesname != null">,#{propertiesname,jdbcType=VARCHAR}</if>
+			<if test="quantity != null">,#{quantity,jdbcType=INTEGER}</if>
+			<if test="price != null">,#{price,jdbcType=NUMERIC}</if>
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			<if test="enterpriseProductNo != null">,#{enterpriseProductNo,jdbcType=VARCHAR}</if>
+			<if test="volume != null">,#{volume,jdbcType=NUMERIC}</if>
+			<if test="weight != null">,#{weight,jdbcType=NUMERIC}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="productSku">
+		update product_sku
+		<set>
+			<if test="productId != null">product_id=#{productId,jdbcType=BIGINT},</if>
+			<if test="properties != null">properties=#{properties,jdbcType=VARCHAR},</if>
+			<if test="propertiesname != null">propertiesName=#{propertiesname,jdbcType=VARCHAR},</if>
+			<if test="quantity != null">quantity=#{quantity,jdbcType=INTEGER},</if>
+			<if test="price != null">price=#{price,jdbcType=NUMERIC},</if>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="enterpriseProductNo != null">enterprise_product_no=#{enterpriseProductNo,jdbcType=VARCHAR},</if>
+			<if test="volume != null">volume=#{volume,jdbcType=NUMERIC},</if>
+			<if test="weight != null">weight=#{weight,jdbcType=NUMERIC},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="productSkuMap">
+		select * from product_sku where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM product_sku ps
+		<where>
+			<if test="idArray != null">
+				ps.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="productId != null">and ps.product_id = #{productId}</if>
+			<if test="properties != null and properties.trim() !=''">and ps.properties = #{properties}</if>
+			<if test="propertiesname != null and propertiesname.trim() !=''">and ps.propertiesName = #{propertiesname}</if>
+			<if test="quantity != null">and ps.quantity = #{quantity}</if>
+			<if test="priceFrom != null">and ps.price >= #{priceFrom}</if>
+			<if test="priceTo != null"><![CDATA[and ps.price <= #{priceTo}]]></if>
+			<if test="gmtCreateFrom != null">and ps.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and ps.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and ps.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and ps.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and ps.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and ps.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<choose>
+				<when test="status != null">and ps.status = #{status}</when>
+				<when test="statusArray != null">
+					and ps.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and ps.status > 0
+				</otherwise>
+			</choose>
+			<if test="enterpriseProductNo != null and enterpriseProductNo.trim() !=''">and ps.enterprise_product_no = #{enterpriseProductNo}</if>
+			<if test="volumeFrom != null">and ps.volume >= #{volumeFrom}</if>
+			<if test="volumeTo != null"><![CDATA[and ps.volume <= #{volumeTo}]]></if>
+			<if test="weightFrom != null">and ps.weight >= #{weightFrom}</if>
+			<if test="weightTo != null"><![CDATA[and ps.weight <= #{weightTo}]]></if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by ps.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="productSkuQuery"
+		resultMap="productSkuMap">
+		<include refid="common.pageBegin" />
+		select ps.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}</foreach>
+			</when>
+			<otherwise>
+				,ps.product_id
+				,ps.properties
+				,ps.propertiesName
+				,ps.quantity
+				,ps.price
+				,ps.GMT_CREATE
+				,ps.GMT_MODIFY
+				,ps.status
+				,ps.enterprise_product_no
+				,ps.volume
+				,ps.weight
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="productSkuQuery"
+		resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="productSku">
+		update product_sku set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from product_sku where id=#{id}
+	</delete>
+	
+	<delete id="deleteByCondition" parameterType="productSku">
+		delete from product_sku 
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="productId != null">and product_id = #{productId}</if>
+		</where>
+	</delete>
+	
+</mapper>

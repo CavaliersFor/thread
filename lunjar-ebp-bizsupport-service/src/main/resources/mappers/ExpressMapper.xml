@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.ExpressMapper">
+	<resultMap id="expressMap" type="express">
+		<id column="id" property="id" /><!-- 主键id -->
+		<result column="enterprise_id" property="enterpriseId" /><!-- 商家id -->
+		<result column="ec_price" property="ecPrice" /><!-- 快递费用字符串 中山,东莞,顺德:5,长沙;厦门:10这种方式 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+		<result column="ec_status" property="ecStatus" /><!-- 状态1:正常2:停止 -->
+		<result column="valuation" property="valuation" /><!-- 计费方式：1：数量2：重量3：体积 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="express" useGeneratedKeys="true"
+		keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_express.nextval from dual
+		</selectKey>
+		insert into
+		express(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="enterpriseId != null">,enterprise_id</if>
+			<if test="ecPrice != null">,ec_price</if>
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="ecStatus != null">,ec_status</if>
+			<if test="valuation != null">,valuation</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="enterpriseId != null">,#{enterpriseId,jdbcType=BIGINT}</if>
+			<if test="ecPrice != null">,#{ecPrice,jdbcType=VARCHAR}</if>
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="ecStatus != null">,#{ecStatus,jdbcType=INTEGER}</if>
+			<if test="valuation != null">,#{valuation,jdbcType=INTEGER}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="express">
+		update express
+		<set>
+			<if test="enterpriseId != null">enterprise_id=#{enterpriseId,jdbcType=BIGINT},</if>
+			<if test="ecPrice != null">ec_price=#{ecPrice,jdbcType=VARCHAR},</if>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="ecStatus != null">ec_status=#{ecStatus,jdbcType=INTEGER},</if>
+			<if test="valuation != null">valuation=#{valuation,jdbcType=INTEGER},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="expressMap">
+		select * from express where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM express e
+		<where>
+			<if test="idArray != null">
+				e.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="enterpriseId != null">and e.enterprise_id = #{enterpriseId}</if>
+			<if test="ecPrice != null and ecPrice.trim() !=''">and e.ec_price = #{ecPrice}</if>
+			<if test="gmtCreateFrom != null">and e.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and e.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and e.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and e.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and e.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and e.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="ecStatus != null">and e.ec_status = #{ecStatus}</if>
+			<if test="valuation != null">and e.valuation = #{valuation}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by e.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="expressQuery" resultMap="expressMap">
+		<include refid="common.pageBegin" />
+		select e.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}
+				</foreach>
+			</when>
+			<otherwise>
+				,e.enterprise_id
+				,e.ec_price
+				,e.GMT_CREATE
+				,e.GMT_MODIFY
+				,e.ec_status
+				,e.valuation
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="expressQuery" resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="express">
+		update express set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from express where id=#{id}
+	</delete>
+	<!--通过id和商户编号删除-->	
+	<delete id="deleteByIdAndEnterpriseId" parameterType="express">
+		delete from express where id=#{id} and enterprise_id = #{enterpriseId}
+	</delete>
+	
+	<select id="getByEntId" parameterType="long" resultMap="expressMap">
+		select * from express where id=#{enterpriseId}
+	</select>
+</mapper>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.EnterpriseLogisticsMapper">
+	<resultMap id="enterpriseLogisticsMap" type="enterpriseLogistics">
+		<id column="id" property="id" /><!-- 主键id -->
+		<result column="enterprise_id" property="enterpriseId" /><!-- 商家id -->
+		<result column="logistics_id" property="logisticsId" /><!-- 物流公司id -->
+		<result column="logistics_code" property="logisticsCode" /><!-- 
+			物流公司编码 -->
+		<result column="logistics_name" property="logisticsName" /><!-- 
+			物流公司名称 -->
+		<result column="status" property="status" /><!-- 状态1：正常2：停用 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="enterpriseLogistics"
+		useGeneratedKeys="true" keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_enterprise_logistics.nextval from dual
+		</selectKey>
+		insert into
+		enterprise_logistics(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="enterpriseId != null">,enterprise_id</if>
+			<if test="logisticsId != null">,logistics_id</if>
+			<if test="logisticsCode != null">,logistics_code</if>
+			<if test="logisticsName != null">,logistics_name</if>
+			<if test="status != null">,status</if>
+			,GMT_CREATE
+			,GMT_MODIFY
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="enterpriseId != null">,#{enterpriseId,jdbcType=BIGINT}</if>
+			<if test="logisticsId != null">,#{logisticsId,jdbcType=BIGINT}</if>
+			<if test="logisticsCode != null">,#{logisticsCode,jdbcType=VARCHAR}</if>
+			<if test="logisticsName != null">,#{logisticsName,jdbcType=VARCHAR}</if>
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="enterpriseLogistics">
+		update enterprise_logistics
+		<set>
+			<if test="enterpriseId != null">enterprise_id=#{enterpriseId,jdbcType=BIGINT},</if>
+			<if test="logisticsId != null">logistics_id=#{logisticsId,jdbcType=BIGINT},</if>
+			<if test="logisticsCode != null">logistics_code=#{logisticsCode,jdbcType=VARCHAR},</if>
+			<if test="logisticsName != null">logistics_name=#{logisticsName,jdbcType=VARCHAR},</if>
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="enterpriseLogisticsMap">
+		select * from enterprise_logistics where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM enterprise_logistics el
+		<where>
+			<if test="idArray != null">
+				el.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="enterpriseId != null">and el.enterprise_id = #{enterpriseId}</if>
+			<if test="logisticsId != null">and el.logistics_id = #{logisticsId}</if>
+			<if test="logisticsCode != null and logisticsCode.trim() !=''">and el.logistics_code = #{logisticsCode}</if>
+			<if test="logisticsName != null and logisticsName.trim() !=''">and el.logistics_name = #{logisticsName}</if>
+			<choose>
+				<when test="status != null">and el.status = #{status}</when>
+				<when test="statusArray != null">
+					and el.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and el.status > 0
+				</otherwise>
+			</choose>
+			<if test="gmtCreateFrom != null">and el.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and el.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and el.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and el.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and el.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and el.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by el.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="enterpriseLogisticsQuery"
+		resultMap="enterpriseLogisticsMap">
+		<include refid="common.pageBegin" />
+		select el.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}
+				</foreach>
+			</when>
+			<otherwise>
+				,el.enterprise_id
+				,el.logistics_id
+				,el.logistics_code
+				,el.logistics_name
+				,el.status
+				,el.GMT_CREATE
+				,el.GMT_MODIFY
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="enterpriseLogisticsQuery"
+		resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="enterpriseLogistics">
+		update enterprise_logistics set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from enterprise_logistics where id=#{id}
+	</delete>
+</mapper>

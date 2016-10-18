@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.LogisticsMapper">
+	<resultMap id="logisticsMap" type="logistics">
+		<id column="id" property="id" /><!-- 主键 -->
+		<result column="trade_id" property="tradeId" /><!-- 订单id -->
+		<result column="logistics_name" property="logisticsName" /><!-- 
+			物流公司名称 -->
+		<result column="logistics_no" property="logisticsNo" /><!-- 物流单号 -->
+		<result column="status" property="status" /><!-- 物流状态1：未开始2：运输中3：已到达 -->
+		<result column="send_time" property="sendTime" /><!-- 发货时间 -->
+		<result column="station" property="station" /><!-- 货物目前所处地点 -->
+		<result column="arrive_time" property="arriveTime" /><!-- 预计到达时间 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 物流起始时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 到达现在地点的时间 -->
+		<result column="logistics_phone" property="logisticsPhone" /><!-- 
+			查询货物的电话 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="logistics" useGeneratedKeys="true"
+		keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_logistics.nextval from dual
+		</selectKey>
+		insert into
+		logistics(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="tradeId != null">,trade_id</if>
+			<if test="logisticsName != null">,logistics_name</if>
+			<if test="logisticsNo != null">,logistics_no</if>
+			<if test="status != null">,status</if>
+			<if test="sendTime != null">,send_time</if>
+			<if test="station != null">,station</if>
+			<if test="arriveTime != null">,arrive_time</if>
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="logisticsPhone != null">,logistics_phone</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="tradeId != null">,#{tradeId,jdbcType=BIGINT}</if>
+			<if test="logisticsName != null">,#{logisticsName,jdbcType=VARCHAR}</if>
+			<if test="logisticsNo != null">,#{logisticsNo,jdbcType=VARCHAR}</if>
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			<if test="sendTime != null">,#{sendTime,jdbcType=TIMESTAMP}</if>
+			<if test="station != null">,#{station,jdbcType=VARCHAR}</if>
+			<if test="arriveTime != null">,#{arriveTime,jdbcType=TIMESTAMP}</if>
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="logisticsPhone != null">,#{logisticsPhone,jdbcType=VARCHAR}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="logistics">
+		update logistics
+		<set>
+			<if test="tradeId != null">trade_id=#{tradeId,jdbcType=BIGINT},</if>
+			<if test="logisticsName != null">logistics_name=#{logisticsName,jdbcType=VARCHAR},</if>
+			<if test="logisticsNo != null">logistics_no=#{logisticsNo,jdbcType=VARCHAR},</if>
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="sendTime != null">send_time=#{sendTime,jdbcType=TIMESTAMP},</if>
+			<if test="station != null">station=#{station,jdbcType=VARCHAR},</if>
+			<if test="arriveTime != null">arrive_time=#{arriveTime,jdbcType=TIMESTAMP},</if>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="logisticsPhone != null">logistics_phone=#{logisticsPhone,jdbcType=VARCHAR},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="logisticsMap">
+		select * from logistics where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM logistics l
+		<where>
+			<if test="idArray != null">
+				l.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="tradeId != null">and l.trade_id = #{tradeId}</if>
+			<if test="logisticsName != null and logisticsName.trim() !=''">and l.logistics_name = #{logisticsName}</if>
+			<if test="logisticsNo != null and logisticsNo.trim() !=''">and l.logistics_no = #{logisticsNo}</if>
+			<choose>
+				<when test="status != null">and l.status = #{status}</when>
+				<when test="statusArray != null">
+					and l.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and l.status > 0
+				</otherwise>
+			</choose>
+			<if test="sendTimeFrom != null">and l.send_time >= #{sendTimeFrom}</if>
+			<if test="sendTimeTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and l.send_time < #{sendTimeTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and l.send_time < date_add(#{sendTimeTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="station != null and station.trim() !=''">and l.station = #{station}</if>
+			<if test="arriveTimeFrom != null">and l.arrive_time >= #{arriveTimeFrom}</if>
+			<if test="arriveTimeTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and l.arrive_time < #{arriveTimeTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and l.arrive_time < date_add(#{arriveTimeTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtCreateFrom != null">and l.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and l.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and l.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and l.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and l.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and l.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="logisticsPhone != null and logisticsPhone.trim() !=''">and l.logistics_phone = #{logisticsPhone}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by l.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="logisticsQuery" resultMap="logisticsMap">
+		<include refid="common.pageBegin" />
+		select l.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}</foreach>
+			</when>
+			<otherwise>
+				,l.trade_id
+				,l.logistics_name
+				,l.logistics_no
+				,l.status
+				,l.send_time
+				,l.station
+				,l.arrive_time
+				,l.GMT_CREATE
+				,l.GMT_MODIFY
+				,l.logistics_phone
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="logisticsQuery"
+		resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="logistics">
+		update logistics set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from logistics where id=#{id}
+	</delete>
+</mapper>

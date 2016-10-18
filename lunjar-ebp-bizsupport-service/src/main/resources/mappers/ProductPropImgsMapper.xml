@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.ProductPropImgsMapper">
+	<resultMap id="productPropImgsMap" type="productPropImgs">
+		<id column="id" property="id" /><!-- 主键 -->
+		<result column="product_id" property="productId" /><!-- 产品id -->
+		<result column="status" property="status" /><!-- 状态1:显示2:屏蔽3:删除 -->
+		<result column="pic_path" property="picPath" /><!-- 图片显示路径 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+		<result column="sort_num" property="sortNum" /><!-- 图片显示的顺序,按值由小到大显示 -->
+		<result column="type" property="type" /><!-- 图片类型 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="productPropImgs"
+		useGeneratedKeys="true" keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_product_prop_imgs.nextval from dual
+		</selectKey>
+		insert into
+		product_prop_imgs(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="productId != null">,product_id</if>
+			<if test="status != null">,status</if>
+			<if test="picPath != null">,pic_path</if>
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="sortNum != null">,sort_num</if>
+			<if test="type != null">,type</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="productId != null">,#{productId,jdbcType=BIGINT}</if>
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			<if test="picPath != null">,#{picPath,jdbcType=VARCHAR}</if>
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="sortNum != null">,#{sortNum,jdbcType=INTEGER}</if>
+			<if test="type != null">,#{type,jdbcType=INTEGER}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="productPropImgs">
+		update product_prop_imgs
+		<set>
+			<if test="productId != null">product_id=#{productId,jdbcType=BIGINT},</if>
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="picPath != null">pic_path=#{picPath,jdbcType=VARCHAR},</if>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="sortNum != null">sort_num=#{sortNum,jdbcType=INTEGER},</if>
+			<if test="type != null">type=#{type,jdbcType=INTEGER},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="productPropImgsMap">
+		select * from product_prop_imgs where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM product_prop_imgs ppi
+		<where>
+			<if test="idArray != null">
+				ppi.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="productId != null">and ppi.product_id = #{productId}</if>
+			<choose>
+				<when test="status != null">and ppi.status = #{status}</when>
+				<when test="statusArray != null">
+					and ppi.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and ppi.status > 0
+				</otherwise>
+			</choose>
+			<if test="picPath != null and picPath.trim() !=''">and ppi.pic_path = #{picPath}</if>
+			<if test="gmtCreateFrom != null">and ppi.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and ppi.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and ppi.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and ppi.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and ppi.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and ppi.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="sortNum != null">and ppi.sort_num = #{sortNum}</if>
+			<if test="type != null">and ppi.type = #{type}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by ppi.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="productPropImgsQuery"
+		resultMap="productPropImgsMap">
+		<include refid="common.pageBegin" />
+		select ppi.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}</foreach>
+			</when>
+			<otherwise>
+				,ppi.product_id
+				,ppi.status
+				,ppi.pic_path
+				,ppi.GMT_CREATE
+				,ppi.GMT_MODIFY
+				,ppi.sort_num
+				,ppi.type
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="productPropImgsQuery"
+		resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="productPropImgs">
+		update product_prop_imgs set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from product_prop_imgs where id=#{id}
+	</delete>
+	
+	
+	<delete id="deleteByCondition" parameterType="productPropImgs">
+		delete from product_prop_imgs 
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="productId != null">and product_id = #{productId}</if>
+		</where>
+	</delete>
+	
+</mapper>

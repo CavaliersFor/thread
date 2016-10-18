@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.EnterpriseMapper">
+	<resultMap id="enterpriseMap" type="enterprise">
+		<id column="id" property="id" /><!-- 主键 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+		<result column="account" property="account" /><!-- 注册账号 -->
+		<result column="password" property="password" /><!-- 密码 -->
+		<result column="ENTERPISE_NAME" property="enterpiseName" /><!-- 
+			企业名称 -->
+		<result column="CONTACT_PHONE" property="contactPhone" /><!-- 联系人电话 -->
+		<result column="ORG_NO" property="orgNo" /><!-- 组织机构代码 -->
+		<result column="BUSINESS_NO" property="businessNo" /><!-- 工商注册编号 -->
+		<result column="TAX_NO" property="taxNo" /><!-- 税务登记号 -->
+		<result column="LEGAL_NAME" property="legalName" /><!-- 法人名称 -->
+		<result column="EMAIL" property="email" /><!-- 公司邮箱 -->
+		<result column="FAX" property="fax" /><!-- 传真 -->
+		<result column="PROVINCE" property="province" /><!-- 省 -->
+		<result column="CITY" property="city" /><!-- 市 -->
+		<result column="REGION" property="region" /><!-- 区(县) -->
+		<result column="ADDRESS" property="address" /><!-- 公司所在地址 -->
+		<result column="POST_CODE" property="postCode" /><!-- 邮编 -->
+		<result column="ENTERPRISE_TYPE" property="enterpriseType" /><!-- 
+			企业类型1：民营2：国企3：合资 -->
+		<result column="BUSSINESS_SCOPE" property="bussinessScope" /><!-- 
+			经营范围 -->
+		<result column="TRADE" property="trade" /><!-- 行业1：互联网2：食品3：金融 ... -->
+		<result column="BUSINESS_LICENCE_URL" property="businessLicenceUrl" /><!-- 
+			营业执照副本地址 -->
+		<result column="TELEPHONE" property="telephone" /><!-- 企业电话 -->
+		<result column="ENTERPISE_ALIAS" property="enterpiseAlias" /><!-- 
+			企业简称 -->
+		<result column="LINK_MAN" property="linkMan" /><!-- 联系人 -->
+		<result column="distribution_mode" property="distributionMode" /><!-- 
+			配送方式1：快递2：自取 -->
+		<result column="delivery_deadline" property="deliveryDeadline" /><!-- 
+			每日发货截止时间 -->
+		<result column="head_pic_url" property="headPicUrl" /><!-- 商家头像图片 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="enterprise" useGeneratedKeys="true"
+		keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_enterprise.nextval from dual
+		</selectKey>
+		insert into
+		enterprise(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="account != null">,account</if>
+			<if test="password != null">,password</if>
+			<if test="enterpiseName != null">,ENTERPISE_NAME</if>
+			<if test="contactPhone != null">,CONTACT_PHONE</if>
+			<if test="orgNo != null">,ORG_NO</if>
+			<if test="businessNo != null">,BUSINESS_NO</if>
+			<if test="taxNo != null">,TAX_NO</if>
+			<if test="legalName != null">,LEGAL_NAME</if>
+			<if test="email != null">,EMAIL</if>
+			<if test="fax != null">,FAX</if>
+			<if test="province != null">,PROVINCE</if>
+			<if test="city != null">,CITY</if>
+			<if test="region != null">,REGION</if>
+			<if test="address != null">,ADDRESS</if>
+			<if test="postCode != null">,POST_CODE</if>
+			<if test="enterpriseType != null">,ENTERPRISE_TYPE</if>
+			<if test="bussinessScope != null">,BUSSINESS_SCOPE</if>
+			<if test="trade != null">,TRADE</if>
+			<if test="businessLicenceUrl != null">,BUSINESS_LICENCE_URL</if>
+			<if test="telephone != null">,TELEPHONE</if>
+			<if test="enterpiseAlias != null">,ENTERPISE_ALIAS</if>
+			<if test="linkMan != null">,LINK_MAN</if>
+			<if test="distributionMode != null">,distribution_mode</if>
+			<if test="deliveryDeadline != null">,delivery_deadline</if>
+			<if test="headPicUrl != null">,head_pic_url</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="account != null">,#{account,jdbcType=VARCHAR}</if>
+			<if test="password != null">,#{password,jdbcType=VARCHAR}</if>
+			<if test="enterpiseName != null">,#{enterpiseName,jdbcType=VARCHAR}</if>
+			<if test="contactPhone != null">,#{contactPhone,jdbcType=VARCHAR}</if>
+			<if test="orgNo != null">,#{orgNo,jdbcType=VARCHAR}</if>
+			<if test="businessNo != null">,#{businessNo,jdbcType=VARCHAR}</if>
+			<if test="taxNo != null">,#{taxNo,jdbcType=VARCHAR}</if>
+			<if test="legalName != null">,#{legalName,jdbcType=VARCHAR}</if>
+			<if test="email != null">,#{email,jdbcType=VARCHAR}</if>
+			<if test="fax != null">,#{fax,jdbcType=VARCHAR}</if>
+			<if test="province != null">,#{province,jdbcType=VARCHAR}</if>
+			<if test="city != null">,#{city,jdbcType=VARCHAR}</if>
+			<if test="region != null">,#{region,jdbcType=VARCHAR}</if>
+			<if test="address != null">,#{address,jdbcType=VARCHAR}</if>
+			<if test="postCode != null">,#{postCode,jdbcType=VARCHAR}</if>
+			<if test="enterpriseType != null">,#{enterpriseType,jdbcType=INTEGER}</if>
+			<if test="bussinessScope != null">,#{bussinessScope,jdbcType=VARCHAR}</if>
+			<if test="trade != null">,#{trade,jdbcType=INTEGER}</if>
+			<if test="businessLicenceUrl != null">,#{businessLicenceUrl,jdbcType=VARCHAR}</if>
+			<if test="telephone != null">,#{telephone,jdbcType=VARCHAR}</if>
+			<if test="enterpiseAlias != null">,#{enterpiseAlias,jdbcType=VARCHAR}</if>
+			<if test="linkMan != null">,#{linkMan,jdbcType=VARCHAR}</if>
+			<if test="distributionMode != null">,#{distributionMode,jdbcType=INTEGER}</if>
+			<if test="deliveryDeadline != null">,#{deliveryDeadline,jdbcType=VARCHAR}</if>
+			<if test="headPicUrl != null">,#{headPicUrl,jdbcType=VARCHAR}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="enterprise">
+		update enterprise
+		<set>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="account != null">account=#{account,jdbcType=VARCHAR},</if>
+			<if test="password != null">password=#{password,jdbcType=VARCHAR},</if>
+			<if test="enterpiseName != null">ENTERPISE_NAME=#{enterpiseName,jdbcType=VARCHAR},</if>
+			<if test="contactPhone != null">CONTACT_PHONE=#{contactPhone,jdbcType=VARCHAR},</if>
+			<if test="orgNo != null">ORG_NO=#{orgNo,jdbcType=VARCHAR},</if>
+			<if test="businessNo != null">BUSINESS_NO=#{businessNo,jdbcType=VARCHAR},</if>
+			<if test="taxNo != null">TAX_NO=#{taxNo,jdbcType=VARCHAR},</if>
+			<if test="legalName != null">LEGAL_NAME=#{legalName,jdbcType=VARCHAR},</if>
+			<if test="email != null">EMAIL=#{email,jdbcType=VARCHAR},</if>
+			<if test="fax != null">FAX=#{fax,jdbcType=VARCHAR},</if>
+			<if test="province != null">PROVINCE=#{province,jdbcType=VARCHAR},</if>
+			<if test="city != null">CITY=#{city,jdbcType=VARCHAR},</if>
+			<if test="region != null">REGION=#{region,jdbcType=VARCHAR},</if>
+			<if test="address != null">ADDRESS=#{address,jdbcType=VARCHAR},</if>
+			<if test="postCode != null">POST_CODE=#{postCode,jdbcType=VARCHAR},</if>
+			<if test="enterpriseType != null">ENTERPRISE_TYPE=#{enterpriseType,jdbcType=INTEGER},</if>
+			<if test="bussinessScope != null">BUSSINESS_SCOPE=#{bussinessScope,jdbcType=VARCHAR},</if>
+			<if test="trade != null">TRADE=#{trade,jdbcType=INTEGER},</if>
+			<if test="businessLicenceUrl != null">BUSINESS_LICENCE_URL=#{businessLicenceUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="telephone != null">TELEPHONE=#{telephone,jdbcType=VARCHAR},</if>
+			<if test="enterpiseAlias != null">ENTERPISE_ALIAS=#{enterpiseAlias,jdbcType=VARCHAR},</if>
+			<if test="linkMan != null">LINK_MAN=#{linkMan,jdbcType=VARCHAR},</if>
+			<if test="distributionMode != null">distribution_mode=#{distributionMode,jdbcType=INTEGER},
+			</if>
+			<if test="deliveryDeadline != null">delivery_deadline=#{deliveryDeadline,jdbcType=VARCHAR},
+			</if>
+			<if test="headPicUrl != null">head_pic_url=#{headPicUrl,jdbcType=VARCHAR},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="enterpriseMap">
+		select * from enterprise where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM enterprise e
+		<where>
+			<if test="idArray != null">
+				e.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="gmtCreateFrom != null">and e.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and e.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and e.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and e.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and e.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and e.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="account != null and account.trim() !=''">and e.account = #{account}</if>
+			<if test="password != null and password.trim() !=''">and e.password = #{password}</if>
+			<if test="enterpiseName != null and enterpiseName.trim() !=''">and e.ENTERPISE_NAME = #{enterpiseName}</if>
+			<if test="contactPhone != null and contactPhone.trim() !=''">and e.CONTACT_PHONE = #{contactPhone}</if>
+			<if test="orgNo != null and orgNo.trim() !=''">and e.ORG_NO = #{orgNo}</if>
+			<if test="businessNo != null and businessNo.trim() !=''">and e.BUSINESS_NO = #{businessNo}</if>
+			<if test="taxNo != null and taxNo.trim() !=''">and e.TAX_NO = #{taxNo}</if>
+			<if test="legalName != null and legalName.trim() !=''">and e.LEGAL_NAME = #{legalName}</if>
+			<if test="email != null and email.trim() !=''">and e.EMAIL = #{email}</if>
+			<if test="fax != null and fax.trim() !=''">and e.FAX = #{fax}</if>
+			<if test="province != null and province.trim() !=''">and e.PROVINCE = #{province}</if>
+			<if test="city != null and city.trim() !=''">and e.CITY = #{city}</if>
+			<if test="region != null and region.trim() !=''">and e.REGION = #{region}</if>
+			<if test="address != null and address.trim() !=''">and e.ADDRESS = #{address}</if>
+			<if test="postCode != null and postCode.trim() !=''">and e.POST_CODE = #{postCode}</if>
+			<if test="enterpriseType != null">and e.ENTERPRISE_TYPE = #{enterpriseType}</if>
+			<if test="bussinessScope != null and bussinessScope.trim() !=''">and e.BUSSINESS_SCOPE = #{bussinessScope}</if>
+			<if test="trade != null">and e.TRADE = #{trade}</if>
+			<if test="businessLicenceUrl != null and businessLicenceUrl.trim() !=''">and e.BUSINESS_LICENCE_URL = #{businessLicenceUrl}</if>
+			<if test="telephone != null and telephone.trim() !=''">and e.TELEPHONE = #{telephone}</if>
+			<if test="enterpiseAlias != null and enterpiseAlias.trim() !=''">and e.ENTERPISE_ALIAS = #{enterpiseAlias}</if>
+			<if test="linkMan != null and linkMan.trim() !=''">and e.LINK_MAN = #{linkMan}</if>
+			<if test="distributionMode != null">and e.distribution_mode = #{distributionMode}</if>
+			<if test="deliveryDeadline != null and deliveryDeadline.trim() !=''">and e.delivery_deadline = #{deliveryDeadline}</if>
+			<if test="headPicUrl != null and headPicUrl.trim() !=''">and e.head_pic_url = #{headPicUrl}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by e.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="enterpriseQuery"
+		resultMap="enterpriseMap">
+		<include refid="common.pageBegin" />
+		select e.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}
+				</foreach>
+			</when>
+			<otherwise>
+				,e.GMT_CREATE
+				,e.GMT_MODIFY
+				,e.account
+				,e.password
+				,e.ENTERPISE_NAME
+				,e.CONTACT_PHONE
+				,e.ORG_NO
+				,e.BUSINESS_NO
+				,e.TAX_NO
+				,e.LEGAL_NAME
+				,e.EMAIL
+				,e.FAX
+				,e.PROVINCE
+				,e.CITY
+				,e.REGION
+				,e.ADDRESS
+				,e.POST_CODE
+				,e.ENTERPRISE_TYPE
+				,e.BUSSINESS_SCOPE
+				,e.TRADE
+				,e.BUSINESS_LICENCE_URL
+				,e.TELEPHONE
+				,e.ENTERPISE_ALIAS
+				,e.LINK_MAN
+				,e.distribution_mode
+				,e.delivery_deadline
+				,e.head_pic_url
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="enterpriseQuery"
+		resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="enterprise">
+		update enterprise set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from enterprise where id=#{id}
+	</delete>
+</mapper>

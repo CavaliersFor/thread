@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.OutTradeNoMapper">
+	<resultMap id="outTradeNoMap" type="outTradeNo">
+		<id column="out_trade_no" property="outTradeNo" /><!-- 主键 -->
+		<result column="total_fee" property="totalFee" /><!-- 支付金额 -->
+		<result column="status" property="status" /><!-- 状态 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+		<result column="trade_ids" property="tradeIds" /><!-- 结束取货时间 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="outTradeNo">
+		insert into
+		out_trade_no(
+		out_trade_no
+		<if test="totalFee != null">,total_fee</if>
+		<if test="status != null">,status</if>
+		,GMT_CREATE
+		,GMT_MODIFY
+		<if test="tradeIds != null">,trade_ids</if>
+		)values(
+		#{outTradeNo}
+		<if test="totalFee != null">,#{totalFee,jdbcType=NUMERIC}</if>
+		<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+		,
+		<include refid="common.now" />
+		,
+		<include refid="common.now" />
+		<if test="tradeIds != null">,#{tradeIds,jdbcType=VARCHAR}</if>
+		)
+	</insert>
+
+	<update id="update" parameterType="outTradeNo">
+		update out_trade_no
+		<set>
+			<if test="totalFee != null">total_fee=#{totalFee,jdbcType=NUMERIC},</if>
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="tradeIds != null">trade_ids=#{tradeIds,jdbcType=VARCHAR},</if>
+		</set>
+		where out_trade_no=#{outTradeNo}
+	</update>
+
+	<select id="load" parameterType="string" resultMap="outTradeNoMap">
+		select * from out_trade_no where out_trade_no=#{outTradeNo}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM out_trade_no otn
+		<where>
+			<if test="outTradeNoArray != null">
+				otn.out_trade_no in
+				<foreach collection="outTradeNoArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="totalFeeFrom != null">and otn.total_fee >= #{totalFeeFrom}</if>
+			<if test="totalFeeTo != null"><![CDATA[and otn.total_fee <= #{totalFeeTo}]]></if>
+			<choose>
+				<when test="status != null">and otn.status = #{status}</when>
+				<when test="statusArray != null">
+					and otn.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and otn.status > 0
+				</otherwise>
+			</choose>
+			<if test="gmtCreateFrom != null">and otn.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and otn.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and otn.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and otn.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and otn.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and otn.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="tradeIds != null and tradeIds.trim() !=''">and otn.trade_ids = #{tradeIds}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by otn.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="outTradeNoQuery"
+		resultMap="outTradeNoMap">
+		<include refid="common.pageBegin" />
+		select otn.out_trade_no
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}</foreach>
+			</when>
+			<otherwise>
+				,otn.total_fee
+				,otn.status
+				,otn.GMT_CREATE
+				,otn.GMT_MODIFY
+				,otn.trade_ids
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="outTradeNoQuery"
+		resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="outTradeNo">
+		update out_trade_no set status=#{status} where out_trade_no=#{outTradeNo}
+	</update>
+
+	<delete id="delete" parameterType="string">
+		delete from out_trade_no where out_trade_no=#{outTradeNo}
+	</delete>
+</mapper>

@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.TradeMapper">
+	<resultMap id="tradeMap" type="trade">
+		<id column="id" property="id" /><!-- 主键id -->
+		<result column="trade_no" property="tradeNo" /><!-- 订单编号 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 订单生成时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 订单修改时间 -->
+		<result column="consign_time" property="consignTime" /><!-- 卖家发货时间 -->
+		<result column="buyer_pay_time" property="buyerPayTime" /><!-- 买家支付时间 -->
+		<result column="end_time" property="endTime" /><!-- 订单结束时间 -->
+		<result column="enterprise_id" property="enterpriseId" /><!-- 商家id -->
+		<result column="enterprise_name" property="enterpriseName" /><!-- 
+			商家名称 -->
+		<result column="sale_id" property="saleId" /><!-- 卖家id -->
+		<result column="sale_name" property="saleName" /><!-- 卖家名称 -->
+		<result column="shop_id" property="shopId" /><!-- 商铺id -->
+		<result column="shop_name" property="shopName" /><!-- 商铺名称 -->
+		<result column="partner_id" property="partnerId" /><!-- 合作者平台id -->
+		<result column="partner_name" property="partnerName" /><!-- 合作者平台名称 -->
+		<result column="express_price" property="expressPrice" /><!-- 快递费用 -->
+		<result column="buyer_id" property="buyerId" /><!-- 买家id -->
+		<result column="buyer_name" property="buyerName" /><!-- 收货人姓名 -->
+		<result column="buyer_address" property="buyerAddress" /><!-- 收货人详细地址 -->
+		<result column="buyer_phone" property="buyerPhone" /><!-- 收货人联系电话 -->
+		<result column="status" property="status" /><!-- 交易状态: * TRADE_NO_CREATE_PAY(没有创建支付宝交易) 
+			* WAIT_BUYER_PAY(等待买家付款) * SELLER_CONSIGNED_PART(卖家部分发货) * WAIT_SELLER_SEND_GOODS(等待卖家发货,即:买家已付款) 
+			* WAIT_BUYER_CONFIRM_GOODS(等待买家确认收货,即:卖家已发货) * TRADE_BUYER_SIGNED(买家已签收,货到付款专用) 
+			* TRADE_FINISHED(交易成功) * TRADE_CL -->
+		<result column="province" property="province" /><!-- 买家所在省 -->
+		<result column="city" property="city" /><!-- 买家所在市 -->
+		<result column="REGION" property="region" /><!-- 区县 -->
+		<result column="trade_desc" property="tradeDesc" /><!-- 订单描述：满多少包邮， 
+			a+b商品一共卖50元等 -->
+		<result column="payment_type" property="paymentType" /><!-- 支付类型1:微信2：支付宝3：网银 -->
+		<result column="payment_no" property="paymentNo" /><!-- 支付编号(支付平台返回) -->
+		<result column="invoice_type" property="invoiceType" /><!-- 发票类型1：电子发票2：纸质发票 -->
+		<result column="invoice_name" property="invoiceName" /><!-- 发票抬头 -->
+		<result column="is_invoice" property="isInvoice" /><!-- 是否需要开发票 -->
+		<result column="discount_price" property="discountPrice" /><!-- 
+			订单优惠价格 -->
+		<result column="price" property="price" /><!-- 订单总的价格 -->
+		<result column="real_price" property="realPrice" /><!-- 订单实际支付金额 -->
+		<result column="distribution_mode" property="distributionMode" /><!-- 
+			配送方式1:快递2：自取 -->
+		<result column="sale_remarks" property="saleRemarks" /><!-- 卖家备注 -->
+		<result column="buyer_remarks" property="buyerRemarks" /><!-- 买家备注 -->
+		<result column="buyer_address_id" property="buyerAddressId" /><!-- 
+			买家收货地址id -->
+		<result column="express_company" property="expressCompany" /><!-- 
+			快递公司 -->
+		<result column="express_no" property="expressNo" /><!-- 快递编号 -->
+		<result column="express_abb" property="expressAbb" /><!-- 快递公司简称 -->
+		<result column="pick_up_time" property="pickUpTime" /><!-- 买家提货时间 -->
+		<result column="pick_up_no" property="pickUpNo" /><!-- 提货码 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="trade" useGeneratedKeys="true"
+		keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_trade.nextval from dual
+		</selectKey>
+		insert into
+		trade(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="tradeNo != null">,trade_no</if>
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="consignTime != null">,consign_time</if>
+			<if test="buyerPayTime != null">,buyer_pay_time</if>
+			<if test="endTime != null">,end_time</if>
+			<if test="enterpriseId != null">,enterprise_id</if>
+			<if test="enterpriseName != null">,enterprise_name</if>
+			<if test="saleId != null">,sale_id</if>
+			<if test="saleName != null">,sale_name</if>
+			<if test="shopId != null">,shop_id</if>
+			<if test="shopName != null">,shop_name</if>
+			<if test="partnerId != null">,partner_id</if>
+			<if test="partnerName != null">,partner_name</if>
+			<if test="expressPrice != null">,express_price</if>
+			<if test="buyerId != null">,buyer_id</if>
+			<if test="buyerName != null">,buyer_name</if>
+			<if test="buyerAddress != null">,buyer_address</if>
+			<if test="buyerPhone != null">,buyer_phone</if>
+			<if test="status != null">,status</if>
+			<if test="province != null">,province</if>
+			<if test="city != null">,city</if>
+			<if test="region != null">,REGION</if>
+			<if test="tradeDesc != null">,trade_desc</if>
+			<if test="paymentType != null">,payment_type</if>
+			<if test="paymentNo != null">,payment_no</if>
+			<if test="invoiceType != null">,invoice_type</if>
+			<if test="invoiceName != null">,invoice_name</if>
+			<if test="isInvoice != null">,is_invoice</if>
+			<if test="discountPrice != null">,discount_price</if>
+			<if test="price != null">,price</if>
+			<if test="realPrice != null">,real_price</if>
+			<if test="distributionMode != null">,distribution_mode</if>
+			<if test="saleRemarks != null">,sale_remarks</if>
+			<if test="buyerRemarks != null">,buyer_remarks</if>
+			<if test="buyerAddressId != null">,buyer_address_id</if>
+			<if test="expressCompany != null">,express_company</if>
+			<if test="expressNo != null">,express_no</if>
+			<if test="expressAbb != null">,express_abb</if>
+			<if test="pickUpTime != null">,pick_up_time</if>
+			<if test="pickUpNo != null">,pick_up_no</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="tradeNo != null">,#{tradeNo,jdbcType=VARCHAR}</if>
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="consignTime != null">,#{consignTime,jdbcType=TIMESTAMP}</if>
+			<if test="buyerPayTime != null">,#{buyerPayTime,jdbcType=TIMESTAMP}</if>
+			<if test="endTime != null">,#{endTime,jdbcType=TIMESTAMP}</if>
+			<if test="enterpriseId != null">,#{enterpriseId,jdbcType=BIGINT}</if>
+			<if test="enterpriseName != null">,#{enterpriseName,jdbcType=VARCHAR}</if>
+			<if test="saleId != null">,#{saleId,jdbcType=BIGINT}</if>
+			<if test="saleName != null">,#{saleName,jdbcType=VARCHAR}</if>
+			<if test="shopId != null">,#{shopId,jdbcType=BIGINT}</if>
+			<if test="shopName != null">,#{shopName,jdbcType=VARCHAR}</if>
+			<if test="partnerId != null">,#{partnerId,jdbcType=BIGINT}</if>
+			<if test="partnerName != null">,#{partnerName,jdbcType=VARCHAR}</if>
+			<if test="expressPrice != null">,#{expressPrice,jdbcType=NUMERIC}</if>
+			<if test="buyerId != null">,#{buyerId,jdbcType=BIGINT}</if>
+			<if test="buyerName != null">,#{buyerName,jdbcType=VARCHAR}</if>
+			<if test="buyerAddress != null">,#{buyerAddress,jdbcType=VARCHAR}</if>
+			<if test="buyerPhone != null">,#{buyerPhone,jdbcType=VARCHAR}</if>
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			<if test="province != null">,#{province,jdbcType=VARCHAR}</if>
+			<if test="city != null">,#{city,jdbcType=VARCHAR}</if>
+			<if test="region != null">,#{region,jdbcType=VARCHAR}</if>
+			<if test="tradeDesc != null">,#{tradeDesc,jdbcType=VARCHAR}</if>
+			<if test="paymentType != null">,#{paymentType,jdbcType=INTEGER}</if>
+			<if test="paymentNo != null">,#{paymentNo,jdbcType=VARCHAR}</if>
+			<if test="invoiceType != null">,#{invoiceType,jdbcType=INTEGER}</if>
+			<if test="invoiceName != null">,#{invoiceName,jdbcType=VARCHAR}</if>
+			<if test="isInvoice != null">,#{isInvoice,jdbcType=INTEGER}</if>
+			<if test="discountPrice != null">,#{discountPrice,jdbcType=NUMERIC}</if>
+			<if test="price != null">,#{price,jdbcType=NUMERIC}</if>
+			<if test="realPrice != null">,#{realPrice,jdbcType=NUMERIC}</if>
+			<if test="distributionMode != null">,#{distributionMode,jdbcType=INTEGER}</if>
+			<if test="saleRemarks != null">,#{saleRemarks,jdbcType=VARCHAR}</if>
+			<if test="buyerRemarks != null">,#{buyerRemarks,jdbcType=VARCHAR}</if>
+			<if test="buyerAddressId != null">,#{buyerAddressId,jdbcType=BIGINT}</if>
+			<if test="expressCompany != null">,#{expressCompany,jdbcType=VARCHAR}</if>
+			<if test="expressNo != null">,#{expressNo,jdbcType=VARCHAR}</if>
+			<if test="expressAbb != null">,#{expressAbb,jdbcType=VARCHAR}</if>
+			<if test="pickUpTime != null">,#{pickUpTime,jdbcType=VARCHAR}</if>
+			<if test="pickUpNo != null">,#{pickUpNo,jdbcType=VARCHAR}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="trade">
+		update trade
+		<set>
+			<if test="tradeNo != null">trade_no=#{tradeNo,jdbcType=VARCHAR},</if>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="consignTime != null">consign_time=#{consignTime,jdbcType=TIMESTAMP},</if>
+			<if test="buyerPayTime != null">buyer_pay_time=#{buyerPayTime,jdbcType=TIMESTAMP},</if>
+			<if test="endTime != null">end_time=#{endTime,jdbcType=TIMESTAMP},</if>
+			<if test="enterpriseId != null">enterprise_id=#{enterpriseId,jdbcType=BIGINT},</if>
+			<if test="enterpriseName != null">enterprise_name=#{enterpriseName,jdbcType=VARCHAR},</if>
+			<if test="saleId != null">sale_id=#{saleId,jdbcType=BIGINT},</if>
+			<if test="saleName != null">sale_name=#{saleName,jdbcType=VARCHAR},</if>
+			<if test="shopId != null">shop_id=#{shopId,jdbcType=BIGINT},</if>
+			<if test="shopName != null">shop_name=#{shopName,jdbcType=VARCHAR},</if>
+			<if test="partnerId != null">partner_id=#{partnerId,jdbcType=BIGINT},</if>
+			<if test="partnerName != null">partner_name=#{partnerName,jdbcType=VARCHAR},</if>
+			<if test="expressPrice != null">express_price=#{expressPrice,jdbcType=NUMERIC},</if>
+			<if test="buyerId != null">buyer_id=#{buyerId,jdbcType=BIGINT},</if>
+			<if test="buyerName != null">buyer_name=#{buyerName,jdbcType=VARCHAR},</if>
+			<if test="buyerAddress != null">buyer_address=#{buyerAddress,jdbcType=VARCHAR},</if>
+			<if test="buyerPhone != null">buyer_phone=#{buyerPhone,jdbcType=VARCHAR},</if>
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="province != null">province=#{province,jdbcType=VARCHAR},</if>
+			<if test="city != null">city=#{city,jdbcType=VARCHAR},</if>
+			<if test="region != null">REGION=#{region,jdbcType=VARCHAR},</if>
+			<if test="tradeDesc != null">trade_desc=#{tradeDesc,jdbcType=VARCHAR},</if>
+			<if test="paymentType != null">payment_type=#{paymentType,jdbcType=INTEGER},</if>
+			<if test="paymentNo != null">payment_no=#{paymentNo,jdbcType=VARCHAR},</if>
+			<if test="invoiceType != null">invoice_type=#{invoiceType,jdbcType=INTEGER},</if>
+			<if test="invoiceName != null">invoice_name=#{invoiceName,jdbcType=VARCHAR},</if>
+			<if test="isInvoice != null">is_invoice=#{isInvoice,jdbcType=INTEGER},</if>
+			<if test="discountPrice != null">discount_price=#{discountPrice,jdbcType=NUMERIC},</if>
+			<if test="price != null">price=#{price,jdbcType=NUMERIC},</if>
+			<if test="realPrice != null">real_price=#{realPrice,jdbcType=NUMERIC},</if>
+			<if test="distributionMode != null">distribution_mode=#{distributionMode,jdbcType=INTEGER},
+			</if>
+			<if test="saleRemarks != null">sale_remarks=#{saleRemarks,jdbcType=VARCHAR},</if>
+			<if test="buyerRemarks != null">buyer_remarks=#{buyerRemarks,jdbcType=VARCHAR},</if>
+			<if test="buyerAddressId != null">buyer_address_id=#{buyerAddressId,jdbcType=BIGINT},</if>
+			<if test="expressCompany != null">express_company=#{expressCompany,jdbcType=VARCHAR},</if>
+			<if test="expressNo != null">express_no=#{expressNo,jdbcType=VARCHAR},</if>
+			<if test="expressAbb != null">express_abb=#{expressAbb,jdbcType=VARCHAR},</if>
+			<if test="pickUpTime != null">pick_up_time=#{pickUpTime,jdbcType=VARCHAR},</if>
+			<if test="pickUpNo != null">pick_up_no=#{pickUpNo,jdbcType=VARCHAR},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="tradeMap">
+		select * from
+		trade where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM trade t
+		<where>
+			<if test="idArray != null">
+				t.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="tradeNo != null and tradeNo.trim() !=''">and t.trade_no = #{tradeNo}</if>
+			<if test="gmtCreateFrom != null">and t.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and t.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and t.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and t.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and t.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and t.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="consignTimeFrom != null">and t.consign_time >= #{consignTimeFrom}</if>
+			<if test="consignTimeTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and t.consign_time < #{consignTimeTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and t.consign_time < date_add(#{consignTimeTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="buyerPayTimeFrom != null">and t.buyer_pay_time >= #{buyerPayTimeFrom}</if>
+			<if test="buyerPayTimeTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and t.buyer_pay_time < #{buyerPayTimeTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and t.buyer_pay_time < date_add(#{buyerPayTimeTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="endTimeFrom != null">and t.end_time >= #{endTimeFrom}</if>
+			<if test="endTimeTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and t.end_time < #{endTimeTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and t.end_time < date_add(#{endTimeTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="enterpriseId != null">and t.enterprise_id = #{enterpriseId}</if>
+			<if test="enterpriseName != null and enterpriseName.trim() !=''">and t.enterprise_name = #{enterpriseName}</if>
+			<if test="saleId != null">and t.sale_id = #{saleId}</if>
+			<if test="saleName != null and saleName.trim() !=''">and t.sale_name = #{saleName}</if>
+			<if test="shopId != null">and t.shop_id = #{shopId}</if>
+			<if test="shopName != null and shopName.trim() !=''">and t.shop_name = #{shopName}</if>
+			<if test="partnerId != null">and t.partner_id = #{partnerId}</if>
+			<if test="partnerName != null and partnerName.trim() !=''">and t.partner_name = #{partnerName}</if>
+			<if test="expressPriceFrom != null">and t.express_price >= #{expressPriceFrom}</if>
+			<if test="expressPriceTo != null"><![CDATA[and t.express_price <= #{expressPriceTo}]]></if>
+			<if test="buyerId != null">and t.buyer_id = #{buyerId}</if>
+			<if test="buyerName != null and buyerName.trim() !=''">and t.buyer_name = #{buyerName}</if>
+			<if test="buyerAddress != null and buyerAddress.trim() !=''">and t.buyer_address = #{buyerAddress}</if>
+			<if test="buyerPhone != null and buyerPhone.trim() !=''">and t.buyer_phone = #{buyerPhone}</if>
+			<choose>
+				<when test="status != null">and t.status = #{status}</when>
+				<when test="statusArray != null">
+					and t.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and t.status > 0
+				</otherwise>
+			</choose>
+			<if test="province != null and province.trim() !=''">and t.province = #{province}</if>
+			<if test="city != null and city.trim() !=''">and t.city = #{city}</if>
+			<if test="region != null and region.trim() !=''">and t.REGION = #{region}</if>
+			<if test="tradeDesc != null and tradeDesc.trim() !=''">and t.trade_desc = #{tradeDesc}</if>
+			<if test="paymentType != null">and t.payment_type = #{paymentType}</if>
+			<if test="paymentNo != null and paymentNo.trim() !=''">and t.payment_no = #{paymentNo}</if>
+			<if test="invoiceType != null">and t.invoice_type = #{invoiceType}</if>
+			<if test="invoiceName != null and invoiceName.trim() !=''">and t.invoice_name = #{invoiceName}</if>
+			<if test="isInvoice != null">and t.is_invoice = #{isInvoice}</if>
+			<if test="discountPriceFrom != null">and t.discount_price >= #{discountPriceFrom}</if>
+			<if test="discountPriceTo != null"><![CDATA[and t.discount_price <= #{discountPriceTo}]]></if>
+			<if test="priceFrom != null">and t.price >= #{priceFrom}</if>
+			<if test="priceTo != null"><![CDATA[and t.price <= #{priceTo}]]></if>
+			<if test="realPriceFrom != null">and t.real_price >= #{realPriceFrom}</if>
+			<if test="realPriceTo != null"><![CDATA[and t.real_price <= #{realPriceTo}]]></if>
+			<if test="distributionMode != null">and t.distribution_mode = #{distributionMode}</if>
+			<if test="saleRemarks != null and saleRemarks.trim() !=''">and t.sale_remarks = #{saleRemarks}</if>
+			<if test="buyerRemarks != null and buyerRemarks.trim() !=''">and t.buyer_remarks = #{buyerRemarks}</if>
+			<if test="buyerAddressId != null">and t.buyer_address_id = #{buyerAddressId}</if>
+			<if test="expressCompany != null and expressCompany.trim() !=''">and t.express_company = #{expressCompany}</if>
+			<if test="expressNo != null and expressNo.trim() !=''">and t.express_no = #{expressNo}</if>
+			<if test="expressAbb != null and expressAbb.trim() !=''">and t.express_abb = #{expressAbb}</if>
+			<if test="pickUpTime != null and pickUpTime.trim() !=''">and t.pick_up_time = #{pickUpTime}</if>
+			<if test="pickUpNo != null and pickUpNo.trim() !=''">and t.pick_up_no = #{pickUpNo}</if>
+			<!--通过退款状态查询 -->
+			<if test="refundStatus != null">
+				and t.id in(select DISTINCT o1.trade_id from orders o1
+				where o1.refund_status is not null)
+			</if>
+			<if test="properties!= null">
+				<!--通过商品名称查询 -->
+				<if test="properties.productName!= null">
+					and t.id in(SELECT w1.trade_id FROM orders w1 WHERE
+					w1.product_name like CONCAT('%','${properties.productName}','%' ))
+				</if>
+				<!--查询下单时间范围 -->
+				<if test="properties.startTime!= null">
+					and t.GMT_CREATE BETWEEN
+					#{properties.startTime} and #{properties.endTime}
+				</if>
+				<!--不显示某个状态的订单 -->
+				<if test="properties.noShowStatus!= null">
+					and t.status not in
+					(8,9)
+				</if>
+			</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by t.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="tradeQuery" resultMap="tradeMap">
+		<include refid="common.pageBegin" />
+		select t.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}
+				</foreach>
+			</when>
+			<otherwise>
+				,t.trade_no
+				,t.GMT_CREATE
+				,t.GMT_MODIFY
+				,t.consign_time
+				,t.buyer_pay_time
+				,t.end_time
+				,t.enterprise_id
+				,t.enterprise_name
+				,t.sale_id
+				,t.sale_name
+				,t.shop_id
+				,t.shop_name
+				,t.partner_id
+				,t.partner_name
+				,t.express_price
+				,t.buyer_id
+				,t.buyer_name
+				,t.buyer_address
+				,t.buyer_phone
+				,t.status
+				,t.province
+				,t.city
+				,t.REGION
+				,t.trade_desc
+				,t.payment_type
+				,t.payment_no
+				,t.invoice_type
+				,t.invoice_name
+				,t.is_invoice
+				,t.discount_price
+				,t.price
+				,t.real_price
+				,t.distribution_mode
+				,t.sale_remarks
+				,t.buyer_remarks
+				,t.buyer_address_id
+				,t.express_company
+				,t.express_no
+				,t.express_abb
+				,t.pick_up_time
+				,t.pick_up_no
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="tradeQuery" resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="trade">
+		update trade set
+		status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from trade where
+		id=#{id}
+	</delete>
+
+	<select id="getTrade" parameterType="tradeParams" resultMap="tradeMap">
+		select * from trade where id=#{tradeId} and
+		<if test="ownerType == 1">
+			buyer_id = #{ownerId}
+		</if>
+		<if test="ownerType == 2">
+			shop_id = #{ownerId}
+		</if>
+		<if test="ownerType == 3">
+			enterprise_id = #{ownerId}
+		</if>
+	</select>
+	<!--查询退款状态的订单 -->
+	<select id="getTradeForRefundStatus" parameterType="tradeRefundParams"
+		resultMap="tradeMap">
+		SELECT
+		w1.*
+		FROM
+		trade w1
+		INNER JOIN orders w2 ON w1.id = w2.trade_id
+		WHERE
+		<if test="refundStatus != null">
+			w2.refund_status is not null
+		</if>
+		<if test="buyerId!=null">
+			and w1.buyer_id = #{buyerId}
+		</if>
+	</select>
+
+	<select id="getTradeInfoBuyTradeNo" parameterType="string"
+		resultMap="tradeMap">
+		select * from trade where trade_no=#{tradeNo}
+	</select>
+	
+	<select id="getWaitBuyerPayTradeList" parameterType="String" resultMap="tradeMap">
+		SELECT * from trade WHERE #{overGmtCreate} > GMT_CREATE   and STATUS = 2
+	</select>
+</mapper>

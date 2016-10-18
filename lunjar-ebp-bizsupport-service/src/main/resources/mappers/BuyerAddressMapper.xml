@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.BuyerAddressMapper">
+	<resultMap id="buyerAddressMap" type="buyerAddress">
+		<id column="id" property="id" /><!-- 主键 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 更新时间 -->
+		<result column="buyer_id" property="buyerId" /><!-- 买家id -->
+		<result column="province" property="province" /><!-- 买家省份 -->
+		<result column="city" property="city" /><!-- 买家城市 -->
+		<result column="REGION" property="region" /><!-- 买家区县 -->
+		<result column="status" property="status" /><!-- 状态1：正常2：停止 -->
+		<result column="buyer_name" property="buyerName" /><!-- 收货人姓名 -->
+		<result column="buyer_phone" property="buyerPhone" /><!-- 收货人手机号码 -->
+		<result column="buyer_address" property="buyerAddress" /><!-- 收货人详细地址 -->
+		<result column="buyer_post_code" property="buyerPostCode" /><!-- 
+			收货人邮编 -->
+		<result column="is_default" property="isDefault" /><!-- 是否默认地址1:是2:否 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="buyerAddress"
+		useGeneratedKeys="true" keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_buyer_address.nextval from dual
+		</selectKey>
+		insert into
+		buyer_address(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="buyerId != null">,buyer_id</if>
+			<if test="province != null">,province</if>
+			<if test="city != null">,city</if>
+			<if test="region != null">,REGION</if>
+			<if test="status != null">,status</if>
+			<if test="buyerName != null">,buyer_name</if>
+			<if test="buyerPhone != null">,buyer_phone</if>
+			<if test="buyerAddress != null">,buyer_address</if>
+			<if test="buyerPostCode != null">,buyer_post_code</if>
+			<if test="isDefault != null">,is_default</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="buyerId != null">,#{buyerId,jdbcType=BIGINT}</if>
+			<if test="province != null">,#{province,jdbcType=VARCHAR}</if>
+			<if test="city != null">,#{city,jdbcType=VARCHAR}</if>
+			<if test="region != null">,#{region,jdbcType=VARCHAR}</if>
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			<if test="buyerName != null">,#{buyerName,jdbcType=VARCHAR}</if>
+			<if test="buyerPhone != null">,#{buyerPhone,jdbcType=VARCHAR}</if>
+			<if test="buyerAddress != null">,#{buyerAddress,jdbcType=VARCHAR}</if>
+			<if test="buyerPostCode != null">,#{buyerPostCode,jdbcType=VARCHAR}</if>
+			<if test="isDefault != null">,#{isDefault,jdbcType=INTEGER}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="buyerAddress">
+		update buyer_address
+		<set>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="buyerId != null">buyer_id=#{buyerId,jdbcType=BIGINT},</if>
+			<if test="province != null">province=#{province,jdbcType=VARCHAR},</if>
+			<if test="city != null">city=#{city,jdbcType=VARCHAR},</if>
+			<if test="region != null">REGION=#{region,jdbcType=VARCHAR},</if>
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="buyerName != null">buyer_name=#{buyerName,jdbcType=VARCHAR},</if>
+			<if test="buyerPhone != null">buyer_phone=#{buyerPhone,jdbcType=VARCHAR},</if>
+			<if test="buyerAddress != null">buyer_address=#{buyerAddress,jdbcType=VARCHAR},</if>
+			<if test="buyerPostCode != null">buyer_post_code=#{buyerPostCode,jdbcType=VARCHAR},</if>
+			<if test="isDefault != null">is_default=#{isDefault,jdbcType=INTEGER},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="buyerAddressMap">
+		select * from buyer_address where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM buyer_address ba
+		<where>
+			<if test="idArray != null">
+				ba.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="gmtCreateFrom != null">and ba.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and ba.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and ba.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and ba.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and ba.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and ba.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="buyerId != null">and ba.buyer_id = #{buyerId}</if>
+			<if test="province != null and province.trim() !=''">and ba.province = #{province}</if>
+			<if test="city != null and city.trim() !=''">and ba.city = #{city}</if>
+			<if test="region != null and region.trim() !=''">and ba.REGION = #{region}</if>
+			<choose>
+				<when test="status != null">and ba.status = #{status}</when>
+				<when test="statusArray != null">
+					and ba.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and ba.status > 0
+				</otherwise>
+			</choose>
+			<if test="buyerName != null and buyerName.trim() !=''">and ba.buyer_name = #{buyerName}</if>
+			<if test="buyerPhone != null and buyerPhone.trim() !=''">and ba.buyer_phone = #{buyerPhone}</if>
+			<if test="buyerAddress != null and buyerAddress.trim() !=''">and ba.buyer_address = #{buyerAddress}</if>
+			<if test="buyerPostCode != null and buyerPostCode.trim() !=''">and ba.buyer_post_code = #{buyerPostCode}</if>
+			<if test="isDefault != null">and ba.is_default = #{isDefault}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by ba.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="buyerAddressQuery"
+		resultMap="buyerAddressMap">
+		<include refid="common.pageBegin" />
+		select ba.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}</foreach>
+			</when>
+			<otherwise>
+				,ba.GMT_CREATE
+				,ba.GMT_MODIFY
+				,ba.buyer_id
+				,ba.province
+				,ba.city
+				,ba.REGION
+				,ba.status
+				,ba.buyer_name
+				,ba.buyer_phone
+				,ba.buyer_address
+				,ba.buyer_post_code
+				,ba.is_default
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="buyerAddressQuery"
+		resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="buyerAddress">
+		update buyer_address set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from buyer_address where id=#{id}
+	</delete>
+
+	<!--通过id和buyerId删除 -->
+	<delete id="deleteByIdAndBuyerId" parameterType="buyerAddress">
+		delete from
+		buyer_address where id=#{id} and buyer_id=#{buyerId}
+	</delete>
+</mapper>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.SelfDeliveryUserMapper">
+	<resultMap id="selfDeliveryUserMap" type="selfDeliveryUser">
+		<id column="id" property="id" /><!-- 主键id -->
+		<result column="user_name" property="userName" /><!-- 账号 -->
+		<result column="pass_word" property="passWord" /><!-- 密码 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+		<result column="status" property="status" /><!-- 状态1：正常2：停用 -->
+		<result column="collect_place_id" property="collectPlaceId" /><!-- 
+			所属自提点id -->
+	</resultMap>
+
+	<insert id="insert" parameterType="selfDeliveryUser"
+		useGeneratedKeys="true" keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_self_delivery_user.nextval from dual
+		</selectKey>
+		insert into
+		self_delivery_user(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="userName != null">,user_name</if>
+			<if test="passWord != null">,pass_word</if>
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="status != null">,status</if>
+			<if test="collectPlaceId != null">,collect_place_id</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="userName != null">,#{userName,jdbcType=VARCHAR}</if>
+			<if test="passWord != null">,#{passWord,jdbcType=VARCHAR}</if>
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			<if test="collectPlaceId != null">,#{collectPlaceId,jdbcType=BIGINT}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="selfDeliveryUser">
+		update self_delivery_user
+		<set>
+			<if test="userName != null">user_name=#{userName,jdbcType=VARCHAR},</if>
+			<if test="passWord != null">pass_word=#{passWord,jdbcType=VARCHAR},</if>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="collectPlaceId != null">collect_place_id=#{collectPlaceId,jdbcType=BIGINT},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="selfDeliveryUserMap">
+		select * from self_delivery_user where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM self_delivery_user sdu
+		<where>
+			<if test="idArray != null">
+				sdu.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="userName != null and userName.trim() !=''">and sdu.user_name = #{userName}</if>
+			<if test="passWord != null and passWord.trim() !=''">and sdu.pass_word = #{passWord}</if>
+			<if test="gmtCreateFrom != null">and sdu.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and sdu.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and sdu.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and sdu.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and sdu.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and sdu.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<choose>
+				<when test="status != null">and sdu.status = #{status}</when>
+				<when test="statusArray != null">
+					and sdu.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and sdu.status > 0
+				</otherwise>
+			</choose>
+			<if test="collectPlaceId != null">and sdu.collect_place_id = #{collectPlaceId}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by sdu.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="selfDeliveryUserQuery"
+		resultMap="selfDeliveryUserMap">
+		<include refid="common.pageBegin" />
+		select sdu.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}</foreach>
+			</when>
+			<otherwise>
+				,sdu.user_name
+				,sdu.pass_word
+				,sdu.GMT_CREATE
+				,sdu.GMT_MODIFY
+				,sdu.status
+				,sdu.collect_place_id
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="selfDeliveryUserQuery"
+		resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="selfDeliveryUser">
+		update self_delivery_user set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from self_delivery_user where id=#{id}
+	</delete>
+	
+	<select id="loadByUserName" resultMap="selfDeliveryUserMap">
+		select * from self_delivery_user where user_name=#{userName}
+	</select>
+</mapper>

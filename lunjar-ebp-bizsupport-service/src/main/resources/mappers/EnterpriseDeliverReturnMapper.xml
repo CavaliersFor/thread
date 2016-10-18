@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper
+	namespace="com.lunjar.ebp.bizsupport.mappers.EnterpriseDeliverReturnMapper">
+	<resultMap id="enterpriseDeliverReturnMap" type="enterpriseDeliverReturn">
+		<id column="id" property="id" /><!-- 主键 -->
+		<result column="enterprise_id" property="enterpriseId" /><!-- 商家id -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+		<result column="status" property="status" /><!-- 状态1：使用2：停用 -->
+		<result column="address" property="address" /><!-- 退货详细地址 -->
+		<result column="province" property="province" /><!-- 省 -->
+		<result column="city" property="city" /><!-- 市 -->
+		<result column="region" property="region" /><!-- 区县 -->
+		<result column="type" property="type" /><!-- 类型1：发货地址 2：退货地址 -->
+		<result column="is_default" property="isDefault" /><!-- 是否默认地址1:是 
+			2： 否 -->
+		<result column="linkname" property="linkname" /><!-- 收件人 -->
+		<result column="telephone" property="telephone" /><!-- 联系电话 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="enterpriseDeliverReturn"
+		useGeneratedKeys="true" keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_enterprise_deliver_return.nextval from dual
+		</selectKey>
+		insert into
+		enterprise_deliver_return(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="enterpriseId != null">,enterprise_id</if>
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="status != null">,status</if>
+			<if test="address != null">,address</if>
+			<if test="province != null">,province</if>
+			<if test="city != null">,city</if>
+			<if test="region != null">,region</if>
+			<if test="type != null">,type</if>
+			<if test="isDefault != null">,is_default</if>
+			<if test="linkname != null">,linkname</if>
+			<if test="telephone != null">,telephone</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="enterpriseId != null">,#{enterpriseId,jdbcType=BIGINT}</if>
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			<if test="address != null">,#{address,jdbcType=VARCHAR}</if>
+			<if test="province != null">,#{province,jdbcType=VARCHAR}</if>
+			<if test="city != null">,#{city,jdbcType=VARCHAR}</if>
+			<if test="region != null">,#{region,jdbcType=VARCHAR}</if>
+			<if test="type != null">,#{type,jdbcType=INTEGER}</if>
+			<if test="isDefault != null">,#{isDefault,jdbcType=INTEGER}</if>
+			<if test="linkname != null">,#{linkname,jdbcType=VARCHAR}</if>
+			<if test="telephone != null">,#{telephone,jdbcType=VARCHAR}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="enterpriseDeliverReturn">
+		update enterprise_deliver_return
+		<set>
+			<if test="enterpriseId != null">enterprise_id=#{enterpriseId,jdbcType=BIGINT},</if>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="address != null">address=#{address,jdbcType=VARCHAR},</if>
+			<if test="province != null">province=#{province,jdbcType=VARCHAR},</if>
+			<if test="city != null">city=#{city,jdbcType=VARCHAR},</if>
+			<if test="region != null">region=#{region,jdbcType=VARCHAR},</if>
+			<if test="type != null">type=#{type,jdbcType=INTEGER},</if>
+			<if test="isDefault != null">is_default=#{isDefault,jdbcType=INTEGER},</if>
+			<if test="linkname != null">linkname=#{linkname,jdbcType=VARCHAR},</if>
+			<if test="telephone != null">telephone=#{telephone,jdbcType=VARCHAR},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="enterpriseDeliverReturnMap">
+		select * from enterprise_deliver_return where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM enterprise_deliver_return edr
+		<where>
+			<if test="idArray != null">
+				edr.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="enterpriseId != null">and edr.enterprise_id = #{enterpriseId}</if>
+			<if test="gmtCreateFrom != null">and edr.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and edr.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and edr.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and edr.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and edr.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and edr.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<choose>
+				<when test="status != null">and edr.status = #{status}</when>
+				<when test="statusArray != null">
+					and edr.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and edr.status > 0
+				</otherwise>
+			</choose>
+			<if test="address != null and address.trim() !=''">and edr.address = #{address}</if>
+			<if test="province != null and province.trim() !=''">and edr.province = #{province}</if>
+			<if test="city != null and city.trim() !=''">and edr.city = #{city}</if>
+			<if test="region != null and region.trim() !=''">and edr.region = #{region}</if>
+			<if test="type != null">and edr.type = #{type}</if>
+			<if test="isDefault != null">and edr.is_default = #{isDefault}</if>
+			<if test="linkname != null and linkname.trim() !=''">and edr.linkname = #{linkname}</if>
+			<if test="telephone != null and telephone.trim() !=''">and edr.telephone = #{telephone}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by edr.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="enterpriseDeliverReturnQuery"
+		resultMap="enterpriseDeliverReturnMap">
+		<include refid="common.pageBegin" />
+		select edr.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}</foreach>
+			</when>
+			<otherwise>
+				,edr.enterprise_id
+				,edr.GMT_CREATE
+				,edr.GMT_MODIFY
+				,edr.status
+				,edr.address
+				,edr.province
+				,edr.city
+				,edr.region
+				,edr.type
+				,edr.is_default
+				,edr.linkname
+				,edr.telephone
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="enterpriseDeliverReturnQuery"
+		resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="enterpriseDeliverReturn">
+		update enterprise_deliver_return set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from enterprise_deliver_return where id=#{id}
+	</delete>
+</mapper>

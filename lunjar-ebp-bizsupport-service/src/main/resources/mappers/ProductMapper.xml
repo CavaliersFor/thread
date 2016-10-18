@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.ProductMapper">
+	<resultMap id="productMap" type="product">
+		<id column="id" property="id" /><!-- 主键 -->
+		<result column="name" property="name" /><!-- 商品名称 -->
+		<result column="price" property="price" /><!-- 价格，精确到分 -->
+		<result column="sale_price" property="salePrice" /><!-- 产品销售价格，实际销售价格，精确到分 -->
+		<result column="product_desc" property="productDesc" /><!-- 产品描述 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+		<result column="path_url" property="pathUrl" /><!-- 主图片地址 -->
+		<result column="sale_num" property="saleNum" /><!-- 产品的销量 -->
+		<result column="cid" property="cid" /><!-- 产品类目id -->
+		<result column="cat_name" property="catName" /><!-- 产品类目名称 -->
+		<result column="status" property="status" /><!-- 产品状态1：销售中2：仓库中 -->
+		<result column="product_num" property="productNum" /><!-- 产品总数 -->
+		<result column="props_name" property="propsName" /><!-- 商品属性名称(p1:p1_name;p2:p2_name) -->
+		<result column="PROPS_ALIAS" property="propsAlias" /><!-- 属性值名称(p1:v1:v1_name;p1:v2:v2_name;p1:v3:v3_name;p2:v1:v1_name;p2:v2:v2_name) -->
+		<result column="type" property="type" /><!-- 商品类型 1：普通 2：推荐 3：新品4：热销 -->
+		<result column="distribution_mode" property="distributionMode" /><!-- 
+			配送方式1：快递2：自取 -->
+		<result column="is_post" property="isPost" /><!-- 是否包邮1：是 2：否 -->
+		<result column="express_id" property="expressId" /><!-- 快递模板id -->
+		<result column="discount_id" property="discountId" /><!-- 优惠id(为空则不享受优惠) -->
+		<result column="volume" property="volume" /><!-- 体积 -->
+		<result column="weight" property="weight" /><!-- 重量 -->
+		<result column="enterprise_product_no" property="enterpriseProductNo" /><!-- 
+			商家系统编号 -->
+		<result column="enterprise_id" property="enterpriseId" /><!-- 商家id -->
+	</resultMap>
+
+	<insert id="insert" parameterType="product" useGeneratedKeys="true"
+		keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_product.nextval from dual
+		</selectKey>
+		insert into
+		product(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="name != null">,name</if>
+			<if test="price != null">,price</if>
+			<if test="salePrice != null">,sale_price</if>
+			<if test="productDesc != null">,product_desc</if>
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="pathUrl != null">,path_url</if>
+			<if test="saleNum != null">,sale_num</if>
+			<if test="cid != null">,cid</if>
+			<if test="catName != null">,cat_name</if>
+			<if test="status != null">,status</if>
+			<if test="productNum != null">,product_num</if>
+			<if test="propsName != null">,props_name</if>
+			<if test="propsAlias != null">,PROPS_ALIAS</if>
+			<if test="type != null">,type</if>
+			<if test="distributionMode != null">,distribution_mode</if>
+			<if test="isPost != null">,is_post</if>
+			<if test="expressId != null">,express_id</if>
+			<if test="discountId != null">,discount_id</if>
+			<if test="volume != null">,volume</if>
+			<if test="weight != null">,weight</if>
+			<if test="enterpriseProductNo != null">,enterprise_product_no</if>
+			<if test="enterpriseId != null">,enterprise_id</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="name != null">,#{name,jdbcType=VARCHAR}</if>
+			<if test="price != null">,#{price,jdbcType=NUMERIC}</if>
+			<if test="salePrice != null">,#{salePrice,jdbcType=NUMERIC}</if>
+			<if test="productDesc != null">,#{productDesc,jdbcType=VARCHAR}</if>
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="pathUrl != null">,#{pathUrl,jdbcType=VARCHAR}</if>
+			<if test="saleNum != null">,#{saleNum,jdbcType=INTEGER}</if>
+			<if test="cid != null">,#{cid,jdbcType=INTEGER}</if>
+			<if test="catName != null">,#{catName,jdbcType=VARCHAR}</if>
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			<if test="productNum != null">,#{productNum,jdbcType=INTEGER}</if>
+			<if test="propsName != null">,#{propsName,jdbcType=VARCHAR}</if>
+			<if test="propsAlias != null">,#{propsAlias,jdbcType=VARCHAR}</if>
+			<if test="type != null">,#{type,jdbcType=INTEGER}</if>
+			<if test="distributionMode != null">,#{distributionMode,jdbcType=INTEGER}</if>
+			<if test="isPost != null">,#{isPost,jdbcType=INTEGER}</if>
+			<if test="expressId != null">,#{expressId,jdbcType=BIGINT}</if>
+			<if test="discountId != null">,#{discountId,jdbcType=BIGINT}</if>
+			<if test="volume != null">,#{volume,jdbcType=NUMERIC}</if>
+			<if test="weight != null">,#{weight,jdbcType=NUMERIC}</if>
+			<if test="enterpriseProductNo != null">,#{enterpriseProductNo,jdbcType=VARCHAR}</if>
+			<if test="enterpriseId != null">,#{enterpriseId,jdbcType=BIGINT}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="product">
+		update product
+		<set>
+			<if test="name != null">name=#{name,jdbcType=VARCHAR},</if>
+			<if test="price != null">price=#{price,jdbcType=NUMERIC},</if>
+			<if test="salePrice != null">sale_price=#{salePrice,jdbcType=NUMERIC},</if>
+			<if test="productDesc != null">product_desc=#{productDesc,jdbcType=VARCHAR},</if>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="pathUrl != null">path_url=#{pathUrl,jdbcType=VARCHAR},</if>
+			<if test="saleNum != null">sale_num=#{saleNum,jdbcType=INTEGER},</if>
+			<if test="cid != null">cid=#{cid,jdbcType=INTEGER},</if>
+			<if test="catName != null">cat_name=#{catName,jdbcType=VARCHAR},</if>
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="productNum != null">product_num=#{productNum,jdbcType=INTEGER},</if>
+			<if test="propsName != null">props_name=#{propsName,jdbcType=VARCHAR},</if>
+			<if test="propsAlias != null">PROPS_ALIAS=#{propsAlias,jdbcType=VARCHAR},</if>
+			<if test="type != null">type=#{type,jdbcType=INTEGER},</if>
+			<if test="distributionMode != null">distribution_mode=#{distributionMode,jdbcType=INTEGER},
+			</if>
+			<if test="isPost != null">is_post=#{isPost,jdbcType=INTEGER},</if>
+			<if test="expressId != null">express_id=#{expressId,jdbcType=BIGINT},</if>
+			<if test="discountId != null">discount_id=#{discountId,jdbcType=BIGINT},</if>
+			<if test="volume != null">volume=#{volume,jdbcType=NUMERIC},</if>
+			<if test="weight != null">weight=#{weight,jdbcType=NUMERIC},</if>
+			<if test="enterpriseProductNo != null">enterprise_product_no=#{enterpriseProductNo,jdbcType=VARCHAR},
+			</if>
+			<if test="enterpriseId != null">enterprise_id=#{enterpriseId,jdbcType=BIGINT},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="productMap">
+		select * from product where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM product p
+		<where>
+			<if test="idArray != null">
+				p.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="name != null and name.trim() !=''">and p.name = #{name}</if>
+			<if test="priceFrom != null">and p.price >= #{priceFrom}</if>
+			<if test="priceTo != null"><![CDATA[and p.price <= #{priceTo}]]></if>
+			<if test="salePriceFrom != null">and p.sale_price >= #{salePriceFrom}</if>
+			<if test="salePriceTo != null"><![CDATA[and p.sale_price <= #{salePriceTo}]]></if>
+			<if test="productDesc != null and productDesc.trim() !=''">and p.product_desc = #{productDesc}</if>
+			<if test="gmtCreateFrom != null">and p.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and p.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and p.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and p.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and p.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and p.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="pathUrl != null and pathUrl.trim() !=''">and p.path_url = #{pathUrl}</if>
+			<if test="saleNum != null">and p.sale_num = #{saleNum}</if>
+			<if test="cid != null">and p.cid = #{cid}</if>
+			<if test="catName != null and catName.trim() !=''">and p.cat_name = #{catName}</if>
+			<choose>
+				<when test="status != null">and p.status = #{status}</when>
+				<when test="statusArray != null">
+					and p.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and p.status > 0
+				</otherwise>
+			</choose>
+			<if test="productNum != null">and p.product_num = #{productNum}</if>
+			<if test="propsName != null and propsName.trim() !=''">and p.props_name = #{propsName}</if>
+			<if test="propsAlias != null and propsAlias.trim() !=''">and p.PROPS_ALIAS = #{propsAlias}</if>
+			<if test="type != null">and p.type = #{type}</if>
+			<if test="distributionMode != null">and p.distribution_mode = #{distributionMode}</if>
+			<if test="isPost != null">and p.is_post = #{isPost}</if>
+			<if test="expressId != null">and p.express_id = #{expressId}</if>
+			<if test="discountId != null">and p.discount_id = #{discountId}</if>
+			<if test="volumeFrom != null">and p.volume >= #{volumeFrom}</if>
+			<if test="volumeTo != null"><![CDATA[and p.volume <= #{volumeTo}]]></if>
+			<if test="weightFrom != null">and p.weight >= #{weightFrom}</if>
+			<if test="weightTo != null"><![CDATA[and p.weight <= #{weightTo}]]></if>
+			<if test="enterpriseProductNo != null and enterpriseProductNo.trim() !=''">and p.enterprise_product_no = #{enterpriseProductNo}</if>
+			<if test="enterpriseId != null">and p.enterprise_id = #{enterpriseId}</if>
+			
+			<if test="properties!= null">
+				<!--通过商品名称查询-->
+				<if test="properties.productName!= null">
+					and p.name like CONCAT('%','${properties.productName}','%' )
+				</if>
+			</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by p.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="productQuery" resultMap="productMap">
+		<include refid="common.pageBegin" />
+		select p.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}
+				</foreach>
+			</when>
+			<otherwise>
+				,p.name
+				,p.price
+				,p.sale_price
+				,p.product_desc
+				,p.GMT_CREATE
+				,p.GMT_MODIFY
+				,p.path_url
+				,p.sale_num
+				,p.cid
+				,p.cat_name
+				,p.status
+				,p.product_num
+				,p.props_name
+				,p.PROPS_ALIAS
+				,p.type
+				,p.distribution_mode
+				,p.is_post
+				,p.express_id
+				,p.discount_id
+				,p.volume
+				,p.weight
+				,p.enterprise_product_no
+				,p.enterprise_id
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="productQuery" resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="product">
+		update product set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from product where id=#{id}
+	</delete>
+</mapper>

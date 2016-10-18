@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.BuyerMapper">
+	<resultMap id="buyerMap" type="buyer">
+		<id column="id" property="id" /><!-- 主键 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+		<result column="status" property="status" /><!-- 状态1：正常 2：停止 -->
+		<result column="partner_id" property="partnerId" /><!-- 所属合作者平台id -->
+		<result column="buyer_id" property="buyerId" /><!-- 所属合作者平台用户唯一标识 -->
+		<result column="nickname" property="nickname" /><!-- 用户昵称 -->
+		<result column="phone" property="phone" /><!-- 手机号码 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="buyer" useGeneratedKeys="true"
+		keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_buyer.nextval from dual
+		</selectKey>
+		insert into
+		buyer(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="status != null">,status</if>
+			<if test="partnerId != null">,partner_id</if>
+			<if test="buyerId != null">,buyer_id</if>
+			<if test="nickname != null">,nickname</if>
+			<if test="phone != null">,phone</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			<if test="partnerId != null">,#{partnerId,jdbcType=BIGINT}</if>
+			<if test="buyerId != null">,#{buyerId,jdbcType=VARCHAR}</if>
+			<if test="nickname != null">,#{nickname,jdbcType=VARCHAR}</if>
+			<if test="phone != null">,#{phone,jdbcType=VARCHAR}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="buyer">
+		update buyer
+		<set>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="partnerId != null">partner_id=#{partnerId,jdbcType=BIGINT},</if>
+			<if test="buyerId != null">buyer_id=#{buyerId,jdbcType=VARCHAR},</if>
+			<if test="nickname != null">nickname=#{nickname,jdbcType=VARCHAR},</if>
+			<if test="phone != null">phone=#{phone,jdbcType=VARCHAR},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="buyerMap">
+		select * from buyer where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM buyer b
+		<where>
+			<if test="idArray != null">
+				b.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="gmtCreateFrom != null">and b.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and b.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and b.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and b.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and b.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and b.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<choose>
+				<when test="status != null">and b.status = #{status}</when>
+				<when test="statusArray != null">
+					and b.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and b.status > 0
+				</otherwise>
+			</choose>
+			<if test="partnerId != null">and b.partner_id = #{partnerId}</if>
+			<if test="buyerId != null and buyerId.trim() !=''">and b.buyer_id = #{buyerId}</if>
+			<if test="nickname != null and nickname.trim() !=''">and b.nickname = #{nickname}</if>
+			<if test="phone != null and phone.trim() !=''">and b.phone = #{phone}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by b.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="buyerQuery" resultMap="buyerMap">
+		<include refid="common.pageBegin" />
+		select b.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}</foreach>
+			</when>
+			<otherwise>
+				,b.GMT_CREATE
+				,b.GMT_MODIFY
+				,b.status
+				,b.partner_id
+				,b.buyer_id
+				,b.nickname
+				,b.phone
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="buyerQuery" resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="buyer">
+		update buyer set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from buyer where id=#{id}
+	</delete>
+</mapper>

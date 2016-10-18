@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.ShopIndexMapper">
+	<resultMap id="shopIndexMap" type="shopIndex">
+		<id column="id" property="id" /><!-- 主键id -->
+		<result column="pic_urls" property="picUrls" /><!-- 图片url地址以及排序url地址与排序值和商铺id之间用,号隔开，然后每个之间用;隔开.例如：0/1/0/1473211400641.jpg,1;0/1/0/1473211497188.jpg,2,/product/list?categoryId=3 -->
+		<result column="status" property="status" /><!-- 状态1：正常 2：停止 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+		<result column="type" property="type" /><!-- 类型1：轮播图2：大图3：推荐产品4：热卖产品 -->
+		<result column="shop_id" property="shopId" /><!-- 商铺id -->
+		<result column="sort_num" property="sortNum" /><!-- 排序 -->
+		<result column="name" property="name" /><!-- 名称(针对类型3来动态设置类型名称) -->
+	</resultMap>
+
+	<insert id="insert" parameterType="shopIndex" useGeneratedKeys="true"
+		keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_shop_index.nextval from dual
+		</selectKey>
+		insert into
+		shop_index(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="picUrls != null">,pic_urls</if>
+			<if test="status != null">,status</if>
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="type != null">,type</if>
+			<if test="shopId != null">,shop_id</if>
+			<if test="sortNum != null">,sort_num</if>
+			<if test="name != null">,name</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="picUrls != null">,#{picUrls,jdbcType=VARCHAR}</if>
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="type != null">,#{type,jdbcType=INTEGER}</if>
+			<if test="shopId != null">,#{shopId,jdbcType=BIGINT}</if>
+			<if test="sortNum != null">,#{sortNum,jdbcType=INTEGER}</if>
+			<if test="name != null">,#{name,jdbcType=VARCHAR}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="shopIndex">
+		update shop_index
+		<set>
+			<if test="picUrls != null">pic_urls=#{picUrls,jdbcType=VARCHAR},</if>
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="type != null">type=#{type,jdbcType=INTEGER},</if>
+			<if test="shopId != null">shop_id=#{shopId,jdbcType=BIGINT},</if>
+			<if test="sortNum != null">sort_num=#{sortNum,jdbcType=INTEGER},</if>
+			<if test="name != null">name=#{name,jdbcType=VARCHAR},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="shopIndexMap">
+		select * from shop_index where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM shop_index si
+		<where>
+			<if test="idArray != null">
+				si.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="picUrls != null and picUrls.trim() !=''">and si.pic_urls = #{picUrls}</if>
+			<choose>
+				<when test="status != null">and si.status = #{status}</when>
+				<when test="statusArray != null">
+					and si.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and si.status > 0
+				</otherwise>
+			</choose>
+			<if test="gmtCreateFrom != null">and si.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and si.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and si.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and si.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and si.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and si.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="type != null">and si.type = #{type}</if>
+			<if test="typeArray != null">
+				and si.type in
+				<foreach collection="typeArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+				</foreach>
+			</if>
+			<if test="shopId != null">and si.shop_id = #{shopId}</if>
+			<if test="sortNum != null">and si.sort_num = #{sortNum}</if>
+			<if test="name != null and name.trim() !=''">and si.name = #{name}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by si.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="shopIndexQuery" resultMap="shopIndexMap">
+		<include refid="common.pageBegin" />
+		select si.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}
+				</foreach>
+			</when>
+			<otherwise>
+				,si.pic_urls
+				,si.status
+				,si.GMT_CREATE
+				,si.GMT_MODIFY
+				,si.type
+				,si.shop_id
+				,si.sort_num
+				,si.name
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="shopIndexQuery"
+		resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="shopIndex">
+		update shop_index set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from shop_index where id=#{id}
+	</delete>
+</mapper>

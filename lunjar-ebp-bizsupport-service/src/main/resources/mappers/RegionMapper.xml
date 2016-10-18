@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.RegionMapper">
+	<resultMap id="regionMap" type="region">
+		<id column="CODE" property="code" /><!-- 按照国家规则的统一编码来 -->
+		<result column="PARENT_CODE" property="parentCode" /><!-- 上一级地区的编码 -->
+		<result column="REGION_NAME" property="regionName" /><!-- 地区名字 -->
+		<result column="REGION_TYPE" property="regionType" /><!-- 地区类型，0：国家，1： 
+			省份/直辖市，2：市，3：县/区 -->
+		<result column="STATUS" property="status" /><!-- 1、正常 -1、失效 -->
+		<result column="ABBNAME" property="abbname" /><!-- 区域别名 -->
+		<result column="ZIP" property="zip" /><!-- 邮编 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="region">
+		insert into
+		region(
+		CODE
+		<if test="parentCode != null">,PARENT_CODE</if>
+		<if test="regionName != null">,REGION_NAME</if>
+		<if test="regionType != null">,REGION_TYPE</if>
+		<if test="status != null">,STATUS</if>
+		<if test="abbname != null">,ABBNAME</if>
+		<if test="zip != null">,ZIP</if>
+		)values(
+		#{code}
+		<if test="parentCode != null">,#{parentCode,jdbcType=VARCHAR}</if>
+		<if test="regionName != null">,#{regionName,jdbcType=VARCHAR}</if>
+		<if test="regionType != null">,#{regionType,jdbcType=INTEGER}</if>
+		<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+		<if test="abbname != null">,#{abbname,jdbcType=VARCHAR}</if>
+		<if test="zip != null">,#{zip,jdbcType=VARCHAR}</if>
+		)
+	</insert>
+
+	<update id="update" parameterType="region">
+		update region
+		<set>
+			<if test="parentCode != null">PARENT_CODE=#{parentCode,jdbcType=VARCHAR},</if>
+			<if test="regionName != null">REGION_NAME=#{regionName,jdbcType=VARCHAR},</if>
+			<if test="regionType != null">REGION_TYPE=#{regionType,jdbcType=INTEGER},</if>
+			<if test="status != null">STATUS=#{status,jdbcType=INTEGER},</if>
+			<if test="abbname != null">ABBNAME=#{abbname,jdbcType=VARCHAR},</if>
+			<if test="zip != null">ZIP=#{zip,jdbcType=VARCHAR},</if>
+		</set>
+		where CODE=#{code}
+	</update>
+
+	<select id="load" parameterType="string" resultMap="regionMap">
+		select * from region where CODE=#{code}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM region r
+		<where>
+			<if test="codeArray != null">
+				r.CODE in
+				<foreach collection="codeArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="parentCode != null and parentCode.trim() !=''">and r.PARENT_CODE = #{parentCode}</if>
+			<if test="regionName != null and regionName.trim() !=''">and r.REGION_NAME = #{regionName}</if>
+			<if test="regionType != null">and r.REGION_TYPE = #{regionType}</if>
+			<choose>
+				<when test="status != null">and r.STATUS = #{status}</when>
+				<when test="statusArray != null">
+					and r.STATUS in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and r.STATUS > 0
+				</otherwise>
+			</choose>
+			<if test="abbname != null and abbname.trim() !=''">and r.ABBNAME = #{abbname}</if>
+			<if test="zip != null and zip.trim() !=''">and r.ZIP = #{zip}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by r.CODE 
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="regionQuery" resultMap="regionMap">
+		<include refid="common.pageBegin" />
+		select r.CODE
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}
+				</foreach>
+			</when>
+			<otherwise>
+				,r.PARENT_CODE
+				,r.REGION_NAME
+				,r.REGION_TYPE
+				,r.STATUS
+				,r.ABBNAME
+				,r.ZIP
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="regionQuery" resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="region">
+		update region set status=#{status} where CODE=#{code}
+	</update>
+
+	<delete id="delete" parameterType="string">
+		delete from region where CODE=#{code}
+	</delete>
+	
+	<select id="getParentCode" parameterType="string" resultType="string">
+		select PARENT_CODE from region where CODE=#{code}
+	</select>
+</mapper>

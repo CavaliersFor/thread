@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.OrdersMapper">
+	<resultMap id="ordersMap" type="orders">
+		<id column="id" property="id" /><!-- 主键 -->
+		<result column="trade_id" property="tradeId" /><!-- 订单表id -->
+		<result column="num" property="num" /><!-- 订单数量 -->
+		<result column="product_id" property="productId" /><!-- 产品id -->
+		<result column="product_name" property="productName" /><!-- 产品名称 -->
+		<result column="product_real_price" property="productRealPrice" /><!-- 
+			产品实际销售价格 -->
+		<result column="product_pic_path" property="productPicPath" /><!-- 
+			产品图片 -->
+		<result column="total_price" property="totalPrice" /><!-- 总价格 -->
+		<result column="total_real_price" property="totalRealPrice" /><!-- 
+			实付 -->
+		<result column="total_discount_price" property="totalDiscountPrice" /><!-- 
+			总的优惠价格 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+		<result column="status" property="status" /><!-- 交易状态 可选值: 1:* TRADE_NO_CREATE_PAY(没有创建支付宝交易) 
+			* 2:WAIT_BUYER_PAY(等待买家付款) 3 SELLER_CONSIGNED_PART(卖家部分发货) * WAIT_SELLER_SEND_GOODS(等待卖家发货,即:买家已付款) 
+			* WAIT_BUYER_CONFIRM_GOODS(等待买家确认收货,即:卖家已发货) * TRADE_BUYER_SIGNED(买家已签收,货到付款专用) 
+			* TRADE_FINISHED(交易成功) * TRA -->
+		<result column="refund_status" property="refundStatus" /><!-- 退款状态。退款状态。可选值 
+			WAIT_SELLER_AGREE(买家已经申请退款，等待卖家同意) WAIT_BUYER_RETURN_GOODS(卖家已经同意退款，等待买家退货) 
+			WAIT_SELLER_CONFIRM_GOODS(买家已经退货，等待卖家确认收货) SELLER_REFUSE_BUYER(卖家拒绝退款) CLOSED(退款关闭) 
+			SUCCESS(退款成功) -->
+		<result column="sku_id" property="skuId" /><!-- SKU id -->
+		<result column="properties" property="properties" /><!-- sku的销售属性组合字符串(p1:v1;p2:v2) -->
+		<result column="propertiesName" property="propertiesname" /><!-- 
+			sku组合字符串的值 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="orders" useGeneratedKeys="true"
+		keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_orders.nextval from dual
+		</selectKey>
+		insert into
+		orders(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="tradeId != null">,trade_id</if>
+			<if test="num != null">,num</if>
+			<if test="productId != null">,product_id</if>
+			<if test="productName != null">,product_name</if>
+			<if test="productRealPrice != null">,product_real_price</if>
+			<if test="productPicPath != null">,product_pic_path</if>
+			<if test="totalPrice != null">,total_price</if>
+			<if test="totalRealPrice != null">,total_real_price</if>
+			<if test="totalDiscountPrice != null">,total_discount_price</if>
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="status != null">,status</if>
+			<if test="refundStatus != null">,refund_status</if>
+			<if test="skuId != null">,sku_id</if>
+			<if test="properties != null">,properties</if>
+			<if test="propertiesname != null">,propertiesName</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			<if test="tradeId != null">,#{tradeId,jdbcType=BIGINT}</if>
+			<if test="num != null">,#{num,jdbcType=INTEGER}</if>
+			<if test="productId != null">,#{productId,jdbcType=BIGINT}</if>
+			<if test="productName != null">,#{productName,jdbcType=VARCHAR}</if>
+			<if test="productRealPrice != null">,#{productRealPrice,jdbcType=NUMERIC}</if>
+			<if test="productPicPath != null">,#{productPicPath,jdbcType=VARCHAR}</if>
+			<if test="totalPrice != null">,#{totalPrice,jdbcType=NUMERIC}</if>
+			<if test="totalRealPrice != null">,#{totalRealPrice,jdbcType=NUMERIC}</if>
+			<if test="totalDiscountPrice != null">,#{totalDiscountPrice,jdbcType=NUMERIC}</if>
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			<if test="refundStatus != null">,#{refundStatus,jdbcType=INTEGER}</if>
+			<if test="skuId != null">,#{skuId,jdbcType=BIGINT}</if>
+			<if test="properties != null">,#{properties,jdbcType=VARCHAR}</if>
+			<if test="propertiesname != null">,#{propertiesname,jdbcType=VARCHAR}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="orders">
+		update orders
+		<set>
+			<if test="tradeId != null">trade_id=#{tradeId,jdbcType=BIGINT},</if>
+			<if test="num != null">num=#{num,jdbcType=INTEGER},</if>
+			<if test="productId != null">product_id=#{productId,jdbcType=BIGINT},</if>
+			<if test="productName != null">product_name=#{productName,jdbcType=VARCHAR},</if>
+			<if test="productRealPrice != null">product_real_price=#{productRealPrice,jdbcType=NUMERIC},</if>
+			<if test="productPicPath != null">product_pic_path=#{productPicPath,jdbcType=VARCHAR},</if>
+			<if test="totalPrice != null">total_price=#{totalPrice,jdbcType=NUMERIC},</if>
+			<if test="totalRealPrice != null">total_real_price=#{totalRealPrice,jdbcType=NUMERIC},</if>
+			<if test="totalDiscountPrice != null">total_discount_price=#{totalDiscountPrice,jdbcType=NUMERIC},</if>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="refundStatus != null">refund_status=#{refundStatus,jdbcType=INTEGER},</if>
+			<if test="skuId != null">sku_id=#{skuId,jdbcType=BIGINT},</if>
+			<if test="properties != null">properties=#{properties,jdbcType=VARCHAR},</if>
+			<if test="propertiesname != null">propertiesName=#{propertiesname,jdbcType=VARCHAR},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="ordersMap">
+		select * from orders where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM orders o
+		<where>
+			<if test="idArray != null">
+				o.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="tradeId != null">and o.trade_id = #{tradeId}</if>
+			<if test="num != null">and o.num = #{num}</if>
+			<if test="productId != null">and o.product_id = #{productId}</if>
+			<if test="productName != null and productName.trim() !=''">and o.product_name = #{productName}</if>
+			<if test="productRealPriceFrom != null">and o.product_real_price >= #{productRealPriceFrom}</if>
+			<if test="productRealPriceTo != null"><![CDATA[and o.product_real_price <= #{productRealPriceTo}]]></if>
+			<if test="productPicPath != null and productPicPath.trim() !=''">and o.product_pic_path = #{productPicPath}</if>
+			<if test="totalPriceFrom != null">and o.total_price >= #{totalPriceFrom}</if>
+			<if test="totalPriceTo != null"><![CDATA[and o.total_price <= #{totalPriceTo}]]></if>
+			<if test="totalRealPriceFrom != null">and o.total_real_price >= #{totalRealPriceFrom}</if>
+			<if test="totalRealPriceTo != null"><![CDATA[and o.total_real_price <= #{totalRealPriceTo}]]></if>
+			<if test="totalDiscountPriceFrom != null">and o.total_discount_price >= #{totalDiscountPriceFrom}</if>
+			<if test="totalDiscountPriceTo != null"><![CDATA[and o.total_discount_price <= #{totalDiscountPriceTo}]]></if>
+			<if test="gmtCreateFrom != null">and o.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and o.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and o.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and o.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and o.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and o.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<choose>
+				<when test="status != null">and o.status = #{status}</when>
+				<when test="statusArray != null">
+					and o.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and o.status > 0
+				</otherwise>
+			</choose>
+			<if test="refundStatus != null">and o.refund_status = #{refundStatus}</if>
+			<if test="skuId != null">and o.sku_id = #{skuId}</if>
+			<if test="properties != null and properties.trim() !=''">and o.properties = #{properties}</if>
+			<if test="propertiesname != null and propertiesname.trim() !=''">and o.propertiesName = #{propertiesname}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by o.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="ordersQuery" resultMap="ordersMap">
+		<include refid="common.pageBegin" />
+		select o.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}</foreach>
+			</when>
+			<otherwise>
+				,o.trade_id
+				,o.num
+				,o.product_id
+				,o.product_name
+				,o.product_real_price
+				,o.product_pic_path
+				,o.total_price
+				,o.total_real_price
+				,o.total_discount_price
+				,o.GMT_CREATE
+				,o.GMT_MODIFY
+				,o.status
+				,o.refund_status
+				,o.sku_id
+				,o.properties
+				,o.propertiesName
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="ordersQuery" resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="orders">
+		update orders set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from orders where id=#{id}
+	</delete>
+	
+	<update id="updateByQuery" parameterType="orders">
+		update orders 
+		<set>
+			<if test="tradeId != null">trade_id=#{tradeId,jdbcType=BIGINT},</if>
+			<if test="num != null">num=#{num,jdbcType=INTEGER},</if>
+			<if test="productId != null">product_id=#{productId,jdbcType=BIGINT},</if>
+			<if test="productName != null">product_name=#{productName,jdbcType=VARCHAR},</if>
+			<if test="productRealPrice != null">product_real_price=#{productRealPrice,jdbcType=NUMERIC},</if>
+			<if test="productPicPath != null">product_pic_path=#{productPicPath,jdbcType=VARCHAR},</if>
+			<if test="totalPrice != null">total_price=#{totalPrice,jdbcType=NUMERIC},</if>
+			<if test="totalRealPrice != null">total_real_price=#{totalRealPrice,jdbcType=NUMERIC},</if>
+			<if test="totalDiscountPrice != null">total_discount_price=#{totalDiscountPrice,jdbcType=NUMERIC},</if>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="refundStatus != null">refund_status=#{refundStatus,jdbcType=INTEGER},</if>
+			<if test="skuId != null">sku_id=#{skuId,jdbcType=BIGINT},</if>
+			<if test="properties != null">properties=#{properties,jdbcType=VARCHAR},</if>
+			<if test="propertiesname != null">propertiesName=#{propertiesname,jdbcType=VARCHAR},</if>
+		</set>
+		<where>
+			<if test="idArray != null">
+				id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="tradeId != null">and trade_id = #{tradeId}</if>
+			<if test="num != null">and num = #{num}</if>
+			<if test="productId != null">and product_id = #{productId}</if>
+			<if test="productName != null and productName.trim() !=''">and product_name = #{productName}</if>
+			<if test="productRealPriceFrom != null">and product_real_price >= #{productRealPriceFrom}</if>
+			<if test="productRealPriceTo != null"><![CDATA[and product_real_price <= #{productRealPriceTo}]]></if>
+			<if test="productPicPath != null and productPicPath.trim() !=''">and product_pic_path = #{productPicPath}</if>
+			<if test="totalPriceFrom != null">and total_price >= #{totalPriceFrom}</if>
+			<if test="totalPriceTo != null"><![CDATA[and total_price <= #{totalPriceTo}]]></if>
+			<if test="totalRealPriceFrom != null">and total_real_price >= #{totalRealPriceFrom}</if>
+			<if test="totalRealPriceTo != null"><![CDATA[and total_real_price <= #{totalRealPriceTo}]]></if>
+			<if test="totalDiscountPriceFrom != null">and total_discount_price >= #{totalDiscountPriceFrom}</if>
+			<if test="totalDiscountPriceTo != null"><![CDATA[and total_discount_price <= #{totalDiscountPriceTo}]]></if>
+			<if test="gmtCreateFrom != null">and GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<choose>
+				<when test="status != null">and status = #{status}</when>
+				<when test="statusArray != null">
+					and status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and status > 0
+				</otherwise>
+			</choose>
+			<if test="refundStatus != null">and refund_status = #{refundStatus}</if>
+			<if test="skuId != null">and sku_id = #{skuId}</if>
+			<if test="properties != null and properties.trim() !=''">and properties = #{properties}</if>
+			<if test="propertiesname != null and propertiesname.trim() !=''">and propertiesName = #{propertiesname}</if>
+		</where>
+	</update>
+	
+	<update id="updateStatusByTradeId" parameterType="orders">
+		update orders set status=#{status} where trade_id=#{tradeId}
+	</update>
+</mapper>

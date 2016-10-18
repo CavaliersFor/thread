@@ -1,0 +1,72 @@
+<ehcache>  
+	<cache name="ProductCache"
+		maxElementsInMemory="512" 
+		timeToIdleSeconds="30"
+		timeToLiveSeconds="30">
+	</cache>
+	
+	<cache name="ShopInfoCache"
+		maxElementsInMemory="512" 
+		timeToIdleSeconds="30"
+		timeToLiveSeconds="30">
+	</cache>
+	
+	<cache name="CategoryListCache"
+		maxElementsInMemory="512" 
+		timeToIdleSeconds="30"
+		timeToLiveSeconds="30">
+	</cache>
+	
+	<cache name="BuyerInfoCache"
+		maxElementsInMemory="512" 
+		timeToIdleSeconds="30"
+		timeToLiveSeconds="30">
+	</cache>
+	
+	<cache name="SelfDeliveryAgentCache"
+		maxElementsInMemory="512" 
+		timeToIdleSeconds="30"
+		timeToLiveSeconds="30">
+	</cache>
+	
+	<cache name="EnterpriseLogisticsCache"
+		maxElementsInMemory="512" 
+		timeToIdleSeconds="30"
+		timeToLiveSeconds="30">
+	</cache>
+	
+	<cache name="EnterpriseLogisticsListCache"
+		maxElementsInMemory="512" 
+		timeToIdleSeconds="30"
+		timeToLiveSeconds="30">
+	</cache>
+	
+	<cache name="LogisticsCompanyCache"
+		maxElementsInMemory="512" 
+		timeToIdleSeconds="30"
+		timeToLiveSeconds="30">
+	</cache>
+	
+	<cache name="LogisticsCompanyListCache"    
+		maxElementsInMemory="512" 
+		timeToIdleSeconds="30"
+		timeToLiveSeconds="30">
+	</cache>
+	
+	<cache name="ShopIndexDtoListCache"    
+		maxElementsInMemory="512" 
+		timeToIdleSeconds="30"
+		timeToLiveSeconds="30">
+	</cache>
+	
+	<cache name="ItemListCache"    
+		maxElementsInMemory="512" 
+		timeToIdleSeconds="30"
+		timeToLiveSeconds="30">
+	</cache>
+	<cache name="VerCodeCache"    
+		maxElementsInMemory="512" 
+		timeToIdleSeconds="30"
+		timeToLiveSeconds="30">
+	</cache>
+</ehcache>

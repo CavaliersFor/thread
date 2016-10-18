@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.SellerMapper">
+	<resultMap id="sellerMap" type="seller">
+		<id column="id" property="id" /><!-- 主键 -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 注册时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+		<result column="STATUS" property="status" /><!-- 状态: 1 未激活 2 正常 
+			3 锁定 4 冻结 5 注销 -->
+		<result column="REGISTER_NAME" property="registerName" /><!-- 用户名(手机号码) -->
+		<result column="MOBILE" property="mobile" /><!-- 电话号码 -->
+		<result column="LOGIN_COUNT" property="loginCount" /><!-- 登录总次数 -->
+		<result column="LOGIN_ERROR_COUNT" property="loginErrorCount" /><!-- 
+			登录错误次数 -->
+		<result column="LAST_LOGIN_TIME" property="lastLoginTime" /><!-- 
+			最近一次登录时间 -->
+		<result column="LAST_FREEZE_TIME" property="lastFreezeTime" /><!-- 
+			最近一次冻结时间 -->
+		<result column="LAST_LOCK_TIME" property="lastLockTime" /><!-- 最近一次被锁时间 -->
+		<result column="DESTROY_TIME" property="destroyTime" /><!-- 注销时间 -->
+		<result column="USER_TYPE" property="userType" /><!-- 用户类型 1个人 2企业 
+			默认为1 -->
+		<result column="CHECK_STATUS" property="checkStatus" /><!-- 实名审核状态 
+			1 未审核，2审核通过，3审核不通过，4-审核中，0 初始化 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="seller" useGeneratedKeys="true"
+		keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_seller.nextval from dual
+		</selectKey>
+		insert into
+		seller(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="status != null">,STATUS</if>
+			<if test="registerName != null">,REGISTER_NAME</if>
+			<if test="mobile != null">,MOBILE</if>
+			<if test="loginCount != null">,LOGIN_COUNT</if>
+			<if test="loginErrorCount != null">,LOGIN_ERROR_COUNT</if>
+			<if test="lastLoginTime != null">,LAST_LOGIN_TIME</if>
+			<if test="lastFreezeTime != null">,LAST_FREEZE_TIME</if>
+			<if test="lastLockTime != null">,LAST_LOCK_TIME</if>
+			<if test="destroyTime != null">,DESTROY_TIME</if>
+			<if test="userType != null">,USER_TYPE</if>
+			<if test="checkStatus != null">,CHECK_STATUS</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			<if test="registerName != null">,#{registerName,jdbcType=VARCHAR}</if>
+			<if test="mobile != null">,#{mobile,jdbcType=VARCHAR}</if>
+			<if test="loginCount != null">,#{loginCount,jdbcType=INTEGER}</if>
+			<if test="loginErrorCount != null">,#{loginErrorCount,jdbcType=INTEGER}</if>
+			<if test="lastLoginTime != null">,#{lastLoginTime,jdbcType=TIMESTAMP}</if>
+			<if test="lastFreezeTime != null">,#{lastFreezeTime,jdbcType=TIMESTAMP}</if>
+			<if test="lastLockTime != null">,#{lastLockTime,jdbcType=TIMESTAMP}</if>
+			<if test="destroyTime != null">,#{destroyTime,jdbcType=TIMESTAMP}</if>
+			<if test="userType != null">,#{userType,jdbcType=INTEGER}</if>
+			<if test="checkStatus != null">,#{checkStatus,jdbcType=INTEGER}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="seller">
+		update seller
+		<set>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="status != null">STATUS=#{status,jdbcType=INTEGER},</if>
+			<if test="registerName != null">REGISTER_NAME=#{registerName,jdbcType=VARCHAR},</if>
+			<if test="mobile != null">MOBILE=#{mobile,jdbcType=VARCHAR},</if>
+			<if test="loginCount != null">LOGIN_COUNT=#{loginCount,jdbcType=INTEGER},</if>
+			<if test="loginErrorCount != null">LOGIN_ERROR_COUNT=#{loginErrorCount,jdbcType=INTEGER},</if>
+			<if test="lastLoginTime != null">LAST_LOGIN_TIME=#{lastLoginTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastFreezeTime != null">LAST_FREEZE_TIME=#{lastFreezeTime,jdbcType=TIMESTAMP},</if>
+			<if test="lastLockTime != null">LAST_LOCK_TIME=#{lastLockTime,jdbcType=TIMESTAMP},</if>
+			<if test="destroyTime != null">DESTROY_TIME=#{destroyTime,jdbcType=TIMESTAMP},</if>
+			<if test="userType != null">USER_TYPE=#{userType,jdbcType=INTEGER},</if>
+			<if test="checkStatus != null">CHECK_STATUS=#{checkStatus,jdbcType=INTEGER},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="sellerMap">
+		select * from seller where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM seller s
+		<where>
+			<if test="idArray != null">
+				s.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="gmtCreateFrom != null">and s.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and s.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and s.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and s.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and s.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and s.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<choose>
+				<when test="status != null">and s.STATUS = #{status}</when>
+				<when test="statusArray != null">
+					and s.STATUS in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and s.STATUS > 0
+				</otherwise>
+			</choose>
+			<if test="registerName != null and registerName.trim() !=''">and s.REGISTER_NAME = #{registerName}</if>
+			<if test="mobile != null and mobile.trim() !=''">and s.MOBILE = #{mobile}</if>
+			<if test="loginCount != null">and s.LOGIN_COUNT = #{loginCount}</if>
+			<if test="loginErrorCount != null">and s.LOGIN_ERROR_COUNT = #{loginErrorCount}</if>
+			<if test="lastLoginTimeFrom != null">and s.LAST_LOGIN_TIME >= #{lastLoginTimeFrom}</if>
+			<if test="lastLoginTimeTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and s.LAST_LOGIN_TIME < #{lastLoginTimeTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and s.LAST_LOGIN_TIME < date_add(#{lastLoginTimeTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="lastFreezeTimeFrom != null">and s.LAST_FREEZE_TIME >= #{lastFreezeTimeFrom}</if>
+			<if test="lastFreezeTimeTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and s.LAST_FREEZE_TIME < #{lastFreezeTimeTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and s.LAST_FREEZE_TIME < date_add(#{lastFreezeTimeTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="lastLockTimeFrom != null">and s.LAST_LOCK_TIME >= #{lastLockTimeFrom}</if>
+			<if test="lastLockTimeTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and s.LAST_LOCK_TIME < #{lastLockTimeTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and s.LAST_LOCK_TIME < date_add(#{lastLockTimeTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="destroyTimeFrom != null">and s.DESTROY_TIME >= #{destroyTimeFrom}</if>
+			<if test="destroyTimeTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and s.DESTROY_TIME < #{destroyTimeTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and s.DESTROY_TIME < date_add(#{destroyTimeTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="userType != null">and s.USER_TYPE = #{userType}</if>
+			<if test="checkStatus != null">and s.CHECK_STATUS = #{checkStatus}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by s.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="sellerQuery" resultMap="sellerMap">
+		<include refid="common.pageBegin" />
+		select s.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}</foreach>
+			</when>
+			<otherwise>
+				,s.GMT_CREATE
+				,s.GMT_MODIFY
+				,s.STATUS
+				,s.REGISTER_NAME
+				,s.MOBILE
+				,s.LOGIN_COUNT
+				,s.LOGIN_ERROR_COUNT
+				,s.LAST_LOGIN_TIME
+				,s.LAST_FREEZE_TIME
+				,s.LAST_LOCK_TIME
+				,s.DESTROY_TIME
+				,s.USER_TYPE
+				,s.CHECK_STATUS
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="sellerQuery" resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="seller">
+		update seller set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from seller where id=#{id}
+	</delete>
+</mapper>

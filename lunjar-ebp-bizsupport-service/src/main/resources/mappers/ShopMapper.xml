@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lunjar.ebp.bizsupport.mappers.ShopMapper">
+	<resultMap id="shopMap" type="shop">
+		<id column="id" property="id" /><!-- 主键id -->
+		<result column="GMT_CREATE" property="gmtCreate" /><!-- 创建时间 -->
+		<result column="GMT_MODIFY" property="gmtModify" /><!-- 修改时间 -->
+		<result column="status" property="status" /><!-- 状态1:正常 2:停止3:删除 -->
+		<result column="sale_id" property="saleId" /><!-- 卖家id -->
+		<result column="partner_id" property="partnerId" /><!-- 合作者平台id -->
+		<result column="shop_name" property="shopName" /><!-- 店铺名称 -->
+		<result column="access_key" property="accessKey" /><!-- 接入者key -->
+		<result column="secret_key" property="secretKey" /><!-- 接入者秘钥 -->
+		<result column="url" property="url" /><!-- 访问地址 -->
+		<result column="wx_url" property="wxUrl" /><!-- 微信获取openId地址 -->
+		<result column="head_pic_url" property="headPicUrl" /><!-- 商铺头像图片 -->
+		<result column="third_url" property="thirdUrl" /><!-- 第三方校验地址 -->
+		<result column="payment_mode" property="paymentMode" /><!-- 支付方式1：支付宝支付2：微信支付 -->
+	</resultMap>
+
+	<insert id="insert" parameterType="shop" useGeneratedKeys="true"
+		keyProperty="id">
+		<selectKey databaseId="oracle" keyProperty="id" order="BEFORE"
+			resultType="long">
+			select SEQ_shop.nextval from dual
+		</selectKey>
+		insert into
+		shop(
+		<if test="_databaseId == 'oracle'">ID,</if>
+		<trim prefix="" prefixOverrides=",">
+			,GMT_CREATE
+			,GMT_MODIFY
+			<if test="status != null">,status</if>
+			<if test="saleId != null">,sale_id</if>
+			<if test="partnerId != null">,partner_id</if>
+			<if test="shopName != null">,shop_name</if>
+			<if test="accessKey != null">,access_key</if>
+			<if test="secretKey != null">,secret_key</if>
+			<if test="url != null">,url</if>
+			<if test="wxUrl != null">,wx_url</if>
+			<if test="headPicUrl != null">,head_pic_url</if>
+			<if test="thirdUrl != null">,third_url</if>
+			<if test="paymentMode != null">,payment_mode</if>
+		</trim>
+		)values(
+		<if test="_databaseId == 'oracle'">#{id},</if>
+		<trim prefix="" prefixOverrides=",">
+			,
+			<include refid="common.now" />
+			,
+			<include refid="common.now" />
+			<if test="status != null">,#{status,jdbcType=INTEGER}</if>
+			<if test="saleId != null">,#{saleId,jdbcType=BIGINT}</if>
+			<if test="partnerId != null">,#{partnerId,jdbcType=BIGINT}</if>
+			<if test="shopName != null">,#{shopName,jdbcType=VARCHAR}</if>
+			<if test="accessKey != null">,#{accessKey,jdbcType=VARCHAR}</if>
+			<if test="secretKey != null">,#{secretKey,jdbcType=VARCHAR}</if>
+			<if test="url != null">,#{url,jdbcType=VARCHAR}</if>
+			<if test="wxUrl != null">,#{wxUrl,jdbcType=VARCHAR}</if>
+			<if test="headPicUrl != null">,#{headPicUrl,jdbcType=VARCHAR}</if>
+			<if test="thirdUrl != null">,#{thirdUrl,jdbcType=VARCHAR}</if>
+			<if test="paymentMode != null">,#{paymentMode,jdbcType=INTEGER}</if>
+		</trim>
+		)
+	</insert>
+
+	<update id="update" parameterType="shop">
+		update shop
+		<set>
+			<if test="gmtCreate != null">GMT_CREATE=#{gmtCreate,jdbcType=TIMESTAMP},</if>
+			GMT_MODIFY=
+			<include refid="common.now" />
+			,
+			<if test="status != null">status=#{status,jdbcType=INTEGER},</if>
+			<if test="saleId != null">sale_id=#{saleId,jdbcType=BIGINT},</if>
+			<if test="partnerId != null">partner_id=#{partnerId,jdbcType=BIGINT},</if>
+			<if test="shopName != null">shop_name=#{shopName,jdbcType=VARCHAR},</if>
+			<if test="accessKey != null">access_key=#{accessKey,jdbcType=VARCHAR},</if>
+			<if test="secretKey != null">secret_key=#{secretKey,jdbcType=VARCHAR},</if>
+			<if test="url != null">url=#{url,jdbcType=VARCHAR},</if>
+			<if test="wxUrl != null">wx_url=#{wxUrl,jdbcType=VARCHAR},</if>
+			<if test="headPicUrl != null">head_pic_url=#{headPicUrl,jdbcType=VARCHAR},</if>
+			<if test="thirdUrl != null">third_url=#{thirdUrl,jdbcType=VARCHAR},</if>
+			<if test="paymentMode != null">payment_mode=#{paymentMode,jdbcType=INTEGER},</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="load" parameterType="long" resultMap="shopMap">
+		select * from shop where id=#{id}
+	</select>
+
+	<sql id="queryCommonSql">
+		FROM shop s
+		<where>
+			<if test="idArray != null">
+				s.id in
+				<foreach collection="idArray" index="index" item="item"
+					open="(" separator="," close=")">#{item}</foreach>
+			</if>
+			<if test="gmtCreateFrom != null">and s.GMT_CREATE >= #{gmtCreateFrom}</if>
+			<if test="gmtCreateTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and s.GMT_CREATE < #{gmtCreateTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and s.GMT_CREATE < date_add(#{gmtCreateTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<if test="gmtModifyFrom != null">and s.GMT_MODIFY >= #{gmtModifyFrom}</if>
+			<if test="gmtModifyTo != null">
+				<choose>
+					<when test="_databaseId == 'oracle'"><![CDATA[and s.GMT_MODIFY < #{gmtModifyTo} + 1]]></when>
+					<when test="_databaseId == 'mysql'"><![CDATA[and s.GMT_MODIFY < date_add(#{gmtModifyTo}, interval 1 day)]]></when>
+				</choose>
+			</if>
+			<choose>
+				<when test="status != null">and s.status = #{status}</when>
+				<when test="statusArray != null">
+					and s.status in
+					<foreach collection="statusArray" index="index" item="item"
+						open="(" separator="," close=")">#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					and s.status > 0
+				</otherwise>
+			</choose>
+			<if test="saleId != null">and s.sale_id = #{saleId}</if>
+			<if test="partnerId != null">and s.partner_id = #{partnerId}</if>
+			<if test="shopName != null and shopName.trim() !=''">and s.shop_name = #{shopName}</if>
+			<if test="accessKey != null and accessKey.trim() !=''">and s.access_key = #{accessKey}</if>
+			<if test="secretKey != null and secretKey.trim() !=''">and s.secret_key = #{secretKey}</if>
+			<if test="url != null and url.trim() !=''">and s.url = #{url}</if>
+			<if test="wxUrl != null and wxUrl.trim() !=''">and s.wx_url = #{wxUrl}</if>
+			<if test="headPicUrl != null and headPicUrl.trim() !=''">and s.head_pic_url = #{headPicUrl}</if>
+			<if test="thirdUrl != null and thirdUrl.trim() !=''">and s.third_url = #{thirdUrl}</if>
+			<if test="paymentMode != null">and s.payment_mode = #{paymentMode}</if>
+		</where>
+	</sql>
+
+	<sql id="sortSql">
+		<choose>
+			<when test="sort != null and sort.trim() !=''">
+				order by ${sort}
+			</when>
+			<otherwise>
+				<if test="sortByDefault">
+					order by s.GMT_CREATE DESC
+				</if>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="queryList" parameterType="shopQuery" resultMap="shopMap">
+		<include refid="common.pageBegin" />
+		select s.id
+		<choose>
+			<when test="columns != null and columns.length>0">
+				<foreach collection="columns" index="index" item="item">,${item}
+				</foreach>
+			</when>
+			<otherwise>
+				,s.GMT_CREATE
+				,s.GMT_MODIFY
+				,s.status
+				,s.sale_id
+				,s.partner_id
+				,s.shop_name
+				,s.access_key
+				,s.secret_key
+				,s.url
+				,s.wx_url
+				,s.head_pic_url
+				,s.third_url
+				,s.payment_mode
+			</otherwise>
+		</choose>
+		<include refid="queryCommonSql" />
+		<include refid="sortSql" />
+		<include refid="common.pageEnd" />
+	</select>
+
+	<select id="queryCount" parameterType="shopQuery" resultType="int">
+		select count(1)
+		<include refid="queryCommonSql" />
+	</select>
+
+	<update id="updateStatus" parameterType="shop">
+		update shop set status=#{status} where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		delete from shop where id=#{id}
+	</delete>
+
+	<select id="getShopByAccessKey" parameterType="long" resultMap="shopMap">
+		select * from shop where access_key=#{accessKey}
+	</select>
+</mapper>

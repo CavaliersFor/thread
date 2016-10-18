@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+    	<param name="Encoding" value="utf-8"/>
+	        <layout class="org.apache.log4j.PatternLayout">
+	            <param name="ConversionPattern" value="[%d{yyyy-MM-dd HH:mm:ss SSS\} %-5p] [%t] %C.%M(%L) | %m%n"/>
+	        </layout>
+    </appender>
+	
+    <!--所有日志-->
+    <appender name="main" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="/home/logs/doubbo/main.log"/>
+        <param name="Encoding" value="utf-8"/>
+        <param name="MaxFileSize" value="5MB"/>
+        <param name="MaxBackupIndex" value="100"/>
+        <param name="flushInterval" value="5" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%d{yyyy-MM-dd HH:mm:ss SSS\} %-5p] [%t] %C.%M(%L) | %m%n"/>
+        </layout>
+    </appender>
+
+    <!--接口日志-->
+    <appender name="webapi" class="com.lunjar.products.core.log4j.TimedBufferedRollingFileAppender">
+        <param name="File" value="/Users/evan/sources/workspace01/logs/ancun/bps-admin-webapp/webapi.log"/>
+        <param name="MaxFileSize" value="5MB"/>
+        <param name="MaxBackupIndex" value="100"/>
+        <param name="flushInterval" value="5" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%m%n"/>
+        </layout>
+    </appender>
+
+    <!--错误日志-->
+    <appender name="error" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="/Users/evan/sources/workspace01/logs/ancun/bps-admin-webapp/error.log"/>
+        <param name="Threshold" value="ERROR"/>
+        <param name="MaxFileSize" value="3MB"/>
+        <param name="MaxBackupIndex" value="100"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="------------------------------------------------------------------------------%n%d{yyyy-MM-dd HH:mm:ss} %m [%t] [%l] %n"/>
+        </layout>
+    </appender>
+
+    <!--异常告警(输出到文件,ELK 手机)-->
+    <appender name="alarm" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="/Users/evan/sources/workspace01/logs/ancun/bps-admin-webapp/alarm.log"/>
+        <param name="Threshold" value="ERROR"/>
+        <param name="MaxFileSize" value="3MB"/>
+        <param name="MaxBackupIndex" value="100"/>
+        <layout class="com.ancun.bps.core.log4j.ELKPatternLayout">
+            <param name="ConversionPattern"
+                   value='{"alarmTime":"%d{yyyy-MM-dd HH:mm:ss}","thread":"%t","message":"%m","cause":"%l"} %n'/>
+        </layout>
+    </appender>
+
+    <!--异常日志邮件通知-->
+  <!--   <appender name="email" class="org.apache.log4j.net.SMTPAppender">
+        <param name="Threshold" value="ERROR"/>
+        <param name="From" value="jcpt@ancunkeji.com"/>
+        <param name="SMTPHost" value="smtp.ancunkeji.com"/>
+        <param name="SMTPUsername" value="jcpt@ancunkeji.com"/>
+        <param name="SMTPPassword" value="jcpt@2016"/>
+        <param name="Subject" value="Error message from ancun bps"/>
+        <param name="To" value="xbd0723@163.com"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %m [%t] [%l] %n"/>
+        </layout>
+    </appender>
+    <appender name="async" class="org.apache.log4j.AsyncAppender">
+        <param name="blocking" value="false"/>
+        <param name="bufferSize" value="32"/>
+        <appender-ref ref="email"/>
+    </appender> -->
+    
+    <logger name="org.springframework">
+    	<level value="error"/>
+    </logger>
+    <logger name="org.springframework.web">
+    	<level value="error"/>
+    </logger>
+    <logger name="org.apache">
+    	<level value="error"/>
+    </logger>
+    <logger name="com.mchange">
+    	<level value="error"/>
+    </logger>
+    <logger name="com.hongfang">
+    	<level value="error"/>
+    </logger>
+    <logger name="net.sf.ehcache">
+    	<level value="error"/>
+    </logger>
+    <logger name="com.lunjar">
+    	<level value="error"/>
+    </logger>
+    <logger name="com.alibaba">
+    	<level value="error"/>
+    </logger>
+    <logger name="org.hibernate">
+    	<level value="error"/>
+    </logger>
+    
+    <logger name="org.apache.ibatis">
+    	<level value="error"/>
+    </logger>
+    <logger name="java.sql.ResultSet">
+    	<level value="debug"/>
+    </logger>
+    <logger name="org.mybatis">
+    	<level value="error"/>
+    </logger>
+    <logger name="com.lunjar.ebp.bizsupport.mappers">
+    	<level value="trace"/>
+    </logger>
+    <root>
+        <level value="debug"/>
+        <appender-ref ref="console"/>
+        <appender-ref ref="main"/>
+    </root>
+
+</log4j:configuration>

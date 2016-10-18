@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+     http://code.alibabatech.com/schema/dubbo  
+     http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- 用dubbo协议在20880端口暴露服务 -->
+	<dubbo:protocol name="dubbo" port="${dubbo.protocol.dubbo.port}" />
+
+	<dubbo:protocol name="hessian" port="${dubbo.protocol.hessian.port}"
+		server="jetty" />
+
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.ProductService"
+		ref="productService" version="1.0.0" protocol="dubbo">
+	</dubbo:service>
+
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.SellerService"
+		ref="sellerService" version="1.0.0" protocol="dubbo" />
+
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.CartService"
+		ref="cartService" version="1.0.0" protocol="dubbo" />
+
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.ProductShopService"
+		ref="productShopService" version="1.0.0" protocol="dubbo" />
+
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.ShopService"
+		ref="shopService" version="1.0.0" protocol="dubbo" />
+	<!--买家地址服务类 -->
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.BuyerAddressService"
+		ref="buyerAddressService" version="1.0.0" protocol="dubbo" />
+	<!--自定义类目服务类 -->
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.CategoryService"
+		ref="categoryService" version="1.0.0" protocol="dubbo" />
+	<!--商品自取地点服务类 -->
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.CollectPlaceService"
+		ref="collectPlaceService" version="1.0.0" protocol="dubbo" />
+	<!--优惠信息服务类 -->
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.DiscountService"
+		ref="discountService" version="1.0.0" protocol="dubbo" />
+	<!-- 商家发货(退货)地址服务类 -->
+	<dubbo:service
+		interface="com.lunjar.ebp.bizsupport.service.EnterpriseDeliverReturnService"
+		ref="enterpriseDeliverReturnService" version="1.0.0" protocol="dubbo" />
+	<!--快递费用表服务类 -->
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.ExpressService"
+		ref="expressService" version="1.0.0" protocol="dubbo" />
+
+	<!--产品属性图片表服务类 -->
+	<dubbo:service
+		interface="com.lunjar.ebp.bizsupport.service.ProductPropImgsService"
+		ref="productPropImgsService" version="1.0.0" protocol="dubbo" />
+	<!--订单服务类 -->
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.TradeService"
+		ref="tradeService" version="1.0.0" protocol="dubbo" />
+	<!--商品sku服务类 -->
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.ProductSkuService"
+		ref="productSkuService" version="1.0.0" protocol="dubbo" />
+	<!--文件上传服务类 -->
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.FileUploadService"
+		ref="fileUploadService" version="1.0.0" protocol="hessian" timeout="300000"
+		retries="0" />
+	<!--组合商品服务类 -->
+	<dubbo:service
+		interface="com.lunjar.ebp.bizsupport.service.CombinationProductService"
+		ref="combinationProductService" version="1.0.0" protocol="dubbo" />
+	<!--地区服务类 -->
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.RegionService"
+		ref="regionService" version="1.0.0" protocol="dubbo" />
+	<!--商户服务类 -->
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.EnterpriseService"
+		ref="enterpriseService" version="1.0.0" protocol="dubbo" />
+	<!--买家服务类 -->
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.BuyerService"
+		ref="buyerService" version="1.0.0" protocol="dubbo" />
+	<!--子订单服务类 -->
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.OrdersService"
+		ref="ordersService" version="1.0.0" protocol="dubbo" />
+	<!--退款服务类 -->
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.RefundService"
+		ref="refundService" version="1.0.0" protocol="dubbo" />
+	<!--商城首页服务类 -->
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.ShopIndexService"
+		ref="shopIndexService" version="1.0.0" protocol="dubbo" />
+	<!--发送短信服务类 -->
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.SendMessageService"
+		ref="sendMessageService" version="1.0.0" protocol="dubbo" />
+	<!--多个订单支付获取订单编号服务类 -->
+	<dubbo:service interface="com.lunjar.ebp.bizsupport.service.OutTradeNoService"
+		ref="outTradeNoService" version="1.0.0" protocol="dubbo" />
+	<!-- 登录状态服务类 -->
+	<dubbo:service
+		interface="com.lunjar.ebp.bizsupport.service.SelfDeliveryLoginService"
+		ref="selfDeliveryLoginService" version="1.0.0" protocol="dubbo" />
+	<!-- 管理人员信息服务类 -->
+	<dubbo:service
+		interface="com.lunjar.ebp.bizsupport.service.SelfDeliveryUserService"
+		ref="selfDeliveryUserService" version="1.0.0" protocol="dubbo" />
+	<!-- 物流公司服务类 -->
+	<dubbo:service
+		interface="com.lunjar.ebp.bizsupport.service.LogisticsCompanyService"
+		ref="logisticsCompanyService" version="1.0.0" protocol="dubbo" />
+	<!--  商家-物流公司服务类 -->
+	<dubbo:service
+		interface="com.lunjar.ebp.bizsupport.service.EnterpriseLogisticsService"
+		ref="enterpriseLogisticsService" version="1.0.0" protocol="dubbo" />
+	<!--  产品类目(行业标准)服务类 -->
+	<dubbo:service
+		interface="com.lunjar.ebp.bizsupport.service.ItemService"
+		ref="itemService" version="1.0.0" protocol="dubbo" />
+	<!--  验证码服务类 -->
+	<dubbo:service
+		interface="com.lunjar.ebp.bizsupport.service.CreateVerCodeService"
+		ref="createVerCodeService" version="1.0.0" protocol="dubbo" />
+</beans>  
