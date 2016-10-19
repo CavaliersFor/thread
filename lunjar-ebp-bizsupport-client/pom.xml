@@ -117,10 +117,10 @@
 			<name>nexus Repository</name>
 			<url>http://139.196.234.215:9002/nexus/content/groups/public/</url>			
 			<releases>
-				<enabled>true</enabled>
+				<enabled>false</enabled>
 			</releases>
 			<snapshots>
-				<enabled>true</enabled>
+				<enabled>false</enabled>
 			</snapshots>
 		</repository>
 	</repositories>
