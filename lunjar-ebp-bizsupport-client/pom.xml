@@ -10,21 +10,24 @@
 		<jdk.version>1.7</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
+	
 	<!--依赖-->
 	<dependencies>
 		<dependency>
 			<groupId>com.lunjar</groupId>
 			<artifactId>lunjar-products-client-core</artifactId>
 			<version>1.0.2</version>
+			<scope>system</scope>
+			<systemPath>G:\lib\lunjar-products-client-core-1.0.2.jar</systemPath>
 		</dependency>
 		
 		<dependency>
 		  <groupId>com.lunjar</groupId>
 		  <artifactId>lunjar-bps-client-core</artifactId>
 		  <version>1.0.2</version>
+		  <scope>system</scope>
+		  <systemPath>G:\lib\lunjar-bps-client-core-1.0.2.jar</systemPath>
 		</dependency>
-		
 		<!--  
 		<dependency>
 		  <groupId>com.ancun</groupId>
