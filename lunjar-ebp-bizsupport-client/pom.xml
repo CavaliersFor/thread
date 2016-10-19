@@ -10,24 +10,21 @@
 		<jdk.version>1.7</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	
+
 	<!--依赖-->
 	<dependencies>
 		<dependency>
 			<groupId>com.lunjar</groupId>
 			<artifactId>lunjar-products-client-core</artifactId>
 			<version>1.0.2</version>
-			<scope>system</scope>
-			<systemPath>G:\lib\lunjar-products-client-core-1.0.2.jar</systemPath>
 		</dependency>
 		
 		<dependency>
 		  <groupId>com.lunjar</groupId>
 		  <artifactId>lunjar-bps-client-core</artifactId>
 		  <version>1.0.2</version>
-		  <scope>system</scope>
-		  <systemPath>G:\lib\lunjar-bps-client-core-1.0.2.jar</systemPath>
 		</dependency>
+		
 		<!--  
 		<dependency>
 		  <groupId>com.ancun</groupId>
@@ -112,4 +109,32 @@
 			</plugin>	
 		</plugins>	
 	</build>
+
+	<repositories>
+		<!--nexus Repository -->
+		<repository>
+			<id>nexus-releases</id>
+			<name>nexus Repository</name>
+			<url>http://139.196.234.215:9002/nexus/content/groups/public/</url>			
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>nexus-releases</id>
+			<name>Internal Releases</name>			
+			<url>http://139.196.234.215:9002/nexus/content/repositories/releases</url>			
+		</repository>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<name>Internal Snapshots</name>			
+			<url>http://139.196.234.215:9002/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement> 
 </project>
